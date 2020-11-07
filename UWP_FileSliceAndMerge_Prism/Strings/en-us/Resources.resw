@@ -138,7 +138,7 @@
     <comment>Second Pivot item title for TabbedPivot</comment>
   </data>
   <data name="Shell_TabbedPivot.Content" xml:space="preserve">
-    <value>TabbedPivot</value>
+    <value>Binary File</value>
     <comment>Navigation view item name for TabbedPivot</comment>
   </data>
   <data name="Settings_Theme.Text" xml:space="preserve">
@@ -206,15 +206,21 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <value>Select the file(s) you want to split.</value>
   </data>
   <data name="BinaryFileSplitPage_SelectOutputPathButton.Content" xml:space="preserve">
-    <value>Select Output Path</value>
+    <value>Export Path</value>
   </data>
   <data name="BinaryFileSplitPage_SelectOutputPathButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Select the file slices output path.</value>
+    <value>Select the file slices export folder.</value>
   </data>
   <data name="BinaryFileSplitPage_SourceClearButton.Content" xml:space="preserve">
     <value>Clear</value>
   </data>
   <data name="BinaryFileSplitPage_SourceClearButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Clear the file(s) you have choosed in the list.</value>
+  </data>
+  <data name="BinaryFileSplitPage_StartButton.Content" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="BinaryFileSplitPage_OpenSlicesFolderButton.Content" xml:space="preserve">
+    <value>Open Folder</value>
   </data>
 </root>

@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using UWP_FileSliceAndMerge_Prism.ViewModels;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -22,6 +23,8 @@ namespace UWP_FileSliceAndMerge_Prism.Views
     /// </summary>
     public sealed partial class BinaryFileSplitPage : Page
     {
+        private BinaryFileSplitViewModel ViewModel => DataContext as BinaryFileSplitViewModel;
+
         public BinaryFileSplitPage()
         {
             this.InitializeComponent();
