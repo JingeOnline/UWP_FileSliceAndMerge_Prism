@@ -17,117 +17,150 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <!--<RowDefinition Height="auto"/>-->
         </Grid.RowDefinitions>
-        <!--选择文件和选择输出位置-->
-        <Grid Margin="{StaticResource SmallTopBottomMargin}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="12"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <!--源文件列表-->
+        <Border Style="{StaticResource ThinRadiusThemeBorder}"
+                    Margin="{StaticResource SmallTopMargin}">
+            <ListView Height="160" ItemsSource="{x:Bind ViewModel.SourceFiles,Mode=OneWay}"
+                          IsItemClickEnabled="False" SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="storage:StorageFile">
+                        <TextBlock Text="{x:Bind Path}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="8,-4"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Border>
+        <!--选择文件和清空按钮-->
+        <StackPanel Grid.Column="2" VerticalAlignment="Top"
+                        Margin="{StaticResource SmallTopMargin}">
+            <Button Style="{StaticResource MediumButton}" 
+                        x:Uid="BinaryFileSplitPage_SelectFilesButton"
+                        Command="{x:Bind ViewModel.SelectSourceFilesCommand}"/>
+            <Button Style="{StaticResource MediumButton}" Margin="{StaticResource SmallTopMargin}"
+                        x:Uid="BinaryFileSplitPage_SourceClearButton"
+                        Command="{x:Bind ViewModel.ClearSourceFilesCommand}"/>
+        </StackPanel>
+        <!--输出文件路径-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" VerticalAlignment="Center"
+                        Margin="{StaticResource SmallTopMargin}">
+            <TextBlock Style="{StaticResource BodyTextStyle}" Text="{x:Bind ViewModel.OutputFolder.Path,Mode=OneWay}"
+                       VerticalAlignment="Center" HorizontalAlignment="Right"
+                       IsTextSelectionEnabled="True" x:Name="TextBlock_OutputFolder"/>
+            <ToggleSwitch OffContent="Set as Default" OnContent="Set as Default" VerticalAlignment="Center"
+                              Margin="{StaticResource SmallLeftMargin}"
+                              Visibility="{x:Bind ViewModel.IsOutputFolderSetAsDefaultVisiable,Mode=OneWay}"
+                              IsOn="{x:Bind ViewModel.IsSaveOutputFolderAsDefault,Mode=TwoWay}"/>
+        </StackPanel>
+
+        <!--选择输出文件路径按钮-->
+        <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource MediumButton}"
+                    x:Uid="BinaryFileSplitPage_SelectOutputPathButton"
+                    VerticalAlignment="Center" Command="{x:Bind ViewModel.SelectOutputFolderCommand}"
+                Margin="{StaticResource SmallTopMargin}"/>
+
+        <Grid Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <!--源文件列表-->
-            <Border Style="{StaticResource ThinRadiusThemeBorder}">
-                <ListView Height="180" ItemsSource="{x:Bind ViewModel.SourceFiles,Mode=OneWay}"
-                          IsItemClickEnabled="False" SelectionMode="None">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="storage:StorageFile">
-                            <TextBlock Text="{x:Bind Path}"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Padding" Value="0"/>
-                            <Setter Property="Margin" Value="8,-4"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-            </Border>
-            <!--选择文件和清空按钮-->
-            <StackPanel Grid.Column="1" VerticalAlignment="Top">
-                <Button Style="{StaticResource MediumButton}" Margin="{StaticResource SmallLeftMargin}"
-                        x:Uid="BinaryFileSplitPage_SelectFilesButton"
-                        Command="{x:Bind ViewModel.SelectSourceFilesCommand}"/>
-                <Button Style="{StaticResource MediumButton}" Margin="{StaticResource SmallLeftTopMargin}"
-                        x:Uid="BinaryFileSplitPage_SourceClearButton"
-                        Command="{x:Bind ViewModel.ClearSourceFilesCommand}"/>
-            </StackPanel>
-            <!--输出文件路径-->
-            <TextBlock Grid.Row="1" Style="{StaticResource BodyTextStyle}" Text="{x:Bind ViewModel.OutputFolder.Path,Mode=OneWay}"
-                       VerticalAlignment="Center" Margin="{StaticResource SmallTopMargin}" HorizontalAlignment="Right"
-                       IsTextSelectionEnabled="True"/>
-            <!--选择输出文件路径按钮-->
-            <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource MediumButton}"
-                    Margin="{StaticResource SmallLeftTopMargin}" x:Uid="BinaryFileSplitPage_SelectOutputPathButton"
-                    VerticalAlignment="Center" Command="{x:Bind ViewModel.SelectOutputFolderCommand}"/>
-        </Grid>
-        <StackPanel Grid.Row="1">
-            <!--分割方法选择-->
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Split Method" Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"/>
-                <RadioButton GroupName="SplitMethod" Content="Set Slice Number" VerticalAlignment="Center"
+            <Grid.ColumnDefinitions>
+                <!--<ColumnDefinition Width="auto"/>-->
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <!--文本-->
+            <TextBlock Text="Split Method" Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
+                           Width="120" FontWeight="SemiBold"
+                       HorizontalAlignment="Left"/>
+            <TextBlock Text="Set Slice Name" Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
+                           Width="120" Grid.Row="3" Margin="{StaticResource SmallTopMargin}" FontWeight="SemiBold"
+                       HorizontalAlignment="Left"/>
+            <!--切片规则选择-->
+            <StackPanel Orientation="Horizontal" Grid.Row="1" >
+                <!--按照数量切片-->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <RadioButton GroupName="SplitMethod" Content="Set Slice Number" VerticalAlignment="Center"
                              x:Name="RadioButton_SetSliceNumber"
-                             IsChecked="{x:Bind ViewModel.IsSplitBySliceNumber,Mode=TwoWay}"/>
-                <ComboBox IsEditable="True"  Width="200" ItemsSource="{x:Bind ViewModel.SliceNumberList}"
-                          VerticalAlignment="Center"
+                             IsChecked="{x:Bind ViewModel.IsSplitBySliceNumber,Mode=TwoWay}"
+                             Margin="{StaticResource SmallRightMargin}"/>
+                    <!--该控件使用了Binding方式，因为使用XBind的时候，经常报出莫名其妙的异常-->
+                    <ComboBox IsEditable="True"  Width="200" ItemsSource="{x:Bind ViewModel.SliceNumberList}"
+                          VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}"
                           IsEnabled="{Binding ElementName=RadioButton_SetSliceNumber,Path=IsChecked}"
                           SelectedItem="{Binding SliceNumber,Mode=TwoWay}"/>
-                <!--上面控件使用了Binding方式，因为使用XBind的时候，经常报出莫名其妙的异常-->
-                <RadioButton GroupName="SplitMethod" Content="Set Slice Size" VerticalAlignment="Center"
-                             x:Name="RadioButton_SetSliceSize"/>
-                <!--<muxc:NumberBox SpinButtonPlacementMode="Compact" Value="10"/>-->
-                <ComboBox IsEditable="True" Width="200" ItemsSource="" VerticalAlignment="Center"
-                          IsEnabled="{Binding ElementName=RadioButton_SetSliceSize,Path=IsChecked}"/>
-                <ComboBox ItemsSource="" VerticalAlignment="Center" SelectedItem=""
-                          IsEnabled="{Binding ElementName=RadioButton_SetSliceSize,Path=IsChecked}"/>
+                </StackPanel>
+                <!--按照文件大小切片-->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <RadioButton GroupName="SplitMethod" Content="Set Slice Size" VerticalAlignment="Center"
+                             x:Name="RadioButton_SetSliceSize" Margin="{StaticResource SmallRightMargin}"/>
+                    <ComboBox IsEditable="True" Width="100" ItemsSource="{x:Bind ViewModel.SliceMaxSizeList}" VerticalAlignment="Center"
+                          IsEnabled="{Binding ElementName=RadioButton_SetSliceSize,Path=IsChecked}"
+                          SelectedItem="{Binding SliceMaxSize,Mode=TwoWay}"
+                          Margin="{StaticResource SmallRightMargin}"/>
+                    <ComboBox ItemsSource="{x:Bind ViewModel.SliceMaxSizeUnitList}" VerticalAlignment="Center"
+                          IsEnabled="{Binding ElementName=RadioButton_SetSliceSize,Path=IsChecked}"
+                          SelectedItem="{x:Bind ViewModel.SliceMaxSizeUnit,Mode=TwoWay}"/>
+                </StackPanel>
             </StackPanel>
-            <!--输出文件命名规则-->
-            <StackPanel Orientation="Horizontal" Margin="{StaticResource SmallTopMargin}">
-                <TextBlock Text="Set slice name" Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"/>
-                <ComboBox IsEditable="True" Width="400" VerticalAlignment="Center"
+            <!--设置切片的命名规则-->
+            <StackPanel Orientation="Horizontal" Grid.Row="4" 
+                        VerticalAlignment="Center">
+                <ComboBox IsEditable="True" Width="348" VerticalAlignment="Center"
                           ItemsSource="{x:Bind ViewModel.SliceNamingRules}"
-                          SelectedItem="{x:Bind ViewModel.SliceNamingRule,Mode=TwoWay}"/>
+                          SelectedItem="{x:Bind ViewModel.SliceNamingRule,Mode=TwoWay}"
+                          Margin="{StaticResource SmallRightMargin}"/>
                 <RadioButton GroupName="IndexStartWith" Content="Index Start with 0"
-                             VerticalAlignment="Center" IsChecked="{x:Bind ViewModel.IndexStartWith0,Mode=TwoWay}"/>
+                             VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}"
+                             IsChecked="{x:Bind ViewModel.IndexStartWith0,Mode=TwoWay}"/>
                 <RadioButton GroupName="IndexStartWith" Content="Index Start with 1"
                              VerticalAlignment="Center"/>
             </StackPanel>
-        </StackPanel>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <!--输出文件预览列表-->
-            <Border  Style="{StaticResource ThinRadiusThemeBorder}" Margin="{StaticResource SmallTopMargin}">
-                <controls:DataGrid ItemsSource="{x:Bind ViewModel.PreviewOutput,Mode=OneWay}"
+            <TextBlock Foreground="Red"  Grid.Row="2" Text="Warning" Visibility="Collapsed" />
+            <TextBlock Foreground="Red"  Grid.Row="5" Text="warning: ewoifjwoie" Visibility="Collapsed"/>
+        </Grid>
+        <!--输出文件预览列表-->
+        <Border  Style="{StaticResource ThinRadiusThemeBorder}"
+                     Margin="{StaticResource MediumTopMargin}"
+                     Grid.Row="4">
+            <controls:DataGrid ItemsSource="{x:Bind ViewModel.PreviewOutput,Mode=OneWay}"
                                    AutoGenerateColumns="False" IsReadOnly="True">
-                    <controls:DataGrid.Columns>
-                        <controls:DataGridTextColumn Header="Output Name"
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Header="Output Name"
                                                      Binding="{Binding FileName,Mode=OneWay}"
                                                      Width="4*"
                                                      FontSize="16"/>
-                        <controls:DataGridTextColumn Header="File Size (Byte)"
+                    <controls:DataGridTextColumn Header="File Size (Byte)"
                                                      Binding="{Binding FileSize,Mode=OneWay}"
                                                      Width="*"
                                                      FontSize="16"/>
-                    </controls:DataGrid.Columns>
-                </controls:DataGrid>
-            </Border>
-            <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="1"
-                        Margin="{StaticResource SmallLeftTopMargin}" VerticalAlignment="Top">
-                <!--开始按钮-->
-                <Button Style="{StaticResource MediumButton}" x:Uid="BinaryFileSplitPage_StartButton"
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </Border>
+        <StackPanel Grid.Row="4" Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="2"
+                        Margin="{StaticResource SmallTopMargin}" VerticalAlignment="Top">
+            <!--开始按钮-->
+            <Button Style="{StaticResource MediumButton}" x:Uid="BinaryFileSplitPage_StartButton"
                         Command="{x:Bind ViewModel.StartSplitCommand}"/>
-                <Button Style="{StaticResource MediumButton}" Margin="{StaticResource SmallTopBottomMargin}"
+            <Button Style="{StaticResource MediumButton}" Margin="{StaticResource SmallTopBottomMargin}"
                         x:Uid="BinaryFileSplitPage_OpenSlicesFolderButton" IsEnabled="False"/>
-            </StackPanel>
-        </Grid>
-
+        </StackPanel>
     </Grid>
 </Page>

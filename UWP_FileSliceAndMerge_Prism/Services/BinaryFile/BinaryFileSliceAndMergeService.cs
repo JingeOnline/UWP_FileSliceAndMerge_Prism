@@ -26,7 +26,12 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             
         }
 
-        public async Task Slice(IEnumerable<BinarySliceModel> previewResultCollection)
+        /// <summary>
+        /// 分隔文件
+        /// </summary>
+        /// <param name="previewResultCollection"></param>
+        /// <returns></returns>
+        public async Task SplitFiles(IEnumerable<BinarySliceModel> previewResultCollection)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();

@@ -20,7 +20,8 @@
             IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}"
             IsSettingsVisible="True"
-            Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
+            Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+            OpenPaneLength="240">
             <winui:NavigationView.MenuItems>
                 <!--
                 TODO WTS: Change the symbols for each item as appropriate for your app
