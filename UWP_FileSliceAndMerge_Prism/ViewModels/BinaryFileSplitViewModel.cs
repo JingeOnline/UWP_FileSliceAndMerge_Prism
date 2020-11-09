@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
+using UWP_FileSliceAndMerge_Prism.Constants;
 using UWP_FileSliceAndMerge_Prism.Core.Models;
 using UWP_FileSliceAndMerge_Prism.Core.Services;
 using UWP_FileSliceAndMerge_Prism.Helpers;
@@ -15,6 +16,7 @@ using UWP_FileSliceAndMerge_Prism.Services.BinaryFile;
 using Windows.ApplicationModel.Store.Preview.InstallControl;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.System;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
@@ -30,6 +32,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         public DelegateCommand ClearSourceFilesCommand { get; set; }
         public DelegateCommand SelectOutputFolderCommand { get; set; }
         public DelegateCommand StartSplitCommand { get; set; }
+        public DelegateCommand LaunchFolderCommand { get; set; }
 
         public List<string> SliceNamingRules { get; set; } = new List<string>()
         {
@@ -38,13 +41,13 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             "{*}~{#}",
             "{*}.{#}"
         };
-        public List<int> SliceNumberList { get; set; } = new List<int>()
+        public List<string> SliceNumberList { get; set; } = new List<string>()
         {
-            2,3,5,10,100,
+            "2","3","5","10","100",
         };
-        public List<long> SliceMaxSizeList { get; set; } = new List<long>()
+        public List<string> SliceMaxSizeList { get; set; } = new List<string>()
         {
-            1,5,10,20,50,100,500
+            "1","2","8","16","128","256","512"
         };
         public List<string> SliceMaxSizeUnitList { get; set; } = new List<string>()
         {
@@ -66,20 +69,34 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         }
 
         private int _sliceNumber = 2;
-        public int SliceNumber
+        public string SliceNumberText
         {
-            get { return _sliceNumber; }
-            set { SetProperty(ref _sliceNumber, value); previewResultFiles(); }
+            get { return _sliceNumber.ToString(); }
+            set
+            {
+                if (checkUserInput(value))
+                {
+                    SetProperty(ref _sliceNumber, Int32.Parse(value));
+                    previewResultFiles();
+                }
+            }
         }
 
         private long _sliceMaxSize = 1;
-        public long SliceMaxSize
+        public string SliceMaxSizeText
         {
-            get { return _sliceMaxSize; }
-            set { SetProperty(ref _sliceMaxSize, value);previewResultFiles(); }
+            get { return _sliceMaxSize.ToString(); }
+            set
+            {
+                if (checkUserInput(value))
+                {
+                    SetProperty(ref _sliceMaxSize, long.Parse(value));
+                    previewResultFiles();
+                }
+            }
         }
 
-        private string _sliceMaxSizeUnit="MB";
+        private string _sliceMaxSizeUnit = "MB";
         public string SliceMaxSizeUnit
         {
             get { return _sliceMaxSizeUnit; }
@@ -112,10 +129,10 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
         }
 
-        private bool _isOutputFolderSetAsDefaultVisiable=false;
+        private bool _isOutputFolderSetAsDefaultVisiable = false;
         public bool IsOutputFolderSetAsDefaultVisiable
         {
-            get {return _isOutputFolderSetAsDefaultVisiable; }
+            get { return _isOutputFolderSetAsDefaultVisiable; }
             set { SetProperty(ref _isOutputFolderSetAsDefaultVisiable, value); }
         }
 
@@ -130,17 +147,89 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
         }
 
+        private string _splitMethodWarning;
+        public string SplitMethodWarning
+        {
+            get { return _splitMethodWarning; }
+            set
+            {
+                SetProperty(ref _splitMethodWarning, value);
+                if (string.IsNullOrEmpty(value))
+                {
+                    IsSplitMethodWarningVisible = false;
+                }
+                else
+                {
+                    IsSplitMethodWarningVisible = true;
+                }
+            }
+        }
+
+        private string _sliceNamingWarning;
+        public string SliceNamingWarning
+        {
+            get { return _sliceNamingWarning; }
+            set
+            {
+                SetProperty(ref _sliceNamingWarning, value);
+                if (string.IsNullOrEmpty(value))
+                {
+                    IsSliceNamingWarningVisiable = false;
+                }
+                else
+                {
+                    IsSliceNamingWarningVisiable = true;
+                }
+            }
+        }
+
+        private bool _isSplitMethodWarningVisible;
+        public bool IsSplitMethodWarningVisible
+        {
+            get { return _isSplitMethodWarningVisible; }
+            set { SetProperty(ref _isSplitMethodWarningVisible, value); }
+        }
+
+        private bool _isSliceNamingWarningVisiable;
+        public bool IsSliceNamingWarningVisiable
+        {
+            get { return _isSliceNamingWarningVisiable; }
+            set { SetProperty(ref _isSliceNamingWarningVisiable, value); }
+        }
+
+        private bool _isFinish;
+        public bool IsFinish
+        {
+            get { return _isFinish; }
+            set { SetProperty(ref _isFinish, value); }
+        }
+
         public BinaryFileSplitViewModel()
         {
-            
+
             SelectSourceFilesCommand = new DelegateCommand(selectSourceFiles);
             ClearSourceFilesCommand = new DelegateCommand(clearUi);
             SelectOutputFolderCommand = new DelegateCommand(selectOutputFolder);
-            StartSplitCommand = new DelegateCommand(startSplit);
+            //这里不能用ObservesCanExecute，因为该方法要求必须传入一个属性。
+            StartSplitCommand = new DelegateCommand(startSplit,canStart);
+            LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(()=>IsFinish);
             SliceNamingRule = SliceNamingRules[0];
             getAppSetting();
         }
 
+        /// <summary>
+        /// 开始按钮是否可用
+        /// </summary>
+        /// <returns></returns>
+        private bool canStart()
+        {
+            return SourceFiles.Count > 0;
+        }
+
+        /// <summary>
+        /// 获取应用程序储存的设置数据
+        /// </summary>
+        /// <returns></returns>
         private async Task getAppSetting()
         {
 
@@ -169,6 +258,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 }
                 await getSourceFileInfo();
                 previewResultFiles();
+                //让该Command重新检测是否能够执行的条件
+                StartSplitCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -217,10 +308,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             SourceFiles.Clear();
             SourceFilesInfo.Clear();
             PreviewOutput.Clear();
-            //Debug.WriteLine(IsSplitBySliceNumber);
-            //Debug.WriteLine(SliceNumber);
-            //Debug.WriteLine(SliceNamingRule);
-            //Debug.WriteLine(_indexStartWith);
+            //让该Command重新检测是否能够执行的条件
+            StartSplitCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -228,6 +317,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private void previewResultFiles()
         {
+
             int maxPreviewItemCount = 5000;
             int currentPreviewItemCount = 0;
 
@@ -242,7 +332,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 //如果给ObservableCollection赋新值，需要使用OnPropertyChanged事件，也就是使用SetProperty()方法
                 //PreviewOutput =new ObservableCollection<BinarySliceModel>(previewService.GetPreviewSlicesByNumber(inputFiles));
 
-                List<BinarySliceModel> resultList = previewService.GetPreviewSlicesByNumber(SliceNumber);
+                List<BinarySliceModel> resultList = previewService.GetPreviewSlicesByNumber(_sliceNumber);
                 foreach (var result in resultList)
                 {
                     PreviewOutput.Add(result);
@@ -272,28 +362,75 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
         }
 
+        /// <summary>
+        /// 检测用户输入值是否合法
+        /// </summary>
+        private bool checkUserInput(string inputText)
+        {
+            SplitMethodWarning = "";
+            if (IsSplitBySliceNumber)
+            {
+                if (Int32.TryParse(inputText, out int inputNumber) && inputNumber > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    SplitMethodWarning = BinaryFileErrors.InvalidNumber;
+                }
+            }
+            else
+            {
+                if (long.TryParse(inputText, out long inputNumber) && inputNumber > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    SplitMethodWarning = BinaryFileErrors.InvalidNumber;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 把用户选择的单位转换成Byte
+        /// </summary>
+        /// <returns></returns>
         private long calculateSliceMaxSize()
         {
             switch (SliceMaxSizeUnit)
             {
                 case "Byte":
-                    return SliceMaxSize;
+                    return _sliceMaxSize;
                 case "KB":
-                    return SliceMaxSize * 1024;
+                    return _sliceMaxSize * 1024;
                 case "MB":
-                    return SliceMaxSize * 1024 * 1024;
+                    return _sliceMaxSize * 1024 * 1024;
                 case "GB":
-                    return SliceMaxSize * 1024 * 1024 * 1024;
+                    return _sliceMaxSize * 1024 * 1024 * 1024;
                 default:
                     throw new ArgumentException("计算文件大小单位参数异常", $"SliceMaxSizeUnit={SliceMaxSizeUnit}");
             }
         }
 
+        /// <summary>
+        /// 开始执行切割
+        /// </summary>
         private async void startSplit()
         {
             BinaryFileSliceAndMergeService sliceService = new BinaryFileSliceAndMergeService(OutputFolder, SourceFiles);
             await sliceService.SplitFiles(PreviewOutput);
-            //await sliceService.CopyFile(SourceFiles[0],OutputFolder);
+            IsFinish = true;
+        }
+
+        /// <summary>
+        /// 下载完成后打开文件夹
+        /// </summary>
+        private async void launchFolder()
+        {
+            var t = new FolderLauncherOptions();
+            await Launcher.LaunchFolderAsync(OutputFolder, t);
         }
     }
 }

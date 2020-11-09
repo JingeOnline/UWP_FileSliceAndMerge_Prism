@@ -28,8 +28,8 @@ namespace UWP_FileSliceAndMerge_Prism.Tests.MSTest
             };
 
             PreviewOutputService previewOutputService = 
-                new PreviewOutputService(sliceNumber, namingRule, indexStartWith);
-            List<BinarySliceModel> list = previewOutputService.GetPreviewSlicesByNumber(sourceFils);
+                new PreviewOutputService(namingRule,indexStartWith,sourceFils);
+            List<BinarySliceModel> list = previewOutputService.GetPreviewSlicesByNumber(sliceNumber);
 
             Assert.AreEqual(list.Count,9);
             Assert.AreEqual(list.Last().FileSize, 3001);

@@ -86,7 +86,13 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             }
         }
 
-
+        /// <summary>
+        /// 输出一个切片
+        /// </summary>
+        /// <param name="sourceFile"></param>
+        /// <param name="preview"></param>
+        /// <param name="streamStartPosition"></param>
+        /// <returns></returns>
         private async Task splitOneFileOneSlice(StorageFile sourceFile, BinarySliceModel preview, long streamStartPosition)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -122,6 +128,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                     }
                 }
             }
+            preview.IsDone=true;
             Debug.WriteLine(preview.FileName+"写入用时 "+stopwatch.ElapsedMilliseconds);
         }
 
