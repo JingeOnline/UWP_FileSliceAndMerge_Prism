@@ -152,10 +152,30 @@
                                                  Binding="{Binding Icon,Mode=OneWay}"
                                                  FontFamily="Segoe MDL2 Assets"
                                                  FontSize="16"/>
-                    <controls:DataGridTextColumn Header="Output Name"
+                    <!--<controls:DataGridTextColumn Header="Output Name"
                                                      Binding="{Binding FileName,Mode=OneWay}"
                                                      Width="4*"
-                                                     FontSize="16"/>
+                                                     FontSize="16"/>-->
+                    <controls:DataGridTemplateColumn Header="Output Name"
+                                                     Width="4*">
+                        <controls:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Margin="{StaticResource SmallLeftRightMargin}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"
+                                               Grid.Column="0"/>
+                                    <ProgressBar IsIndeterminate="False" VerticalAlignment="Center"
+                                                 Grid.Column="1" Margin="{StaticResource SmallLeftMargin}"
+                                                 Value="{Binding FinishSize,Mode=OneWay}"
+                                                 Maximum="{Binding FileSize,Mode=OneWay}"
+                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>
                     <controls:DataGridTextColumn Header="File Size (Byte)"
                                                      Binding="{Binding FileSize,Mode=OneWay}"
                                                      Width="*"

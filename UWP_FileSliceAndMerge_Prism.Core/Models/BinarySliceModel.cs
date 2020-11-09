@@ -10,6 +10,13 @@ namespace UWP_FileSliceAndMerge_Prism.Core.Models
         public string SourceFileName { get; set; }
         public string FileName { get; set; }
         public long FileSize { get; set; }
+
+        private bool _isStart;
+        public bool IsStart
+        {
+            get { return _isStart; }
+            set { _isStart = value;OnPropertyChanged("IsStart"); }
+        }
         
         private bool _isDone;
         public bool IsDone 
@@ -30,9 +37,18 @@ namespace UWP_FileSliceAndMerge_Prism.Core.Models
             }
         }
 
+        private long _finishSize=0;
+        public long FinishSize
+        {
+            get { return _finishSize; }
+            set
+            {
+                _finishSize = value;
+                OnPropertyChanged("FinishSize");
+            }
+        }
+
         private string _icon;
-
-
         public string Icon
         {
             get { return _icon; }

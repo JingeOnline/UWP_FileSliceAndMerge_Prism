@@ -97,7 +97,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-
+            preview.IsStart = true;
             StorageFile targetFile = await _outputFolder.CreateFileAsync(preview.FileName);
             Debug.WriteLine("创建文件用时 " + stopwatch.ElapsedMilliseconds);
             using (Stream readStream = await sourceFile.OpenStreamForReadAsync())
@@ -124,11 +124,14 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                             await writeStream.WriteAsync(buffer, 0, n);
                             break;
                         }
+                        //用来更新进度条
+                        preview.FinishSize = preview.FileSize - sliceSize;
                         GC.Collect(2);
                     }
                 }
             }
             preview.IsDone=true;
+            preview.FinishSize = preview.FileSize;
             Debug.WriteLine(preview.FileName+"写入用时 "+stopwatch.ElapsedMilliseconds);
         }
 

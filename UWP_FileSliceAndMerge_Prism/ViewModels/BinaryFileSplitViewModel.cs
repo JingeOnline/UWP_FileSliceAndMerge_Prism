@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using Prism.Commands;
@@ -204,14 +205,29 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             set { SetProperty(ref _isFinish, value); }
         }
 
+        private bool _isStarted = false;
+        public bool IsStarted
+        {
+            get { return _isStarted;  }
+            set { SetProperty(ref _isStarted, value); }
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public BinaryFileSplitViewModel()
         {
-
-            SelectSourceFilesCommand = new DelegateCommand(selectSourceFiles);
-            ClearSourceFilesCommand = new DelegateCommand(clearUi);
-            SelectOutputFolderCommand = new DelegateCommand(selectOutputFolder);
-            //这里不能用ObservesCanExecute，因为该方法要求必须传入一个属性。
-            StartSplitCommand = new DelegateCommand(startSplit,canStart);
+            //在DelegateCommand中可以写lambda表达式，返回值为bool类型即可。
+            //但在ObservesCanExecute和ObservesProperty方法中，看似是lambda表达式，
+            //实际上只能传入一个属性，传入其他的值或者表达式会报错。
+            SelectSourceFilesCommand = new DelegateCommand(selectSourceFiles,()=>!IsStarted)
+                .ObservesProperty(()=> IsStarted);
+            ClearSourceFilesCommand = new DelegateCommand(clearUi, () => !IsStarted)
+                .ObservesProperty(() => IsStarted);
+            SelectOutputFolderCommand = new DelegateCommand(selectOutputFolder, () => !IsStarted)
+                .ObservesProperty(() => IsStarted);
+            StartSplitCommand = new DelegateCommand(startSplit,canStart)
+                .ObservesProperty(()=>IsFinish).ObservesProperty(()=>IsStarted);
             LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(()=>IsFinish);
             SliceNamingRule = SliceNamingRules[0];
             getAppSetting();
@@ -223,8 +239,9 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// <returns></returns>
         private bool canStart()
         {
-            return SourceFiles.Count > 0;
+            return SourceFiles.Count > 0 && !IsFinish &&!IsStarted;
         }
+
 
         /// <summary>
         /// 获取应用程序储存的设置数据
@@ -305,6 +322,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private void clearUi()
         {
+            IsFinish = false;
             SourceFiles.Clear();
             SourceFilesInfo.Clear();
             PreviewOutput.Clear();
@@ -321,6 +339,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             int maxPreviewItemCount = 5000;
             int currentPreviewItemCount = 0;
 
+            IsFinish = false;
             PreviewOutput.Clear();
 
             if (IsSplitBySliceNumber)
@@ -419,9 +438,11 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private async void startSplit()
         {
+            IsStarted = true;
             BinaryFileSliceAndMergeService sliceService = new BinaryFileSliceAndMergeService(OutputFolder, SourceFiles);
             await sliceService.SplitFiles(PreviewOutput);
             IsFinish = true;
+            IsStarted = false;
         }
 
         /// <summary>
