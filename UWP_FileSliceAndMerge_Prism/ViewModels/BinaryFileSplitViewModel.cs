@@ -57,11 +57,18 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             "Byte","KB","MB","GB"
         };
 
-        private string _slickeNamingRule = "{*}_{#}";
+        private string _sliceNamingRule = "{*}_{#}";
         public string SliceNamingRule
         {
-            get { return _slickeNamingRule; }
-            set { SetProperty(ref _slickeNamingRule, value); previewResultFiles(); }
+            get { return _sliceNamingRule; }
+            set
+            {
+                if (_sliceNamingRule != value)
+                {
+                    SetProperty(ref _sliceNamingRule, value);
+                    previewResultFiles();
+                }
+            }
         }
 
         private bool _isSplitBySliceNumber = true;
@@ -89,11 +96,12 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             set
             {
                 checkSliceNumber(value);
+                Debug.WriteLine("SliceNumberText=" + value);
             }
         }
 
         private long _sliceMaxSize = 1;
-        private long _sliceMaxSizeTextToLong=1;
+        private long _sliceMaxSizeTextNumber = 1;
         public string SliceMaxSizeText
         {
             get { return _sliceMaxSize.ToString(); }
@@ -109,9 +117,12 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             get { return _sliceMaxSizeUnit; }
             set
             {
-                SetProperty(ref _sliceMaxSizeUnit, value);
-                checkSliceMaxSizeUnit(_sliceMaxSizeUnit);
-                Debug.WriteLine("_sliceMaxSizeUnit=" + _sliceMaxSizeUnit);
+                if (value != _sliceMaxSizeUnit)
+                {
+                    SetProperty(ref _sliceMaxSizeUnit, value);
+                    checkSliceMaxSizeUnit(_sliceMaxSizeUnit);
+                    Debug.WriteLine("_sliceMaxSizeUnit=" + _sliceMaxSizeUnit);
+                }
             }
         }
 
@@ -442,7 +453,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     }
                 }
                 _sliceMaxSize = calculateSliceMaxSize(inputNumber);
-                _sliceMaxSizeTextToLong = inputNumber;
+                _sliceMaxSizeTextNumber = inputNumber;
                 previewResultFiles();
             }
             else
@@ -532,7 +543,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             long sliceCount = 0;
             foreach (BinarySliceModel file in SourceFilesInfo)
             {
-                sliceCount += file.FileSize / calculateSliceMaxSize(_sliceMaxSizeTextToLong, unit);
+                sliceCount += file.FileSize / calculateSliceMaxSize(_sliceMaxSizeTextNumber, unit);
             }
             if (sliceCount > 5000)
             {
@@ -542,9 +553,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     return;
                 }
             }
-            //_sliceMaxSizeUnit = unit;
+            _sliceMaxSize = calculateSliceMaxSize(_sliceMaxSizeTextNumber);
             previewResultFiles();
-            Debug.WriteLine(DateTime.Now);
         }
 
         /// <summary>
@@ -579,7 +589,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
         }
 
-        private long calculateSliceMaxSize(long sliceSizeNumber,string unit)
+        private long calculateSliceMaxSize(long sliceSizeNumber, string unit)
         {
             switch (unit)
             {
