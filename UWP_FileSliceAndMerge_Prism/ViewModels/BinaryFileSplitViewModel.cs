@@ -39,10 +39,10 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
 
         public List<string> SliceNamingRules { get; set; } = new List<string>()
         {
-            "{*}_{#}",
-            "{*}-{#}",
-            "{*}~{#}",
-            "{*}.{#}"
+            "{@}_Slices_{#}",
+            "{@}-Slices-{#}",
+            "{@}_{#}",
+            "{@}-{#}"
         };
         public List<string> SliceNumberList { get; set; } = new List<string>()
         {
@@ -57,7 +57,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             "Byte","KB","MB","GB"
         };
 
-        private string _sliceNamingRule = "{*}_{#}";
+        private string _sliceNamingRule = "{@}_Slices_{#}";
         public string SliceNamingRule
         {
             get { return _sliceNamingRule; }
@@ -438,6 +438,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             SplitMethodWarning = "";
             if (long.TryParse(inputText, out long inputNumber) && inputNumber > 0)
             {
+                _sliceMaxSizeTextNumber = inputNumber;
                 //if(inputNumber)
                 long sliceCount = 0;
                 foreach (BinarySliceModel file in SourceFilesInfo)
@@ -453,7 +454,6 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     }
                 }
                 _sliceMaxSize = calculateSliceMaxSize(inputNumber);
-                _sliceMaxSizeTextNumber = inputNumber;
                 previewResultFiles();
             }
             else

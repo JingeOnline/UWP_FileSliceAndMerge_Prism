@@ -97,9 +97,9 @@ namespace UWP_FileSliceAndMerge_Prism.Core.Services
             string fileExtention = array[array.Length - 1];
             string fileName = sourceName.Remove(sourceName.Length - fileExtention.Length - 1);
             string name = namingRule;
-            if (namingRule.Contains("{*}"))
+            if (namingRule.Contains("{@}"))
             {
-                name = name.Replace("{*}", fileName);
+                name = name.Replace("{@}", fileName);
             }
             if (namingRule.Contains("{#}"))
             {
