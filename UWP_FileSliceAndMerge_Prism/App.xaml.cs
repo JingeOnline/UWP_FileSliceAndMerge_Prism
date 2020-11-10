@@ -47,6 +47,7 @@ namespace UWP_FileSliceAndMerge_Prism
             await ThemeSelectorService.SetRequestedThemeAsync();
             NavigationService.Navigate(page, launchParam);
             Window.Current.Activate();
+            //显示第一次启动的弹窗
             await Container.Resolve<IFirstRunDisplayService>().ShowIfAppropriateAsync();
             Container.Resolve<IToastNotificationsService>().ShowToastNotificationSample();
         }

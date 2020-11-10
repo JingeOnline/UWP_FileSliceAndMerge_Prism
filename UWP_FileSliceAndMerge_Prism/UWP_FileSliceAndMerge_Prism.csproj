@@ -176,6 +176,9 @@
     <Compile Include="Views\BinaryFileSplitPage.xaml.cs">
       <DependentUpon>BinaryFileSplitPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BinarySplitSettingWarningDialog.xaml.cs">
+      <DependentUpon>BinarySplitSettingWarningDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FirstRunDialog.xaml.cs">
       <DependentUpon>FirstRunDialog.xaml</DependentUpon>
     </Compile>
@@ -222,6 +225,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BinaryFileSplitPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BinarySplitSettingWarningDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

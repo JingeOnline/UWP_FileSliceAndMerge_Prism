@@ -156,6 +156,7 @@
                                                      Binding="{Binding FileName,Mode=OneWay}"
                                                      Width="4*"
                                                      FontSize="16"/>-->
+                    <!--文件名和进度条-->
                     <controls:DataGridTemplateColumn Header="Output Name"
                                                      Width="4*">
                         <controls:DataGridTemplateColumn.CellTemplate>
@@ -176,10 +177,12 @@
                             </DataTemplate>
                         </controls:DataGridTemplateColumn.CellTemplate>
                     </controls:DataGridTemplateColumn>
+                    <!--文件大小-->
+                    <!--该控件不能在xmal中格式化字符串-->
                     <controls:DataGridTextColumn Header="File Size (Byte)"
-                                                     Binding="{Binding FileSize,Mode=OneWay}"
-                                                     Width="*"
-                                                     FontSize="16"/>
+                                                 Binding="{Binding FileSizeText, Mode=OneWay}"
+                                                 Width="*"
+                                                 FontSize="16"/>
                 </controls:DataGrid.Columns>
             </controls:DataGrid>
         </Border>

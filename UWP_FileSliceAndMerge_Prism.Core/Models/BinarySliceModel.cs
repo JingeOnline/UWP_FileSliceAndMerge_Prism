@@ -10,6 +10,11 @@ namespace UWP_FileSliceAndMerge_Prism.Core.Models
         public string SourceFileName { get; set; }
         public string FileName { get; set; }
         public long FileSize { get; set; }
+        public string FileSizeText
+        {
+            //每三位数添加一个逗号
+            get { return FileSize.ToString("N0"); }
+        }
 
         private bool _isStart;
         public bool IsStart

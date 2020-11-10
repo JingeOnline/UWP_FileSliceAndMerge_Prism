@@ -14,10 +14,12 @@ using UWP_FileSliceAndMerge_Prism.Core.Services;
 using UWP_FileSliceAndMerge_Prism.Helpers;
 using UWP_FileSliceAndMerge_Prism.Models;
 using UWP_FileSliceAndMerge_Prism.Services.BinaryFile;
+using UWP_FileSliceAndMerge_Prism.Views;
 using Windows.ApplicationModel.Store.Preview.InstallControl;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
+using Windows.UI.Core;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
@@ -48,7 +50,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         };
         public List<string> SliceMaxSizeList { get; set; } = new List<string>()
         {
-            "1","2","8","16","128","256","512"
+            "1","2","8","32","128","512"
         };
         public List<string> SliceMaxSizeUnitList { get; set; } = new List<string>()
         {
@@ -66,7 +68,18 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         public bool IsSplitBySliceNumber
         {
             get { return _isSplitBySliceNumber; }
-            set { SetProperty(ref _isSplitBySliceNumber, value); }
+            set
+            {
+                SetProperty(ref _isSplitBySliceNumber, value);
+                if (value)
+                {
+                    checkSliceNumber(_sliceNumber.ToString());
+                }
+                else
+                {
+                    checkSliceMaxSize(_sliceMaxSize);
+                }
+            }
         }
 
         private int _sliceNumber = 2;
@@ -75,25 +88,18 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             get { return _sliceNumber.ToString(); }
             set
             {
-                if (checkUserInput(value))
-                {
-                    SetProperty(ref _sliceNumber, Int32.Parse(value));
-                    previewResultFiles();
-                }
+                checkSliceNumber(value);
             }
         }
 
         private long _sliceMaxSize = 1;
+        private long _sliceMaxSizeTextToLong=1;
         public string SliceMaxSizeText
         {
             get { return _sliceMaxSize.ToString(); }
             set
             {
-                if (checkUserInput(value))
-                {
-                    SetProperty(ref _sliceMaxSize, long.Parse(value));
-                    previewResultFiles();
-                }
+                checkSliceMaxSize(value);
             }
         }
 
@@ -101,7 +107,12 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         public string SliceMaxSizeUnit
         {
             get { return _sliceMaxSizeUnit; }
-            set { SetProperty(ref _sliceMaxSizeUnit, value); previewResultFiles(); }
+            set
+            {
+                SetProperty(ref _sliceMaxSizeUnit, value);
+                checkSliceMaxSizeUnit(_sliceMaxSizeUnit);
+                Debug.WriteLine("_sliceMaxSizeUnit=" + _sliceMaxSizeUnit);
+            }
         }
 
         private bool _indexStartWith0 = true;
@@ -208,7 +219,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         private bool _isStarted = false;
         public bool IsStarted
         {
-            get { return _isStarted;  }
+            get { return _isStarted; }
             set { SetProperty(ref _isStarted, value); }
         }
 
@@ -220,15 +231,15 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             //在DelegateCommand中可以写lambda表达式，返回值为bool类型即可。
             //但在ObservesCanExecute和ObservesProperty方法中，看似是lambda表达式，
             //实际上只能传入一个属性，传入其他的值或者表达式会报错。
-            SelectSourceFilesCommand = new DelegateCommand(selectSourceFiles,()=>!IsStarted)
-                .ObservesProperty(()=> IsStarted);
+            SelectSourceFilesCommand = new DelegateCommand(selectSourceFiles, () => !IsStarted)
+                .ObservesProperty(() => IsStarted);
             ClearSourceFilesCommand = new DelegateCommand(clearUi, () => !IsStarted)
                 .ObservesProperty(() => IsStarted);
             SelectOutputFolderCommand = new DelegateCommand(selectOutputFolder, () => !IsStarted)
                 .ObservesProperty(() => IsStarted);
-            StartSplitCommand = new DelegateCommand(startSplit,canStart)
-                .ObservesProperty(()=>IsFinish).ObservesProperty(()=>IsStarted);
-            LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(()=>IsFinish);
+            StartSplitCommand = new DelegateCommand(startSplit, canStart)
+                .ObservesProperty(() => IsFinish).ObservesProperty(() => IsStarted);
+            LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(() => IsFinish);
             SliceNamingRule = SliceNamingRules[0];
             getAppSetting();
         }
@@ -239,7 +250,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// <returns></returns>
         private bool canStart()
         {
-            return SourceFiles.Count > 0 && !IsFinish &&!IsStarted;
+            return SourceFiles.Count > 0 && !IsFinish && !IsStarted;
         }
 
 
@@ -368,7 +379,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 PreviewOutputService previewService =
                     new PreviewOutputService(SliceNamingRule, _indexStartWith, SourceFilesInfo);
 
-                List<BinarySliceModel> resultList = previewService.GetPreviewSlicesBySize(calculateSliceMaxSize());
+                List<BinarySliceModel> resultList = previewService.GetPreviewSlicesBySize(_sliceMaxSize);
                 foreach (var result in resultList)
                 {
                     PreviewOutput.Add(result);
@@ -382,54 +393,206 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         }
 
         /// <summary>
-        /// 检测用户输入值是否合法
+        /// 检测用户输入的切片数量是否合法
         /// </summary>
-        private bool checkUserInput(string inputText)
+        private async void checkSliceNumber(string inputText)
         {
             SplitMethodWarning = "";
-            if (IsSplitBySliceNumber)
+            if (Int32.TryParse(inputText, out int inputNumber) && inputNumber > 0)
             {
-                if (Int32.TryParse(inputText, out int inputNumber) && inputNumber > 0)
+                //int sliceNumber = Int32.Parse(inputText);
+                if (inputNumber > 5000)
                 {
-                    return true;
+                    bool isUserAllowed = await isUserAllowedSoManySlices();
+                    if (!isUserAllowed)
+                    {
+                        return;
+                    }
                 }
-                else
-                {
-                    SplitMethodWarning = BinaryFileErrors.InvalidNumber;
-                }
+                _sliceNumber = inputNumber;
+                previewResultFiles();
             }
             else
             {
-                if (long.TryParse(inputText, out long inputNumber) && inputNumber > 0)
+                SplitMethodWarning = BinaryFileErrors.InvalidNumber;
+            }
+        }
+
+        /// <summary>
+        /// 检测用户输入的切片大小是否合法
+        /// </summary>
+        /// <param name="inputText"></param>
+        private async void checkSliceMaxSize(string inputText)
+        {
+            SplitMethodWarning = "";
+            if (long.TryParse(inputText, out long inputNumber) && inputNumber > 0)
+            {
+                //if(inputNumber)
+                long sliceCount = 0;
+                foreach (BinarySliceModel file in SourceFilesInfo)
                 {
-                    return true;
+                    sliceCount += file.FileSize / calculateSliceMaxSize(inputNumber);
                 }
-                else
+                if (sliceCount > 5000)
                 {
-                    SplitMethodWarning = BinaryFileErrors.InvalidNumber;
+                    bool isUserAllowed = await isUserAllowedSoManySlices();
+                    if (!isUserAllowed)
+                    {
+                        return;
+                    }
+                }
+                _sliceMaxSize = calculateSliceMaxSize(inputNumber);
+                _sliceMaxSizeTextToLong = inputNumber;
+                previewResultFiles();
+            }
+            else
+            {
+                SplitMethodWarning = BinaryFileErrors.InvalidNumber;
+            }
+        }
+
+        private async void checkSliceMaxSize(long sliceRealSize)
+        {
+            long sliceCount = 0;
+            foreach (BinarySliceModel file in SourceFilesInfo)
+            {
+                sliceCount += file.FileSize / sliceRealSize;
+            }
+            if (sliceCount > 5000)
+            {
+                bool isUserAllowed = await isUserAllowedSoManySlices();
+                if (!isUserAllowed)
+                {
+                    return;
                 }
             }
-            return false;
+            previewResultFiles();
+        }
+
+        //private async void checkUserInputNumber(string inputText)
+        //{
+        //    SplitMethodWarning = "";
+        //    if (IsSplitBySliceNumber)
+        //    {
+        //        if (Int32.TryParse(inputText, out int inputNumber) && inputNumber > 0)
+        //        {
+        //            //int sliceNumber = Int32.Parse(inputText);
+        //            if (inputNumber > 5000)
+        //            {
+        //                bool isUserAllowed = await checkSliceNumber();
+        //                if (!isUserAllowed)
+        //                {
+        //                    return;
+        //                }
+        //            }
+        //            _sliceNumber = inputNumber;
+        //            previewResultFiles();
+        //        }
+        //        else
+        //        {
+        //            SplitMethodWarning = BinaryFileErrors.InvalidNumber;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (long.TryParse(inputText, out long inputNumber) && inputNumber > 0)
+        //        {
+        //            //if(inputNumber)
+        //            long sliceCount = 0;
+        //            foreach(BinarySliceModel file in SourceFilesInfo)
+        //            {
+        //                sliceCount += file.FileSize / calculateSliceMaxSize(inputNumber, _sliceMaxSizeUnit);
+        //            }
+        //            if (sliceCount > 5000)
+        //            {
+        //                bool isUserAllowed = await checkSliceNumber();
+        //                if (!isUserAllowed)
+        //                {
+        //                    return;
+        //                }
+        //            }
+        //            _sliceMaxSize = calculateSliceMaxSize(inputNumber, _sliceMaxSizeUnit);
+        //            previewResultFiles();
+        //        }
+        //        else
+        //        {
+        //            SplitMethodWarning = BinaryFileErrors.InvalidNumber;
+        //        }
+        //    }
+
+        //}
+
+        /// <summary>
+        /// 检测用户选择的切片大小单位是否合法
+        /// </summary>
+        /// <param name="unit"></param>
+        private async void checkSliceMaxSizeUnit(string unit)
+        {
+            SplitMethodWarning = "";
+            long sliceCount = 0;
+            foreach (BinarySliceModel file in SourceFilesInfo)
+            {
+                sliceCount += file.FileSize / calculateSliceMaxSize(_sliceMaxSizeTextToLong, unit);
+            }
+            if (sliceCount > 5000)
+            {
+                bool isUserAllowed = await isUserAllowedSoManySlices();
+                if (!isUserAllowed)
+                {
+                    return;
+                }
+            }
+            //_sliceMaxSizeUnit = unit;
+            previewResultFiles();
+            Debug.WriteLine(DateTime.Now);
+        }
+
+        /// <summary>
+        /// 当用户的设定值过于巨大，影响性能，弹出警告
+        /// </summary>
+        /// <returns></returns>
+        private async Task<bool> isUserAllowedSoManySlices()
+        {
+            BinarySplitSettingWarningDialog dialog = new BinarySplitSettingWarningDialog();
+            await dialog.ShowAsync();
+            return dialog.Result;
         }
 
         /// <summary>
         /// 把用户选择的单位转换成Byte
         /// </summary>
         /// <returns></returns>
-        private long calculateSliceMaxSize()
+        private long calculateSliceMaxSize(long sliceSizeNumber)
         {
             switch (SliceMaxSizeUnit)
             {
                 case "Byte":
-                    return _sliceMaxSize;
+                    return sliceSizeNumber;
                 case "KB":
-                    return _sliceMaxSize * 1024;
+                    return sliceSizeNumber * 1024;
                 case "MB":
-                    return _sliceMaxSize * 1024 * 1024;
+                    return sliceSizeNumber * 1024 * 1024;
                 case "GB":
-                    return _sliceMaxSize * 1024 * 1024 * 1024;
+                    return sliceSizeNumber * 1024 * 1024 * 1024;
                 default:
-                    throw new ArgumentException("计算文件大小单位参数异常", $"SliceMaxSizeUnit={SliceMaxSizeUnit}");
+                    throw new ArgumentException("计算文件大小单位参数异常", $"sliceSizeNumber={sliceSizeNumber},unit={SliceMaxSizeUnit}");
+            }
+        }
+
+        private long calculateSliceMaxSize(long sliceSizeNumber,string unit)
+        {
+            switch (unit)
+            {
+                case "Byte":
+                    return sliceSizeNumber;
+                case "KB":
+                    return sliceSizeNumber * 1024;
+                case "MB":
+                    return sliceSizeNumber * 1024 * 1024;
+                case "GB":
+                    return sliceSizeNumber * 1024 * 1024 * 1024;
+                default:
+                    throw new ArgumentException("计算文件大小单位参数异常", $"sliceSizeNumber={sliceSizeNumber},unit={unit}");
             }
         }
 
