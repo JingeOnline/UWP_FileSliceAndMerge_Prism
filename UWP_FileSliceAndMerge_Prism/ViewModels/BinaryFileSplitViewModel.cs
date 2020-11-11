@@ -351,6 +351,9 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             PreviewOutput.Clear();
             //让该Command重新检测是否能够执行的条件
             StartSplitCommand.RaiseCanExecuteChanged();
+
+            //Todo:任务完成通知
+            new ToastNotificationsService().ShowTaskFinishToast("Test", "This is a Test");
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services
             var content = new ToastContent()
             {
                 // More about the Launch property at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastcontent
+                // 当用户点击该Toast的时候，会把该参数传给app，让app能够响应对应的操作。
                 Launch = "ToastContentActivationParams",
 
                 Visual = new ToastVisual()

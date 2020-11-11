@@ -49,6 +49,7 @@ namespace UWP_FileSliceAndMerge_Prism
             Window.Current.Activate();
             //显示第一次启动的弹窗
             await Container.Resolve<IFirstRunDisplayService>().ShowIfAppropriateAsync();
+            //弹出Toast通知
             Container.Resolve<IToastNotificationsService>().ShowToastNotificationSample();
         }
 
