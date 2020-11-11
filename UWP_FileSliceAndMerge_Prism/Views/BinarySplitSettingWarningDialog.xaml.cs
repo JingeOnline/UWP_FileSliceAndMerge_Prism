@@ -20,9 +20,11 @@ namespace UWP_FileSliceAndMerge_Prism.Views
     public sealed partial class BinarySplitSettingWarningDialog : ContentDialog
     {
         public bool Result { get; set; }
-
-        public BinarySplitSettingWarningDialog()
+        public long ResultFileNumber { get; set; }
+        public BinarySplitSettingWarningDialog(long resultFileNumber)
         {
+            ResultFileNumber = resultFileNumber;
+            RequestedTheme = (Window.Current.Content as FrameworkElement).RequestedTheme;
             this.InitializeComponent();
         }
 

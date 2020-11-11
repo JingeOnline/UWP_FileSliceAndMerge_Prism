@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using UWP_FileSliceAndMerge_Prism.Core.Models;
+using UWP_FileSliceAndMerge_Prism.Models;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 
-namespace UWP_FileSliceAndMerge_Prism.Core.Services
+namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
 {
     public class PreviewOutputService
     {
@@ -13,8 +13,6 @@ namespace UWP_FileSliceAndMerge_Prism.Core.Services
         private string namingRule;
         private int indexStartWith;
         private IEnumerable<FileInfoModel> sourceFilesInfo;
-        //private readonly int maxPreviewItemCount = 10000;
-        //private int currentPreivewItemCount = 0;
 
         public PreviewOutputService(string namingRule, int indexStartWith, IEnumerable<FileInfoModel> sourceFilesInfo)
         {
@@ -41,15 +39,15 @@ namespace UWP_FileSliceAndMerge_Prism.Core.Services
 
         public List<FileInfoModel> GetPreviewSlicesBySize(long maxSize)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
 
             List<FileInfoModel> previewSlices = new List<FileInfoModel>();
             foreach(FileInfoModel sourceFileInfo in sourceFilesInfo)
             {
                 previewSlices.AddRange(getSlicesBySizeFromOneFile(sourceFileInfo, maxSize));
             }
-            Debug.WriteLine(sw.ElapsedMilliseconds);
+            //Debug.WriteLine(sw.ElapsedMilliseconds);
             return previewSlices;
         }
 

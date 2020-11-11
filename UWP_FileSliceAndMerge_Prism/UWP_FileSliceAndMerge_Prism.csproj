@@ -154,10 +154,12 @@
     <Compile Include="Models\DragDropCompletedData.cs" />
     <Compile Include="Models\DragDropData.cs" />
     <Compile Include="Models\DragDropStartingData.cs" />
+    <Compile Include="Models\FileInfoModel.cs" />
     <Compile Include="Models\TabViewItemData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Constants\PageTokens.cs" />
     <Compile Include="Services\BinaryFile\BinaryFileSliceAndMergeService.cs" />
+    <Compile Include="Services\BinaryFile\PreviewOutputService.cs" />
     <Compile Include="Services\CheckOutputFileExistingService.cs" />
     <Compile Include="Services\DragAndDrop\DragDropService.cs" />
     <Compile Include="Services\DragAndDrop\DropConfiguration.cs" />

@@ -19,11 +19,12 @@ namespace UWP_FileSliceAndMerge_Prism.Views
 {
     public sealed partial class OutputFileNameAlreadyExistedDialog : ContentDialog
     {
-        private IEnumerable<string> _fileNames { get; set; }
+        public IEnumerable<string> FileNames { get; set; }
         public bool AllowReplaceExisting = false;
         public OutputFileNameAlreadyExistedDialog(IEnumerable<string> fileNames)
         {
-            _fileNames = fileNames;
+            FileNames = fileNames;
+            RequestedTheme = (Window.Current.Content as FrameworkElement).RequestedTheme;
             this.InitializeComponent();
         }
 

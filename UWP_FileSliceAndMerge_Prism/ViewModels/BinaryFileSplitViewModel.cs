@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
 using UWP_FileSliceAndMerge_Prism.Constants;
-using UWP_FileSliceAndMerge_Prism.Core.Models;
-using UWP_FileSliceAndMerge_Prism.Core.Services;
+//using UWP_FileSliceAndMerge_Prism.Core.Models;
+//using UWP_FileSliceAndMerge_Prism.Core.Services;
 using UWP_FileSliceAndMerge_Prism.Helpers;
 using UWP_FileSliceAndMerge_Prism.Models;
 using UWP_FileSliceAndMerge_Prism.Services;
@@ -97,7 +97,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             set
             {
                 checkSliceNumber(value);
-                Debug.WriteLine("SliceNumberText=" + value);
+                //Debug.WriteLine("SliceNumberText=" + value);
             }
         }
 
@@ -415,7 +415,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 //int sliceNumber = Int32.Parse(inputText);
                 if (inputNumber > 5000)
                 {
-                    bool isUserAllowed = await isUserAllowedSoManySlices();
+                    bool isUserAllowed = await isUserAllowedSoManySlices(inputNumber);
                     if (!isUserAllowed)
                     {
                         return;
@@ -448,7 +448,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 }
                 if (sliceCount > 5000)
                 {
-                    bool isUserAllowed = await isUserAllowedSoManySlices();
+                    bool isUserAllowed = await isUserAllowedSoManySlices(sliceCount);
                     if (!isUserAllowed)
                     {
                         return;
@@ -476,7 +476,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
             if (sliceCount > 5000)
             {
-                bool isUserAllowed = await isUserAllowedSoManySlices();
+                bool isUserAllowed = await isUserAllowedSoManySlices(sliceCount);
                 if (!isUserAllowed)
                 {
                     return;
@@ -499,7 +499,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
             if (sliceCount > 5000)
             {
-                bool isUserAllowed = await isUserAllowedSoManySlices();
+                bool isUserAllowed = await isUserAllowedSoManySlices(sliceCount);
                 if (!isUserAllowed)
                 {
                     return;
@@ -513,9 +513,9 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// 当用户的设定值过于巨大，影响性能，弹出警告
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> isUserAllowedSoManySlices()
+        private async Task<bool> isUserAllowedSoManySlices(long outputFileNumber)
         {
-            BinarySplitSettingWarningDialog dialog = new BinarySplitSettingWarningDialog();
+            BinarySplitSettingWarningDialog dialog = new BinarySplitSettingWarningDialog(outputFileNumber);
             await dialog.ShowAsync();
             return dialog.Result;
         }
@@ -540,23 +540,6 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     throw new ArgumentException("计算文件大小单位参数异常", $"sliceSizeNumber={sliceSizeNumber},unit={SliceMaxSizeUnit}");
             }
         }
-
-        //private long calculateSliceMaxSize(long sliceSizeNumber, string unit)
-        //{
-        //    switch (unit)
-        //    {
-        //        case "Byte":
-        //            return sliceSizeNumber;
-        //        case "KB":
-        //            return sliceSizeNumber * 1024;
-        //        case "MB":
-        //            return sliceSizeNumber * 1024 * 1024;
-        //        case "GB":
-        //            return sliceSizeNumber * 1024 * 1024 * 1024;
-        //        default:
-        //            throw new ArgumentException("计算文件大小单位参数异常", $"sliceSizeNumber={sliceSizeNumber},unit={unit}");
-        //    }
-        //}
 
         /// <summary>
         /// 开始执行切割

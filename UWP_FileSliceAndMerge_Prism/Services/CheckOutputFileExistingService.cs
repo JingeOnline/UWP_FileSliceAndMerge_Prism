@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UWP_FileSliceAndMerge_Prism.Core.Models;
+using UWP_FileSliceAndMerge_Prism.Models;
 using UWP_FileSliceAndMerge_Prism.Views;
 using Windows.Storage;
 

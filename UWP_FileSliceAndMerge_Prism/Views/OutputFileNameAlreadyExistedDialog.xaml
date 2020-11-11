@@ -6,12 +6,25 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="TITLE"
-    PrimaryButtonText="Button1"
-    SecondaryButtonText="Button2"
+    Title="File Already Exist"
+    PrimaryButtonText="Replace Existing File"
+    SecondaryButtonText="Cancel and Rename"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
-    <Grid Background="Orange">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="The following file already exist in the output folder:" Style="{StaticResource BodyTextStyle}"/>
+        <ListView Grid.Row="1" Margin="{StaticResource SmallTopMargin}" ItemsSource="{x:Bind FileNames}"
+                  Background="{StaticResource ThumbBorderThemeBrush}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" HorizontalAlignment="Stretch"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </ContentDialog>

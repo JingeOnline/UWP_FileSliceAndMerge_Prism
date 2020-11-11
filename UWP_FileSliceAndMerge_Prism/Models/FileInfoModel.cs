@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace UWP_FileSliceAndMerge_Prism.Core.Models
+namespace UWP_FileSliceAndMerge_Prism.Models
 {
     public class FileInfoModel:INotifyPropertyChanged
     {
