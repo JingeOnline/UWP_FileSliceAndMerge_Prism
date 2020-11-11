@@ -20,16 +20,16 @@ namespace UWP_FileSliceAndMerge_Prism.Tests.MSTest
             int sliceNumber=3;
             string namingRule= "{*}_{#}";
             int indexStartWith=1;
-            List<BinarySliceModel> sourceFils = new List<BinarySliceModel>()
+            List<FileInfoModel> sourceFils = new List<FileInfoModel>()
             {
-                new BinarySliceModel(){FileName="test1.jpg",FileSize=300, },
-                new BinarySliceModel(){FileName="test2.jpg",FileSize=400,},
-                new BinarySliceModel(){FileName="test3.jpg",FileSize=9001,}
+                new FileInfoModel(){FileName="test1.jpg",FileSize=300, },
+                new FileInfoModel(){FileName="test2.jpg",FileSize=400,},
+                new FileInfoModel(){FileName="test3.jpg",FileSize=9001,}
             };
 
             PreviewOutputService previewOutputService = 
                 new PreviewOutputService(namingRule,indexStartWith,sourceFils);
-            List<BinarySliceModel> list = previewOutputService.GetPreviewSlicesByNumber(sliceNumber);
+            List<FileInfoModel> list = previewOutputService.GetPreviewSlicesByNumber(sliceNumber);
 
             Assert.AreEqual(list.Count,9);
             Assert.AreEqual(list.Last().FileSize, 3001);

@@ -31,7 +31,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// </summary>
         /// <param name="previewResultCollection"></param>
         /// <returns></returns>
-        public async Task SplitFiles(IEnumerable<BinarySliceModel> previewResultCollection)
+        public async Task SplitFiles(IEnumerable<FileInfoModel> previewResultCollection)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -39,7 +39,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             setBufferSize(previewResultCollection);
             foreach (StorageFile file in _sourceFiles)
             {
-                List<BinarySliceModel> oneFilePreviews = previewResultCollection.Where(x => x.SourceFileName == file.Name).ToList();
+                List<FileInfoModel> oneFilePreviews = previewResultCollection.Where(x => x.SourceFileName == file.Name).ToList();
                 await splitOneFile(file,oneFilePreviews);
             }
             GC.Collect(1);
@@ -52,7 +52,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// 根据文件大小设置读写缓冲区大小
         /// </summary>
         /// <param name="previewResultCollection"></param>
-        private void setBufferSize(IEnumerable<BinarySliceModel> previewResultCollection)
+        private void setBufferSize(IEnumerable<FileInfoModel> previewResultCollection)
         {
             long previewSliceSize = previewResultCollection.First().FileSize;
             if (previewSliceSize > 1024 * 1024 * 256)
@@ -76,7 +76,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             _bufferSize = 1024*64;
         }
 
-        private async Task splitOneFile(StorageFile sourceFile, List<BinarySliceModel> slicesPreview)
+        private async Task splitOneFile(StorageFile sourceFile, List<FileInfoModel> slicesPreview)
         {
             long streamStartPosition = 0;
             foreach (var preview in slicesPreview)
@@ -93,12 +93,12 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// <param name="preview"></param>
         /// <param name="streamStartPosition"></param>
         /// <returns></returns>
-        private async Task splitOneFileOneSlice(StorageFile sourceFile, BinarySliceModel preview, long streamStartPosition)
+        private async Task splitOneFileOneSlice(StorageFile sourceFile, FileInfoModel preview, long streamStartPosition)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             preview.IsStart = true;
-            StorageFile targetFile = await _outputFolder.CreateFileAsync(preview.FileName);
+            StorageFile targetFile = await _outputFolder.CreateFileAsync(preview.FileName,CreationCollisionOption.ReplaceExisting);
             Debug.WriteLine("创建文件用时 " + stopwatch.ElapsedMilliseconds);
             using (Stream readStream = await sourceFile.OpenStreamForReadAsync())
             {
