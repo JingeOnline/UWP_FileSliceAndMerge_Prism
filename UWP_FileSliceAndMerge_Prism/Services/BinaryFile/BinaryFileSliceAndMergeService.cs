@@ -20,11 +20,11 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         private StorageFolder _outputFolder;
         private IEnumerable<StorageFile> _sourceFiles;
 
-        public BinaryFileSliceAndMergeService(StorageFolder outputFolder,IEnumerable<StorageFile> sourceFiles)
+        public BinaryFileSliceAndMergeService(StorageFolder outputFolder, IEnumerable<StorageFile> sourceFiles)
         {
             _outputFolder = outputFolder;
             _sourceFiles = sourceFiles;
-            
+
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             foreach (StorageFile file in _sourceFiles)
             {
                 List<FileInfoModel> oneFilePreviews = previewResultCollection.Where(x => x.SourceFileName == file.Name).ToList();
-                await splitOneFile(file,oneFilePreviews);
+                await splitOneFile(file, oneFilePreviews);
             }
             GC.Collect(1);
             GC.Collect(2);
@@ -74,7 +74,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                 return;
             }
 
-            _bufferSize = 1024*64;
+            _bufferSize = 1024 * 64;
         }
 
         private async Task splitOneFile(StorageFile sourceFile, List<FileInfoModel> slicesPreview)
@@ -99,7 +99,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             preview.IsStart = true;
-            StorageFile targetFile = await _outputFolder.CreateFileAsync(preview.FileName,CreationCollisionOption.ReplaceExisting);
+            StorageFile targetFile = await _outputFolder.CreateFileAsync(preview.FileName, CreationCollisionOption.ReplaceExisting);
             Debug.WriteLine("创建文件用时 " + stopwatch.ElapsedMilliseconds);
             using (Stream readStream = await sourceFile.OpenStreamForReadAsync())
             {
@@ -131,9 +131,9 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                     }
                 }
             }
-            preview.IsDone=true;
+            preview.IsDone = true;
             preview.FinishSize = preview.FileSize;
-            Debug.WriteLine(preview.FileName+"写入用时 "+stopwatch.ElapsedMilliseconds);
+            Debug.WriteLine(preview.FileName + "写入用时 " + stopwatch.ElapsedMilliseconds);
         }
 
         /// <summary>

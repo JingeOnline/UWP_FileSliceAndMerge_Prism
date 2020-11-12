@@ -9,17 +9,26 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
 {
     public class PreviewOutputService
     {
-        private int sliceNumber;
-        private string namingRule;
-        private int indexStartWith;
-        private IEnumerable<FileInfoModel> sourceFilesInfo;
+        private int _sliceNumber;
+        private string _namingRule;
+        private string _fileExtention;
+        private int _indexStartWith;
+        private IEnumerable<FileInfoModel> _sourceFilesInfo;
 
         public PreviewOutputService(string namingRule, int indexStartWith, IEnumerable<FileInfoModel> sourceFilesInfo)
         {
-            this.namingRule = namingRule;
-            this.indexStartWith = indexStartWith;
-            this.sourceFilesInfo = sourceFilesInfo;
+            this._namingRule = namingRule;
+            this._indexStartWith = indexStartWith;
+            this._sourceFilesInfo = sourceFilesInfo;
         }
+        public PreviewOutputService(string namingRule,string fileExtention, int indexStartWith, IEnumerable<FileInfoModel> sourceFilesInfo)
+        {
+            this._namingRule = namingRule;
+            this._fileExtention = fileExtention;
+            this._indexStartWith = indexStartWith;
+            this._sourceFilesInfo = sourceFilesInfo;
+        }
+
 
         /// <summary>
         /// 根据切片数量来计算名称和大小
@@ -28,9 +37,9 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// <returns></returns>
         public List<FileInfoModel> GetPreviewSlicesByNumber(int sliceNumber)
         {
-            this.sliceNumber = sliceNumber;
+            this._sliceNumber = sliceNumber;
             List<FileInfoModel> previewSlices = new List<FileInfoModel>();
-            foreach (FileInfoModel sourceFileInfo in sourceFilesInfo)
+            foreach (FileInfoModel sourceFileInfo in _sourceFilesInfo)
             {
                 previewSlices.AddRange(getSlicesByNumberFromOneFile(sourceFileInfo));
             }
@@ -43,7 +52,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             //sw.Start();
 
             List<FileInfoModel> previewSlices = new List<FileInfoModel>();
-            foreach(FileInfoModel sourceFileInfo in sourceFilesInfo)
+            foreach(FileInfoModel sourceFileInfo in _sourceFilesInfo)
             {
                 previewSlices.AddRange(getSlicesBySizeFromOneFile(sourceFileInfo, maxSize));
             }
@@ -59,16 +68,16 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         private List<FileInfoModel> getSlicesByNumberFromOneFile(FileInfoModel sourceFile)
         {
             List<FileInfoModel> slices = new List<FileInfoModel>();
-            long avgSlicesSize = sourceFile.FileSize / sliceNumber;
+            long avgSlicesSize = sourceFile.FileSize / _sliceNumber;
             long lastFileSize = sourceFile.FileSize;
-            for (int i = 0; i < sliceNumber-1; i++)
+            for (int i = 0; i < _sliceNumber-1; i++)
             {
                 lastFileSize -= avgSlicesSize;
                 slices.Add(new FileInfoModel()
                 {
                     SourceFileName=sourceFile.FileName,
                     FileSize = avgSlicesSize,
-                    FileName = getSliceName(sourceFile.FileName,  i + indexStartWith),
+                    FileName = getSliceName(sourceFile.FileName,  i + _indexStartWith),
                     IsDone=false,
                 });
             }
@@ -77,7 +86,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             {
                 SourceFileName = sourceFile.FileName,
                 FileSize = lastFileSize,
-                FileName=getSliceName(sourceFile.FileName,sliceNumber-1+indexStartWith),
+                FileName=getSliceName(sourceFile.FileName,_sliceNumber-1+_indexStartWith),
                 IsDone = false,
             });
             return slices;
@@ -94,17 +103,25 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             string[] array = sourceName.Split('.');
             string fileExtention = array[array.Length - 1];
             string fileName = sourceName.Remove(sourceName.Length - fileExtention.Length - 1);
-            string name = namingRule;
-            if (namingRule.Contains("{@}"))
+            string name = _namingRule;
+            if (_namingRule.Contains("{@}"))
             {
                 name = name.Replace("{@}", fileName);
             }
-            if (namingRule.Contains("{#}"))
+            if (_namingRule.Contains("{#}"))
             {
                 name = name.Replace("{#}", index.ToString());
             }
 
-            return name + "." + fileExtention;
+            if (string.IsNullOrEmpty(_fileExtention))
+            {
+                return name + "." + fileExtention;
+            }
+            else
+            {
+                return name + "." + _fileExtention;
+            }
+            
         }
 
         /// <summary>
@@ -123,10 +140,10 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                 {
                     SourceFileName = sourceFile.FileName,
                     FileSize = maxSize,
-                    FileName = getSliceName(sourceFile.FileName, indexStartWith),
+                    FileName = getSliceName(sourceFile.FileName, _indexStartWith),
                     IsDone = false,
                 });
-                indexStartWith++;
+                _indexStartWith++;
                 totalSize -= maxSize;
             }
             if (totalSize != 0)
@@ -135,7 +152,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                 {
                     SourceFileName = sourceFile.FileName,
                     FileSize = totalSize,
-                    FileName = getSliceName(sourceFile.FileName, indexStartWith),
+                    FileName = getSliceName(sourceFile.FileName, _indexStartWith),
                     IsDone = false,
                 });
             }

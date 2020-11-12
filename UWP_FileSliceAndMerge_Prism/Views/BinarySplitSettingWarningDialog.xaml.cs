@@ -19,7 +19,6 @@ namespace UWP_FileSliceAndMerge_Prism.Views
 {
     public sealed partial class BinarySplitSettingWarningDialog : ContentDialog
     {
-        public bool Result { get; set; }
         public long ResultFileNumber { get; set; }
         public BinarySplitSettingWarningDialog(long resultFileNumber)
         {
@@ -30,12 +29,7 @@ namespace UWP_FileSliceAndMerge_Prism.Views
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            Result = true;
-        }
-
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            Result = false;
+            
         }
     }
 }

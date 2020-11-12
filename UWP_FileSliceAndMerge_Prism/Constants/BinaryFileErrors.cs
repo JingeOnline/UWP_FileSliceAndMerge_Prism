@@ -9,8 +9,8 @@ namespace UWP_FileSliceAndMerge_Prism.Constants
     internal static class BinaryFileErrors
     {
         public const string InvalidNumber = "Error: Input number must be integer and greater than 0";
-        public const string InvalidFileName = "Error: On Windows platform, the file name can't contain the following characters." +
-            "/r/n" + "\\" + "/" + "*" + "?" + ":" + "\"" + "<" + ">" + "|";
+        public const string InvalidFileName = "Error: On Windows system, the file name can't contain the following characters." +
+            "----" + "\\" + "/" + "*" + "?" + ":" + "\"" + "<" + ">" + "|";
         //public const 
     }
 }

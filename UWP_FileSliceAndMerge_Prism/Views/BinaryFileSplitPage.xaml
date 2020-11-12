@@ -81,6 +81,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <!--<ColumnDefinition Width="auto"/>-->
@@ -94,7 +95,7 @@
                            Width="120" Grid.Row="3" Margin="{StaticResource SmallTopMargin}" FontWeight="SemiBold"
                        HorizontalAlignment="Left"/>
             <!--切片规则选择-->
-            <StackPanel Orientation="Horizontal" Grid.Row="1" >
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="{StaticResource SmallTopMargin}">
                 <!--按照数量切片-->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <RadioButton GroupName="SplitMethod" Content="Set Slice Number" VerticalAlignment="Center"
@@ -122,7 +123,7 @@
             </StackPanel>
             <!--设置切片的命名规则-->
             <StackPanel Orientation="Horizontal" Grid.Row="4" 
-                        VerticalAlignment="Center">
+                        VerticalAlignment="Center" Margin="{StaticResource SmallTopMargin}">
                 <ComboBox IsEditable="True" Width="348" VerticalAlignment="Center"
                           ItemsSource="{x:Bind ViewModel.SliceNamingRules}"
                           SelectedItem="{x:Bind ViewModel.SliceNamingRule,Mode=TwoWay}"
@@ -132,59 +133,81 @@
                              IsChecked="{x:Bind ViewModel.IndexStartWith0,Mode=TwoWay}"/>
                 <RadioButton GroupName="IndexStartWith" Content="Index Start with 1"
                              VerticalAlignment="Center"/>
+              
+            </StackPanel>
+            <!--用户自定义文件扩展名-->
+            <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="{StaticResource SmallTopMargin}">
+                <ToggleSwitch OffContent="Customize Extention"
+                              OnContent="Customize Extention"
+                              VerticalAlignment="Center"
+                              x:Name="ToggleSwitch_CustomizeExtention"
+                              IsOn="{x:Bind ViewModel.IsCustomizeExtention,Mode=TwoWay}"/>
+                <TextBox Margin="{StaticResource SmallLeftMargin}"
+                         VerticalAlignment="Center"
+                         Width="156"
+                         Visibility="{Binding ElementName=ToggleSwitch_CustomizeExtention, Path=IsOn}"
+                         Text="{x:Bind ViewModel.SliceFileExtention,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Margin="{StaticResource SmallLeftMargin}"
+                           VerticalAlignment="Center"
+                           Visibility="{Binding ElementName=ToggleSwitch_CustomizeExtention, Path=IsOn}"
+                           Text="Don't forget manually assign the extention when merge."
+                           Foreground="Gray"/>
             </StackPanel>
             <!--错误警告文本-->
             <TextBlock Foreground="Red"  Grid.Row="2"
                        Text="{x:Bind ViewModel.SplitMethodWarning,Mode=OneWay}"
                        Visibility="{x:Bind ViewModel.IsSplitMethodWarningVisible,Mode=OneWay}" />
-            <TextBlock Foreground="Red"  Grid.Row="5"
+            <TextBlock Foreground="Red"  Grid.Row="6"
                        Text="{x:Bind ViewModel.SliceNamingWarning,Mode=OneWay}"
-                       Visibility="{x:Bind ViewModel.IsSliceNamingWarningVisiable,Mode=OneWay}"/>
+                       Visibility="{x:Bind ViewModel.IsSliceNamingWarningVisiable,Mode=OneWay}"
+                       TextWrapping="Wrap"/>
         </Grid>
         <!--输出文件预览列表-->
         <Border  Style="{StaticResource ThinRadiusThemeBorder}"
                      Margin="{StaticResource MediumTopMargin}"
                      Grid.Row="4">
-            <controls:DataGrid ItemsSource="{x:Bind ViewModel.PreviewOutput,Mode=OneWay}"
+            <Grid>
+                <controls:DataGrid ItemsSource="{x:Bind ViewModel.PreviewOutput,Mode=OneWay}"
                                    AutoGenerateColumns="False" IsReadOnly="True">
-                <controls:DataGrid.Columns>
-                    <controls:DataGridTextColumn Width="SizeToCells"
+                    <controls:DataGrid.Columns>
+                        <controls:DataGridTextColumn Width="SizeToCells"
                                                  Binding="{Binding Icon,Mode=OneWay}"
                                                  FontFamily="Segoe MDL2 Assets"
                                                  FontSize="16"/>
-                    <!--<controls:DataGridTextColumn Header="Output Name"
+                        <!--<controls:DataGridTextColumn Header="Output Name"
                                                      Binding="{Binding FileName,Mode=OneWay}"
                                                      Width="4*"
                                                      FontSize="16"/>-->
-                    <!--文件名和进度条-->
-                    <controls:DataGridTemplateColumn Header="Output Name"
+                        <!--文件名和进度条-->
+                        <controls:DataGridTemplateColumn Header="Output Name"
                                                      Width="4*">
-                        <controls:DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Grid Margin="{StaticResource SmallLeftRightMargin}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"
+                            <controls:DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="{StaticResource SmallLeftRightMargin}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"
                                                Grid.Column="0"/>
-                                    <ProgressBar IsIndeterminate="False" VerticalAlignment="Center"
+                                        <ProgressBar IsIndeterminate="False" VerticalAlignment="Center"
                                                  Grid.Column="1" Margin="{StaticResource SmallLeftMargin}"
                                                  Value="{Binding FinishSize,Mode=OneWay}"
                                                  Maximum="{Binding FileSize,Mode=OneWay}"
                                                  Visibility="{Binding Path=IsStart,Mode=OneWay}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </controls:DataGridTemplateColumn.CellTemplate>
-                    </controls:DataGridTemplateColumn>
-                    <!--文件大小-->
-                    <!--该控件不能在xmal中格式化字符串-->
-                    <controls:DataGridTextColumn Header="File Size (Byte)"
+                                    </Grid>
+                                </DataTemplate>
+                            </controls:DataGridTemplateColumn.CellTemplate>
+                        </controls:DataGridTemplateColumn>
+                        <!--文件大小-->
+                        <!--该控件不能在xmal中格式化字符串-->
+                        <controls:DataGridTextColumn Header="File Size (Byte)"
                                                  Binding="{Binding FileSizeText, Mode=OneWay}"
                                                  Width="*"
                                                  FontSize="16"/>
-                </controls:DataGrid.Columns>
-            </controls:DataGrid>
+                    </controls:DataGrid.Columns>
+                </controls:DataGrid>
+            </Grid>
         </Border>
         <StackPanel Grid.Row="4" Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="2"
                         Margin="{StaticResource MediumTopMargin}" VerticalAlignment="Top">

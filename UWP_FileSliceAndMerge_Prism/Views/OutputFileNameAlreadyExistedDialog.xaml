@@ -17,7 +17,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="The following file already exist in the output folder:" Style="{StaticResource BodyTextStyle}"/>
+        <TextBlock Text="The following files already exist in the export folder:" Style="{StaticResource BodyTextBlockStyle}"/>
         <ListView Grid.Row="1" Margin="{StaticResource SmallTopMargin}" ItemsSource="{x:Bind FileNames}"
                   Background="{StaticResource ThumbBorderThemeBrush}">
             <ListView.ItemTemplate>

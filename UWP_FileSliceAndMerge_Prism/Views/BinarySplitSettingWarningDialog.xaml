@@ -6,23 +6,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Confirm Setting"
-    PrimaryButtonText="Confirm"
-    SecondaryButtonText="Cancel"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    Title="Invalid Input"
+    PrimaryButtonText="Ok"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
 
     <Grid>
         <StackPanel>
-            <TextBlock  Style="{StaticResource BodyTextStyle}">
-                <Run Text="This setting will generate"/>
+            <TextBlock Text="The maximum number of slices is 999,999."
+                       Style="{StaticResource BodyTextBlockStyle}"/>
+            <TextBlock  Style="{StaticResource BodyTextBlockStyle}"
+                        Margin="{StaticResource SmallTopMargin}">
+                <Run Text="Your setting will generate"/>
                 <Run Text="{x:Bind ResultFileNumber}"/>
-                     <Run Text="slice files after runing."/>
-                <Run Text="A large number of slices generally need long time to execute."/>
+                     <Run Text="slice files, please change your number or unit."/>
             </TextBlock>
-            <TextBlock Text="Notice: Considering the performance, the result preview table only show the top 5000 slices."
+        <!--<TextBlock Text="Notice: Considering the performance, the result preview table only show the top 5000 slices."
                        Style="{StaticResource NoticeTextStyle}"
-                       Margin="{StaticResource SmallTopMargin}"/>
+                       Margin="{StaticResource SmallTopMargin}"/>-->
         </StackPanel>
     </Grid>
 </ContentDialog>

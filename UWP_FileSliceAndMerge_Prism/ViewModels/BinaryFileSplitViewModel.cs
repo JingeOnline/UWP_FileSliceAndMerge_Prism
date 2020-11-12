@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
 using UWP_FileSliceAndMerge_Prism.Constants;
-//using UWP_FileSliceAndMerge_Prism.Core.Models;
-//using UWP_FileSliceAndMerge_Prism.Core.Services;
 using UWP_FileSliceAndMerge_Prism.Helpers;
 using UWP_FileSliceAndMerge_Prism.Models;
 using UWP_FileSliceAndMerge_Prism.Services;
@@ -28,10 +26,18 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
     {
         //应用程序的setting
         private static ApplicationDataContainer _appSetting = ApplicationData.Current.LocalSettings;
+        private readonly int MaxSliceNumber = 999999;
 
         public ObservableCollection<StorageFile> SourceFiles { get; set; } = new ObservableCollection<StorageFile>();
         public List<FileInfoModel> SourceFilesInfo { get; set; } = new List<FileInfoModel>();
-        public ObservableCollection<FileInfoModel> PreviewOutput { get; set; } = new ObservableCollection<FileInfoModel>();
+        public List<FileInfoModel> OutputFilesInfo { get; set; } = new List<FileInfoModel>();
+        //public ObservableCollection<FileInfoModel> PreviewOutput { get; set; } = new ObservableCollection<FileInfoModel>();
+        private ObservableCollection<FileInfoModel> _previewOutput = new ObservableCollection<FileInfoModel>();
+        public ObservableCollection<FileInfoModel> PreviewOutput
+        {
+            get { return _previewOutput; }
+            set { SetProperty(ref _previewOutput, value); }
+        }
         public DelegateCommand SelectSourceFilesCommand { get; set; }
         public DelegateCommand ClearSourceFilesCommand { get; set; }
         public DelegateCommand SelectOutputFolderCommand { get; set; }
@@ -40,10 +46,9 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
 
         public List<string> SliceNamingRules { get; set; } = new List<string>()
         {
-            "{@}_Slices_{#}",
-            "{@}-Slices-{#}",
             "{@}_{#}",
-            "{@}-{#}"
+            "{@}-{#}",
+            "{@} ({#})"
         };
         public List<string> SliceNumberList { get; set; } = new List<string>()
         {
@@ -58,7 +63,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             "Byte","KB","MB","GB"
         };
 
-        private string _sliceNamingRule = "{@}_Slices_{#}";
+        private string _sliceNamingRule = "{@}_{#}";
         public string SliceNamingRule
         {
             get { return _sliceNamingRule; }
@@ -67,7 +72,41 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 if (_sliceNamingRule != value)
                 {
                     SetProperty(ref _sliceNamingRule, value);
-                    previewResultFiles();
+                    if (checkFileName(value))
+                    {
+                        preview();
+                    }
+                }
+            }
+        }
+
+        private string _sliceFileExtention;
+        public string SliceFileExtention
+        {
+            get { return _sliceFileExtention; }
+            set
+            {
+                if (_sliceFileExtention != value)
+                {
+                    if (checkFileName(value))
+                    {
+                        SetProperty(ref _sliceFileExtention, value);
+                        preview();
+                    }
+                }
+            }
+        }
+
+        private bool _isCustomizeExtention = false;
+        public bool IsCustomizeExtention
+        {
+            get { return _isCustomizeExtention; }
+            set
+            {
+                if (_isCustomizeExtention != value)
+                {
+                    SetProperty(ref _isCustomizeExtention, value);
+                    preview();
                 }
             }
         }
@@ -85,30 +124,39 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 }
                 else
                 {
-                    checkSliceMaxSize(_sliceMaxSize);
+                    checkSliceMaxSize(SliceMaxSizeText);
                 }
             }
         }
 
         private int _sliceNumber = 2;
+        private string _sliceNumberText = "2";
         public string SliceNumberText
         {
             get { return _sliceNumber.ToString(); }
             set
             {
-                checkSliceNumber(value);
-                //Debug.WriteLine("SliceNumberText=" + value);
+                if (_sliceNumberText != value)
+                {
+                    _sliceNumberText = value;
+                    checkSliceNumber(value);
+                }
             }
         }
 
         private long _sliceMaxSize = 1;
         private long _sliceMaxSizeTextNumber = 1;
+        private string _sliceMaxSizeText = "1";
         public string SliceMaxSizeText
         {
-            get { return _sliceMaxSize.ToString(); }
+            get { return _sliceMaxSizeText; }
             set
             {
-                checkSliceMaxSize(value);
+                if (_sliceMaxSizeText != value)
+                {
+                    _sliceMaxSizeText = value;
+                    checkSliceMaxSize(value);
+                }
             }
         }
 
@@ -136,7 +184,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             {
                 SetProperty(ref _indexStartWith0, value);
                 _indexStartWith = value ? 0 : 1;
-                previewResultFiles();
+                preview();
             }
         }
         private StorageFolder _outputFolder;
@@ -297,7 +345,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     SourceFiles.Add(file);
                 }
                 await getSourceFileInfo();
-                previewResultFiles();
+                preview();
                 //让该Command重新检测是否能够执行的条件
                 StartSplitCommand.RaiseCanExecuteChanged();
             }
@@ -348,63 +396,51 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             IsFinish = false;
             SourceFiles.Clear();
             SourceFilesInfo.Clear();
+            OutputFilesInfo.Clear();
             PreviewOutput.Clear();
             //让该Command重新检测是否能够执行的条件
             StartSplitCommand.RaiseCanExecuteChanged();
-
-            //Todo:任务完成通知
-            new ToastNotificationsService().ShowTaskFinishToast("Test", "This is a Test");
         }
 
         /// <summary>
         /// 预览处理结果
         /// </summary>
-        private void previewResultFiles()
+        private void preview()
         {
-
-            int maxPreviewItemCount = 5000;
-            int currentPreviewItemCount = 0;
-
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            if (SourceFiles.Count == 0) { return; }
             IsFinish = false;
+            OutputFilesInfo.Clear();
             PreviewOutput.Clear();
 
-            if (IsSplitBySliceNumber)
+            PreviewOutputService previewService;
+            if (!IsCustomizeExtention)
             {
-                PreviewOutputService previewService =
-                    new PreviewOutputService(SliceNamingRule, _indexStartWith, SourceFilesInfo);
-
-                //不能直接给ObservableCollection赋新值，会造成UI不更新。
-                //如果给ObservableCollection赋新值，需要使用OnPropertyChanged事件，也就是使用SetProperty()方法
-                //PreviewOutput =new ObservableCollection<BinarySliceModel>(previewService.GetPreviewSlicesByNumber(inputFiles));
-
-                List<FileInfoModel> resultList = previewService.GetPreviewSlicesByNumber(_sliceNumber);
-                foreach (var result in resultList)
-                {
-                    PreviewOutput.Add(result);
-                    currentPreviewItemCount++;
-                    if (currentPreviewItemCount >= maxPreviewItemCount)
-                    {
-                        break;
-                    }
-                }
-
+                previewService = new PreviewOutputService(SliceNamingRule, _indexStartWith, SourceFilesInfo);
             }
             else
             {
-                PreviewOutputService previewService =
-                    new PreviewOutputService(SliceNamingRule, _indexStartWith, SourceFilesInfo);
-
-                List<FileInfoModel> resultList = previewService.GetPreviewSlicesBySize(_sliceMaxSize);
-                foreach (var result in resultList)
-                {
-                    PreviewOutput.Add(result);
-                    currentPreviewItemCount++;
-                    if (currentPreviewItemCount >= maxPreviewItemCount)
-                    {
-                        break;
-                    }
-                }
+                previewService = new PreviewOutputService(SliceNamingRule, SliceFileExtention, _indexStartWith, SourceFilesInfo);
             }
+
+
+            List<FileInfoModel> resultList;
+            if (IsSplitBySliceNumber)
+            {
+                //不能直接给ObservableCollection赋新值，会造成UI不更新。
+                //如果给ObservableCollection赋新值，需要使用OnPropertyChanged事件，也就是使用SetProperty()方法
+                //PreviewOutput =new ObservableCollection<BinarySliceModel>(previewService.GetPreviewSlicesByNumber(inputFiles));
+                resultList = previewService.GetPreviewSlicesByNumber(_sliceNumber);
+            }
+            else
+            {
+                resultList = previewService.GetPreviewSlicesBySize(_sliceMaxSize);
+            }
+            Debug.WriteLine("预览计算完成 " + sw.ElapsedMilliseconds);
+            OutputFilesInfo = resultList;
+            PreviewOutput = new ObservableCollection<FileInfoModel>(resultList);
+            Debug.WriteLine("预览赋值完成 " + sw.ElapsedMilliseconds);
         }
 
         /// <summary>
@@ -416,16 +452,13 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             if (Int32.TryParse(inputText, out int inputNumber) && inputNumber > 0)
             {
                 //int sliceNumber = Int32.Parse(inputText);
-                if (inputNumber > 5000)
+                if (inputNumber > MaxSliceNumber)
                 {
-                    bool isUserAllowed = await isUserAllowedSoManySlices(inputNumber);
-                    if (!isUserAllowed)
-                    {
-                        return;
-                    }
+                    await showOverLimitWarning(inputNumber);
+                    return;
                 }
                 _sliceNumber = inputNumber;
-                previewResultFiles();
+                preview();
             }
             else
             {
@@ -449,16 +482,13 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 {
                     sliceCount += file.FileSize / calculateSliceMaxSize(inputNumber);
                 }
-                if (sliceCount > 5000)
+                if (sliceCount > MaxSliceNumber)
                 {
-                    bool isUserAllowed = await isUserAllowedSoManySlices(sliceCount);
-                    if (!isUserAllowed)
-                    {
-                        return;
-                    }
+                    await showOverLimitWarning(sliceCount);
+                    return;
                 }
                 _sliceMaxSize = calculateSliceMaxSize(inputNumber);
-                previewResultFiles();
+                preview();
             }
             else
             {
@@ -466,27 +496,24 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
         }
 
-        /// <summary>
-        /// 检测用户输入的切片大小是否合法(重载方法)
-        /// </summary>
-        /// <param name="sliceRealSize"></param>
-        private async void checkSliceMaxSize(long sliceRealSize)
-        {
-            long sliceCount = 0;
-            foreach (FileInfoModel file in SourceFilesInfo)
-            {
-                sliceCount += file.FileSize / sliceRealSize;
-            }
-            if (sliceCount > 5000)
-            {
-                bool isUserAllowed = await isUserAllowedSoManySlices(sliceCount);
-                if (!isUserAllowed)
-                {
-                    return;
-                }
-            }
-            previewResultFiles();
-        }
+        ///// <summary>
+        ///// 检测用户输入的切片大小是否合法(重载方法)
+        ///// </summary>
+        ///// <param name="sliceRealSize"></param>
+        //private async void checkSliceMaxSize(long sliceRealSize)
+        //{
+        //    long sliceCount = 0;
+        //    foreach (FileInfoModel file in SourceFilesInfo)
+        //    {
+        //        sliceCount += file.FileSize / sliceRealSize;
+        //    }
+        //    if (sliceCount > MaxSliceNumber)
+        //    {
+        //        await showOverLimitWarning(sliceCount);
+        //        return;
+        //    }
+        //    preview();
+        //}
 
         /// <summary>
         /// 检测用户选择的切片大小单位是否合法
@@ -500,27 +527,23 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             {
                 sliceCount += file.FileSize / calculateSliceMaxSize(_sliceMaxSizeTextNumber);
             }
-            if (sliceCount > 5000)
+            if (sliceCount > MaxSliceNumber)
             {
-                bool isUserAllowed = await isUserAllowedSoManySlices(sliceCount);
-                if (!isUserAllowed)
-                {
-                    return;
-                }
+                await showOverLimitWarning(sliceCount);
+                return;
             }
             _sliceMaxSize = calculateSliceMaxSize(_sliceMaxSizeTextNumber);
-            previewResultFiles();
+            preview();
         }
 
         /// <summary>
-        /// 当用户的设定值过于巨大，影响性能，弹出警告
+        /// 当用户的设定值超过最大切片数量限制，弹出警告。
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> isUserAllowedSoManySlices(long outputFileNumber)
+        private async Task showOverLimitWarning(long outputFileNumber)
         {
             BinarySplitSettingWarningDialog dialog = new BinarySplitSettingWarningDialog(outputFileNumber);
             await dialog.ShowAsync();
-            return dialog.Result;
         }
 
         /// <summary>
@@ -549,15 +572,17 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private async void startSplit()
         {
-            if(!await CheckOutputFileExistingService.checkOutputFileName(OutputFolder,PreviewOutput))
+            if (!await CheckOutputFileExistingService.checkOutputFileName(OutputFolder, OutputFilesInfo))
             {
                 return;
             }
             IsStarted = true;
             BinaryFileSliceAndMergeService sliceService = new BinaryFileSliceAndMergeService(OutputFolder, SourceFiles);
-            await sliceService.SplitFiles(PreviewOutput);
+            await sliceService.SplitFiles(OutputFilesInfo);
             IsFinish = true;
             IsStarted = false;
+            new ToastNotificationsService().ShowTaskFinishToast("Split Complete",
+                $"Successfully exported {OutputFilesInfo.Count} slice files.");
         }
 
         /// <summary>
@@ -567,6 +592,26 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             var t = new FolderLauncherOptions();
             await Launcher.LaunchFolderAsync(OutputFolder, t);
+        }
+
+        /// <summary>
+        /// 检查用户输入的文件名是否是合法的windows文件名
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private bool checkFileName(string fileName)
+        {
+            bool isValid = FileNameCheck.Check(fileName);
+            if (!isValid)
+            {
+                SliceNamingWarning = BinaryFileErrors.InvalidFileName;
+                IsSliceNamingWarningVisiable = true;
+            }
+            else
+            {
+                IsSliceNamingWarningVisiable = false;
+            }
+            return isValid;
         }
 
     }
