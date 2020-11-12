@@ -28,12 +28,14 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         private static ApplicationDataContainer _appSetting = ApplicationData.Current.LocalSettings;
         private readonly int MaxSliceNumber = 999999;
 
-        public ObservableCollection<StorageFile> SourceFiles { get; set; } = new ObservableCollection<StorageFile>();
-        public List<FileInfoModel> SourceFilesInfo { get; set; } = new List<FileInfoModel>();
-        public List<FileInfoModel> OutputFilesInfo { get; set; } = new List<FileInfoModel>();
+        public ObservableCollection<BinarySourceInfoModel> SourceFiles { get; set; } =
+            new ObservableCollection<BinarySourceInfoModel>();
+        //public ObservableCollection<StorageFile> SourceFiles { get; set; } = new ObservableCollection<StorageFile>();
+        //public ObservableCollection<BinarySliceInfoModel> SourceFilesInfo { get; set; } = new ObservableCollection<BinarySliceInfoModel>();
+        public List<BinarySliceInfoModel> OutputFilesInfo { get; set; } = new List<BinarySliceInfoModel>();
         //public ObservableCollection<FileInfoModel> PreviewOutput { get; set; } = new ObservableCollection<FileInfoModel>();
-        private ObservableCollection<FileInfoModel> _previewOutput = new ObservableCollection<FileInfoModel>();
-        public ObservableCollection<FileInfoModel> PreviewOutput
+        private ObservableCollection<BinarySliceInfoModel> _previewOutput = new ObservableCollection<BinarySliceInfoModel>();
+        public ObservableCollection<BinarySliceInfoModel> PreviewOutput
         {
             get { return _previewOutput; }
             set { SetProperty(ref _previewOutput, value); }
@@ -339,12 +341,13 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             var files = await filesPicker.PickMultipleFilesAsync();
             if (files.Count > 0)
             {
-                SourceFiles.Clear();
-                foreach (StorageFile file in files)
-                {
-                    SourceFiles.Add(file);
-                }
-                await getSourceFileInfo();
+                //SourceFiles.Clear();
+                //foreach (StorageFile file in files)
+                //{
+                //    SourceFiles.Add(file);
+                //}
+                //await getSourceFileInfo();
+                await getSourceFileInfo(files);
                 preview();
                 //让该Command重新检测是否能够执行的条件
                 StartSplitCommand.RaiseCanExecuteChanged();
@@ -373,15 +376,16 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// 获取用户选择文件的文件名和大小
         /// </summary>
         /// <returns></returns>
-        private async Task getSourceFileInfo()
+        private async Task getSourceFileInfo(IEnumerable<StorageFile> sourceStorageFiles)
         {
-            SourceFilesInfo.Clear();
-            foreach (StorageFile file in SourceFiles)
+            SourceFiles.Clear();
+            foreach (StorageFile file in sourceStorageFiles)
             {
                 Windows.Storage.FileProperties.BasicProperties basicProperties =
                                             await file.GetBasicPropertiesAsync();
-                SourceFilesInfo.Add(new FileInfoModel
+                SourceFiles.Add(new BinarySourceInfoModel
                 {
+                    StorageFile=file,
                     FileName = file.Name,
                     FileSize = (long)basicProperties.Size
                 });
@@ -395,7 +399,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             IsFinish = false;
             SourceFiles.Clear();
-            SourceFilesInfo.Clear();
+            //SourceFilesInfo.Clear();
             OutputFilesInfo.Clear();
             PreviewOutput.Clear();
             //让该Command重新检测是否能够执行的条件
@@ -417,15 +421,15 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             PreviewOutputService previewService;
             if (!IsCustomizeExtention)
             {
-                previewService = new PreviewOutputService(SliceNamingRule, _indexStartWith, SourceFilesInfo);
+                previewService = new PreviewOutputService(SliceNamingRule, _indexStartWith, SourceFiles);
             }
             else
             {
-                previewService = new PreviewOutputService(SliceNamingRule, SliceFileExtention, _indexStartWith, SourceFilesInfo);
+                previewService = new PreviewOutputService(SliceNamingRule, SliceFileExtention, _indexStartWith, SourceFiles);
             }
 
 
-            List<FileInfoModel> resultList;
+            List<BinarySliceInfoModel> resultList;
             if (IsSplitBySliceNumber)
             {
                 //不能直接给ObservableCollection赋新值，会造成UI不更新。
@@ -439,7 +443,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
             Debug.WriteLine("预览计算完成 " + sw.ElapsedMilliseconds);
             OutputFilesInfo = resultList;
-            PreviewOutput = new ObservableCollection<FileInfoModel>(resultList);
+            PreviewOutput = new ObservableCollection<BinarySliceInfoModel>(resultList);
             Debug.WriteLine("预览赋值完成 " + sw.ElapsedMilliseconds);
         }
 
@@ -478,9 +482,9 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 _sliceMaxSizeTextNumber = inputNumber;
                 //if(inputNumber)
                 long sliceCount = 0;
-                foreach (FileInfoModel file in SourceFilesInfo)
+                foreach (BinarySourceInfoModel sourceFile in SourceFiles)
                 {
-                    sliceCount += file.FileSize / calculateSliceMaxSize(inputNumber);
+                    sliceCount += sourceFile.FileSize / calculateSliceMaxSize(inputNumber);
                 }
                 if (sliceCount > MaxSliceNumber)
                 {
@@ -523,7 +527,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             SplitMethodWarning = "";
             long sliceCount = 0;
-            foreach (FileInfoModel file in SourceFilesInfo)
+            foreach (BinarySourceInfoModel file in SourceFiles)
             {
                 sliceCount += file.FileSize / calculateSliceMaxSize(_sliceMaxSizeTextNumber);
             }

@@ -11,7 +11,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services
 {
     public static class CheckOutputFileExistingService
     {
-        public static async Task<bool> checkOutputFileName(StorageFolder outputFolder, IEnumerable<FileInfoModel> previewFiles)
+        public static async Task<bool> checkOutputFileName(StorageFolder outputFolder, IEnumerable<BinarySliceInfoModel> previewFiles)
         {
             IReadOnlyList<StorageFile> existedFiles = await outputFolder.GetFilesAsync();
             IEnumerable<string> existedFileNames = existedFiles.Select(x => x.Name);

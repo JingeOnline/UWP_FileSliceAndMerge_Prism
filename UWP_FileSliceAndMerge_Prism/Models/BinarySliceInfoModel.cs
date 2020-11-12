@@ -5,7 +5,7 @@ using System.Text;
 
 namespace UWP_FileSliceAndMerge_Prism.Models
 {
-    public class FileInfoModel:INotifyPropertyChanged
+    public class BinarySliceInfoModel:INotifyPropertyChanged
     {
         public string SourceFileName { get; set; }
         public string FileName { get; set; }

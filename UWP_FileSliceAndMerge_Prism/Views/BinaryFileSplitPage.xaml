@@ -29,7 +29,7 @@
         <!--源文件列表-->
         <Border Style="{StaticResource ThinRadiusThemeBorder}"
                     Margin="{StaticResource SmallTopMargin}">
-            <ListView Height="160" ItemsSource="{x:Bind ViewModel.SourceFiles,Mode=OneWay}"
+            <!--<ListView Height="160" ItemsSource="{x:Bind ViewModel.SourceFiles,Mode=OneWay}"
                           IsItemClickEnabled="False" SelectionMode="None">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="storage:StorageFile">
@@ -43,7 +43,26 @@
                         <Setter Property="BorderThickness" Value="0"/>
                     </Style>
                 </ListView.ItemContainerStyle>
-            </ListView>
+            </ListView>-->
+            <controls:DataGrid ItemsSource="{x:Bind ViewModel.SourceFiles,Mode=OneWay}"
+                                   AutoGenerateColumns="False" IsReadOnly="True" Height="160">
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Width="SizeToCells"
+                                                 Binding="{Binding Icon,Mode=OneWay}"
+                                                 FontFamily="Segoe MDL2 Assets"
+                                                 FontSize="16"/>
+                    <controls:DataGridTextColumn Header="File Name"
+                                                 Width="4*"
+                                                 Binding="{Binding FileName,Mode=OneWay}"
+                                                 FontSize="16">
+                        
+                    </controls:DataGridTextColumn>
+                    <controls:DataGridTextColumn Header="File Size (Byte)"
+                                                 Binding="{Binding FileSizeText, Mode=OneWay}"
+                                                 Width="*"
+                                                 FontSize="16"/>
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
         </Border>
         <!--选择文件和清空按钮-->
         <StackPanel Grid.Column="2" VerticalAlignment="Top"
