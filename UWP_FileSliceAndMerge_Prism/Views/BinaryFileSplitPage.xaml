@@ -29,21 +29,6 @@
         <!--源文件列表-->
         <Border Style="{StaticResource ThinRadiusThemeBorder}"
                     Margin="{StaticResource SmallTopMargin}">
-            <!--<ListView Height="160" ItemsSource="{x:Bind ViewModel.SourceFiles,Mode=OneWay}"
-                          IsItemClickEnabled="False" SelectionMode="None">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="storage:StorageFile">
-                        <TextBlock Text="{x:Bind Path}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="Padding" Value="0"/>
-                        <Setter Property="Margin" Value="8,-4"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>-->
             <controls:DataGrid ItemsSource="{x:Bind ViewModel.SourceFiles,Mode=OneWay}"
                                    AutoGenerateColumns="False" IsReadOnly="True" Height="160">
                 <controls:DataGrid.Columns>
@@ -51,12 +36,30 @@
                                                  Binding="{Binding Icon,Mode=OneWay}"
                                                  FontFamily="Segoe MDL2 Assets"
                                                  FontSize="16"/>
-                    <controls:DataGridTextColumn Header="File Name"
-                                                 Width="4*"
-                                                 Binding="{Binding FileName,Mode=OneWay}"
-                                                 FontSize="16">
-                        
-                    </controls:DataGridTextColumn>
+                    <controls:DataGridTemplateColumn Header="File Name"
+                                                     Width="4*">
+                        <controls:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Margin="{StaticResource SmallLeftRightMargin}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding FileName,Mode=OneWay}"
+                                               Grid.Column="0"
+                                               VerticalAlignment="Center"/>
+                                    <ProgressBar VerticalAlignment="Center"
+                                                 Grid.Column="1"
+                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"
+                                                 Margin="{StaticResource SmallLeftMargin}"
+                                                 IsIndeterminate="False"
+                                                 Value="{Binding Path=SliceComplatedNumber,Mode=OneWay}"
+                                                 Maximum="{Binding Path=SliceNumber,Mode=OneWay}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>
+
                     <controls:DataGridTextColumn Header="File Size (Byte)"
                                                  Binding="{Binding FileSizeText, Mode=OneWay}"
                                                  Width="*"

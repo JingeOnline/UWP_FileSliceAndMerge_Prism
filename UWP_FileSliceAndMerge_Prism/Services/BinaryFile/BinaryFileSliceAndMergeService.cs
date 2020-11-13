@@ -42,6 +42,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             {
                 List<BinarySliceInfoModel> oneFilePreviews = previewResultCollection.Where(x => x.SourceFileName == file.FileName).ToList();
                 await splitOneFile(file, oneFilePreviews);
+                file.IsDone = true;
             }
             GC.Collect(1);
             GC.Collect(2);
@@ -79,11 +80,13 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
 
         private async Task splitOneFile(BinarySourceInfoModel sourceFile, List<BinarySliceInfoModel> slicesPreview)
         {
+            sourceFile.IsStart = true;
             long streamStartPosition = 0;
             foreach (var preview in slicesPreview)
             {
                 await splitOneFileOneSlice(sourceFile.StorageFile, preview, streamStartPosition);
                 streamStartPosition += preview.FileSize;
+                sourceFile.SliceComplatedNumber++;
             }
         }
 

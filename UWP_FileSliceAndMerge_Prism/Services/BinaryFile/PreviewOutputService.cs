@@ -41,7 +41,9 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             List<BinarySliceInfoModel> previewSlices = new List<BinarySliceInfoModel>();
             foreach (BinarySourceInfoModel sourceFileInfo in _sourceFiles)
             {
-                previewSlices.AddRange(getSlicesByNumberFromOneFile(sourceFileInfo));
+                List<BinarySliceInfoModel> binarySlices = getSlicesByNumberFromOneFile(sourceFileInfo);
+                sourceFileInfo.SliceNumber = binarySlices.Count;
+                previewSlices.AddRange(binarySlices);
             }
             return previewSlices;
         }

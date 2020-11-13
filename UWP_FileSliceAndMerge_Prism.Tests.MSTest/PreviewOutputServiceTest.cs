@@ -4,36 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UWP_FileSliceAndMerge_Prism.Core.Models;
-using UWP_FileSliceAndMerge_Prism.Core.Services;
+using UWP_FileSliceAndMerge_Prism.Models;
+using UWP_FileSliceAndMerge_Prism.Services;
 
 namespace UWP_FileSliceAndMerge_Prism.Tests.MSTest
 {
     [TestClass]
     public class PreviewOutputServiceTest
     {
-        [TestMethod]
-        public void TestGetPreviewSlicesByNumber()
-        {
-            //string name = getSliceName("jinge.jpg", "{*}_{#}", 1);
-            //Assert.AreEqual(name, "jinge_1.jpg");
-            int sliceNumber=3;
-            string namingRule= "{*}_{#}";
-            int indexStartWith=1;
-            List<FileInfoModel> sourceFils = new List<FileInfoModel>()
-            {
-                new FileInfoModel(){FileName="test1.jpg",FileSize=300, },
-                new FileInfoModel(){FileName="test2.jpg",FileSize=400,},
-                new FileInfoModel(){FileName="test3.jpg",FileSize=9001,}
-            };
+        //[TestMethod]
+        //public void TestGetPreviewSlicesByNumber()
+        //{
+        //    //string name = getSliceName("jinge.jpg", "{*}_{#}", 1);
+        //    //Assert.AreEqual(name, "jinge_1.jpg");
+        //    int sliceNumber=3;
+        //    string namingRule= "{*}_{#}";
+        //    int indexStartWith=1;
+        //    List<FileInfoModel> sourceFils = new List<FileInfoModel>()
+        //    {
+        //        new FileInfoModel(){FileName="test1.jpg",FileSize=300, },
+        //        new FileInfoModel(){FileName="test2.jpg",FileSize=400,},
+        //        new FileInfoModel(){FileName="test3.jpg",FileSize=9001,}
+        //    };
 
-            PreviewOutputService previewOutputService = 
-                new PreviewOutputService(namingRule,indexStartWith,sourceFils);
-            List<FileInfoModel> list = previewOutputService.GetPreviewSlicesByNumber(sliceNumber);
+        //    PreviewOutputService previewOutputService = 
+        //        new PreviewOutputService(namingRule,indexStartWith,sourceFils);
+        //    List<FileInfoModel> list = previewOutputService.GetPreviewSlicesByNumber(sliceNumber);
 
-            Assert.AreEqual(list.Count,9);
-            Assert.AreEqual(list.Last().FileSize, 3001);
-        }
+        //    Assert.AreEqual(list.Count,9);
+        //    Assert.AreEqual(list.Last().FileSize, 3001);
+        //}
 
     }
 }
