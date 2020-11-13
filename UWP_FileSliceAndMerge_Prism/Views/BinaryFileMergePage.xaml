@@ -89,5 +89,46 @@
                               Visibility="{x:Bind ViewModel.IsOutputFolderSetAsDefaultVisiable,Mode=OneWay}"
                               IsOn="{x:Bind ViewModel.IsSaveOutputFolderAsDefault,Mode=TwoWay}"/>
         </StackPanel>
+        <!--Preview文件列表-->
+        <Border Style="{StaticResource ThinRadiusThemeBorder}"
+                    Margin="{StaticResource MediumTopMargin}" Grid.Row="3">
+            <controls:DataGrid ItemsSource="{x:Bind ViewModel.MergedFiles,Mode=OneWay}"
+                                   AutoGenerateColumns="False" IsReadOnly="True">
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Width="SizeToCells"
+                                                 Binding="{Binding Icon,Mode=OneWay}"
+                                                 FontFamily="Segoe MDL2 Assets"
+                                                 FontSize="16"/>
+                    <controls:DataGridTemplateColumn Header="File Name"
+                                                     Width="4*">
+                        <controls:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Margin="{StaticResource SmallLeftRightMargin}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding FileName,Mode=OneWay}"
+                                               Grid.Column="0"
+                                               VerticalAlignment="Center"/>
+                                    <ProgressBar VerticalAlignment="Center"
+                                                 Grid.Column="1"
+                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"
+                                                 Margin="{StaticResource SmallLeftMargin}"
+                                                 IsIndeterminate="False"
+                                                 Value="{Binding Path=SliceComplatedNumber,Mode=OneWay}"
+                                                 Maximum="{Binding Path=SliceNumber,Mode=OneWay}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>
+
+                    <controls:DataGridTextColumn Header="File Size (Byte)"
+                                                 Binding="{Binding FileSizeText, Mode=OneWay}"
+                                                 Width="*"
+                                                 FontSize="16"/>
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </Border>
     </Grid>
 </Page>

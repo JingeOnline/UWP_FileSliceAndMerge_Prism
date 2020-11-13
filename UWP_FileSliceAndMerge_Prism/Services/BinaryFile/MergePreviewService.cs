@@ -10,14 +10,14 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
 {
     public class MergePreviewService
     {
-        private string _fileExtention;
+        private string _givenFileExtention;
         private IEnumerable<BinarySliceInfoModel> _sourceFiles;
         private List<BinaryEntiretyInfoModel> _mergedFiles;
 
-        public MergePreviewService(IEnumerable<BinarySliceInfoModel> sourceFiles, string fileExtention = null)
+        public MergePreviewService(IEnumerable<BinarySliceInfoModel> sourceFiles, string givenFileExtention = null)
         {
             _sourceFiles = sourceFiles;
-            _fileExtention = fileExtention;
+            _givenFileExtention = givenFileExtention;
         }
 
         /// <summary>
@@ -46,8 +46,8 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                 string fileNameWithoutExtention = slice.FileName.Remove(slice.FileName.Length - fileExtention.Length - 1);
                 //fileNameWithoutExtMatchToSlice.Add(fileNameWithoutExtention, slice);
 
-                findIndex(slice,fileNameWithoutExtention);
-                findSourceFile(slice, fileNameWithoutExtention);
+                findIndex(slice, fileNameWithoutExtention);
+                findSourceFile(slice, fileNameWithoutExtention,fileExtention);
             }
         }
 
@@ -56,11 +56,13 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// </summary>
         /// <param name="slice"></param>
         /// <param name="nameWithoutExtention"></param>
-        private void findIndex(BinarySliceInfoModel slice,string nameWithoutExtention)
+        private void findIndex(BinarySliceInfoModel slice, string nameWithoutExtention)
         {
             string pattern = "[\\d]+";
+
+            //从右开始查找第一组数字
             Match match = Regex.Match(nameWithoutExtention, pattern, RegexOptions.RightToLeft);
-            if(uint.TryParse(match.Value,out uint index))
+            if (uint.TryParse(match.Value, out uint index))
             {
                 slice.Index = index;
             }
@@ -71,11 +73,21 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// </summary>
         /// <param name="slice"></param>
         /// <param name="nameWithoutExtention"></param>
-        private void findSourceFile(BinarySliceInfoModel slice,string nameWithoutExtention)
+        private void findSourceFile(BinarySliceInfoModel slice, string nameWithoutExtention,string sourceExtention)
         {
-            string pattern= "[_|\\-|\\(| ]*[\\d]+[\\)]*";
-            string sourceName=Regex.Replace(nameWithoutExtention, pattern, "", RegexOptions.RightToLeft);
-            slice.SourceFileName = sourceName;
+            string pattern = "[_|\\-|\\(| ]*[\\d]+[\\)]*";
+
+            //使用参数RightToLeft，可以让查找从字符串的最后开始。
+            //从右查找出-123,_123,(123),-((123))这样字符串，并替换为空。
+            string sourceNameWithoutExtention = Regex.Replace(nameWithoutExtention, pattern, "", RegexOptions.RightToLeft);
+            if (string.IsNullOrEmpty(_givenFileExtention))
+            {
+                slice.SourceFileName = sourceNameWithoutExtention+"."+sourceExtention;
+            }
+            else
+            {
+                slice.SourceFileName = sourceNameWithoutExtention+"."+_givenFileExtention;
+            }
         }
 
         /// <summary>
@@ -86,7 +98,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             _mergedFiles = new List<BinaryEntiretyInfoModel>();
             List<string> sourceFileNames =
                 _sourceFiles.Select(file => file.SourceFileName).Distinct().ToList();
-            foreach(string sourceName in sourceFileNames)
+            foreach (string sourceName in sourceFileNames)
             {
                 BinaryEntiretyInfoModel sourceFile = new BinaryEntiretyInfoModel();
                 sourceFile.FileName = sourceName;

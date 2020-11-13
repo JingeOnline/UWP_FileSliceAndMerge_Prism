@@ -53,7 +53,7 @@ namespace UWP_FileSliceAndMerge_Prism.Models
             }
         }
 
-        private string _icon = "\xE8FF";
+        private string _icon = "\xF5ED";
         public string Icon
         {
             get { return _icon; }

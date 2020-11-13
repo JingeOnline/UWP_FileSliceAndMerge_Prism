@@ -104,6 +104,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 await getSourceFileInfo(files);
                 preview();
                 //让该Command重新检测是否能够执行的条件
+                //TODO:这里记得取消注释
                 //StartSplitCommand.RaiseCanExecuteChanged();
             }
         }

@@ -187,7 +187,7 @@
         <!--输出文件预览列表-->
         <Border  Style="{StaticResource ThinRadiusThemeBorder}"
                      Margin="{StaticResource MediumTopMargin}"
-                     Grid.Row="4">
+                     Grid.Row="3">
             <Grid>
                 <controls:DataGrid ItemsSource="{x:Bind ViewModel.SliceFiles,Mode=OneWay}"
                                    AutoGenerateColumns="False" IsReadOnly="True">
