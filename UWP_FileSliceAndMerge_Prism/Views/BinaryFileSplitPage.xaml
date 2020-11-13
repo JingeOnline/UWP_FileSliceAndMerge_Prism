@@ -29,7 +29,7 @@
         <!--源文件列表-->
         <Border Style="{StaticResource ThinRadiusThemeBorder}"
                     Margin="{StaticResource SmallTopMargin}">
-            <controls:DataGrid ItemsSource="{x:Bind ViewModel.SourceFiles,Mode=OneWay}"
+            <controls:DataGrid ItemsSource="{x:Bind ViewModel.MergedFiles,Mode=OneWay}"
                                    AutoGenerateColumns="False" IsReadOnly="True" Height="160">
                 <controls:DataGrid.Columns>
                     <controls:DataGridTextColumn Width="SizeToCells"
@@ -189,7 +189,7 @@
                      Margin="{StaticResource MediumTopMargin}"
                      Grid.Row="4">
             <Grid>
-                <controls:DataGrid ItemsSource="{x:Bind ViewModel.PreviewOutput,Mode=OneWay}"
+                <controls:DataGrid ItemsSource="{x:Bind ViewModel.SliceFiles,Mode=OneWay}"
                                    AutoGenerateColumns="False" IsReadOnly="True">
                     <controls:DataGrid.Columns>
                         <controls:DataGridTextColumn Width="SizeToCells"

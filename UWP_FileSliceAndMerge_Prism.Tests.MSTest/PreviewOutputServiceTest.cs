@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UWP_FileSliceAndMerge_Prism.Models;
@@ -12,28 +13,29 @@ namespace UWP_FileSliceAndMerge_Prism.Tests.MSTest
     [TestClass]
     public class PreviewOutputServiceTest
     {
-        //[TestMethod]
-        //public void TestGetPreviewSlicesByNumber()
-        //{
-        //    //string name = getSliceName("jinge.jpg", "{*}_{#}", 1);
-        //    //Assert.AreEqual(name, "jinge_1.jpg");
-        //    int sliceNumber=3;
-        //    string namingRule= "{*}_{#}";
-        //    int indexStartWith=1;
-        //    List<FileInfoModel> sourceFils = new List<FileInfoModel>()
-        //    {
-        //        new FileInfoModel(){FileName="test1.jpg",FileSize=300, },
-        //        new FileInfoModel(){FileName="test2.jpg",FileSize=400,},
-        //        new FileInfoModel(){FileName="test3.jpg",FileSize=9001,}
-        //    };
 
-        //    PreviewOutputService previewOutputService = 
-        //        new PreviewOutputService(namingRule,indexStartWith,sourceFils);
-        //    List<FileInfoModel> list = previewOutputService.GetPreviewSlicesByNumber(sliceNumber);
+        [TestMethod]
+        public void test()
+        {
+            //string text = "123_456  (789)";
+            //string result1 = "  (789)";
 
-        //    Assert.AreEqual(list.Count,9);
-        //    Assert.AreEqual(list.Last().FileSize, 3001);
-        //}
+            //string text = "123_456_(789)";
+            //string result1 = "_(789)";
 
+            string text = "123_456-((789))";
+            string result1 = "-((789))";
+
+
+            string result = getMergedNameFromSliceName(text);
+            Assert.AreEqual(result1, result);
+        }
+
+        private string getMergedNameFromSliceName(string name)
+        {
+            string pattern1 = "[_|\\-|\\(| ]*[\\d]+[\\)]*";
+            Match match = Regex.Match(name, pattern1, RegexOptions.RightToLeft);
+            return match.Value;
+        }
     }
 }

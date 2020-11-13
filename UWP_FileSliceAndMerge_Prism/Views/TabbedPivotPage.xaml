@@ -28,11 +28,7 @@
             
             <PivotItem x:Uid="TabbedPivot_PivotItem2">
                 <Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-                    <!--
-                        The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
-                        Place your content here.
-                    -->
-
+                    <local:BinaryFileMergePage/>
                 </Grid>
             </PivotItem>
         </Pivot>

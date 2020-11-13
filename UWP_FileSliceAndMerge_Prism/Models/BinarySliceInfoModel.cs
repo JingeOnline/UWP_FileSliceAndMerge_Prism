@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using Windows.Storage;
 
 namespace UWP_FileSliceAndMerge_Prism.Models
 {
     public class BinarySliceInfoModel:INotifyPropertyChanged
     {
+        public StorageFile StorageFile { get; set; }
         public string SourceFileName { get; set; }
         public string FileName { get; set; }
         public long FileSize { get; set; }
+        public uint Index { get; set; }
+        //public string MergedFileName { get; set; }
         public string FileSizeText
         {
             //每三位数添加一个逗号
@@ -35,10 +39,6 @@ namespace UWP_FileSliceAndMerge_Prism.Models
                 {
                     Icon= "\xF78C";
                 }
-                else
-                {
-                    Icon= "\xE8FF";
-                }
             }
         }
 
@@ -53,7 +53,7 @@ namespace UWP_FileSliceAndMerge_Prism.Models
             }
         }
 
-        private string _icon;
+        private string _icon = "\xE8FF";
         public string Icon
         {
             get { return _icon; }

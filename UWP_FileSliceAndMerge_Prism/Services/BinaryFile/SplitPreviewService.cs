@@ -7,26 +7,26 @@ using System.Diagnostics;
 
 namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
 {
-    public class PreviewOutputService
+    public class SplitPreviewService
     {
         private int _sliceNumber;
         private string _namingRule;
         private string _fileExtention;
         private int _indexStartWith;
-        private IEnumerable<BinarySourceInfoModel> _sourceFiles;
+        private IEnumerable<BinaryEntiretyInfoModel> _sourceFiles;
 
-        public PreviewOutputService(string namingRule, int indexStartWith, IEnumerable<BinarySourceInfoModel> sourceFilesInfo)
+        public SplitPreviewService(string namingRule, int indexStartWith, IEnumerable<BinaryEntiretyInfoModel> sourceFiles)
         {
             this._namingRule = namingRule;
             this._indexStartWith = indexStartWith;
-            this._sourceFiles = sourceFilesInfo;
+            this._sourceFiles = sourceFiles;
         }
-        public PreviewOutputService(string namingRule,string fileExtention, int indexStartWith, IEnumerable<BinarySourceInfoModel> sourceFilesInfo)
+        public SplitPreviewService(string namingRule,string fileExtention, int indexStartWith, IEnumerable<BinaryEntiretyInfoModel> sourceFiles)
         {
             this._namingRule = namingRule;
             this._fileExtention = fileExtention;
             this._indexStartWith = indexStartWith;
-            this._sourceFiles = sourceFilesInfo;
+            this._sourceFiles = sourceFiles;
         }
 
 
@@ -39,7 +39,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         {
             this._sliceNumber = sliceNumber;
             List<BinarySliceInfoModel> previewSlices = new List<BinarySliceInfoModel>();
-            foreach (BinarySourceInfoModel sourceFileInfo in _sourceFiles)
+            foreach (BinaryEntiretyInfoModel sourceFileInfo in _sourceFiles)
             {
                 List<BinarySliceInfoModel> binarySlices = getSlicesByNumberFromOneFile(sourceFileInfo);
                 sourceFileInfo.SliceNumber = binarySlices.Count;
@@ -54,7 +54,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             //sw.Start();
 
             List<BinarySliceInfoModel> previewSlices = new List<BinarySliceInfoModel>();
-            foreach(BinarySourceInfoModel sourceFileInfo in _sourceFiles)
+            foreach(BinaryEntiretyInfoModel sourceFileInfo in _sourceFiles)
             {
                 previewSlices.AddRange(getSlicesBySizeFromOneFile(sourceFileInfo, maxSize));
             }
@@ -67,7 +67,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// </summary>
         /// <param name="sourceFile"></param>
         /// <returns></returns>
-        private List<BinarySliceInfoModel> getSlicesByNumberFromOneFile(BinarySourceInfoModel sourceFile)
+        private List<BinarySliceInfoModel> getSlicesByNumberFromOneFile(BinaryEntiretyInfoModel sourceFile)
         {
             List<BinarySliceInfoModel> slices = new List<BinarySliceInfoModel>();
             long avgSlicesSize = sourceFile.FileSize / _sliceNumber;
@@ -77,7 +77,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                 lastFileSize -= avgSlicesSize;
                 slices.Add(new BinarySliceInfoModel()
                 {
-                    SourceFileName=sourceFile.FileName,
+                    SourceFileName = sourceFile.FileName,
                     FileSize = avgSlicesSize,
                     FileName = getSliceName(sourceFile.FileName,  i + _indexStartWith),
                     IsDone=false,
@@ -132,7 +132,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// <param name="sourceFile"></param>
         /// <param name="maxSize"></param>
         /// <returns></returns>
-        private List<BinarySliceInfoModel> getSlicesBySizeFromOneFile(BinarySourceInfoModel sourceFile,long maxSize)
+        private List<BinarySliceInfoModel> getSlicesBySizeFromOneFile(BinaryEntiretyInfoModel sourceFile,long maxSize)
         {
             List<BinarySliceInfoModel> slices = new List<BinarySliceInfoModel>();
             long totalSize = sourceFile.FileSize;

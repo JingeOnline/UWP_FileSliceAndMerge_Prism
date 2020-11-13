@@ -7,20 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UWP_FileSliceAndMerge_Prism.Models;
-//using UWP_FileSliceAndMerge_Prism.Core.Models;
 using UWP_FileSliceAndMerge_Prism.ViewModels;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
 namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
 {
-    public class BinaryFileSliceAndMergeService
+    public class SplitService
     {
         private int _bufferSize;
         private StorageFolder _outputFolder;
-        private IEnumerable<BinarySourceInfoModel> _sourceFiles;
+        private IEnumerable<BinaryEntiretyInfoModel> _sourceFiles;
 
-        public BinaryFileSliceAndMergeService(StorageFolder outputFolder, IEnumerable<BinarySourceInfoModel> sourceFiles)
+        public SplitService(StorageFolder outputFolder, IEnumerable<BinaryEntiretyInfoModel> sourceFiles)
         {
             _outputFolder = outputFolder;
             _sourceFiles = sourceFiles;
@@ -28,7 +27,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         }
 
         /// <summary>
-        /// 分隔文件
+        /// 切割文件
         /// </summary>
         /// <param name="previewResultCollection"></param>
         /// <returns></returns>
@@ -38,7 +37,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             stopwatch.Start();
 
             setBufferSize(previewResultCollection);
-            foreach (BinarySourceInfoModel file in _sourceFiles)
+            foreach (BinaryEntiretyInfoModel file in _sourceFiles)
             {
                 List<BinarySliceInfoModel> oneFilePreviews = previewResultCollection.Where(x => x.SourceFileName == file.FileName).ToList();
                 await splitOneFile(file, oneFilePreviews);
@@ -78,7 +77,13 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             _bufferSize = 1024 * 64;
         }
 
-        private async Task splitOneFile(BinarySourceInfoModel sourceFile, List<BinarySliceInfoModel> slicesPreview)
+        /// <summary>
+        /// 执行一个文件的切割
+        /// </summary>
+        /// <param name="sourceFile"></param>
+        /// <param name="slicesPreview"></param>
+        /// <returns></returns>
+        private async Task splitOneFile(BinaryEntiretyInfoModel sourceFile, List<BinarySliceInfoModel> slicesPreview)
         {
             sourceFile.IsStart = true;
             long streamStartPosition = 0;

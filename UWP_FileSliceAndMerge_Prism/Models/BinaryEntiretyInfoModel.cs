@@ -9,7 +9,7 @@ using Prism.Windows.Mvvm;
 
 namespace UWP_FileSliceAndMerge_Prism.Models
 {
-    public class BinarySourceInfoModel:BindableBase
+    public class BinaryEntiretyInfoModel:BindableBase
     {
         public StorageFile StorageFile { get; set; }
         public String FileName { get; set; }
