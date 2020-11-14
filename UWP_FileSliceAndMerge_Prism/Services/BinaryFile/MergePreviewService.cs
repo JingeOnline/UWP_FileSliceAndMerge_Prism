@@ -47,7 +47,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                 //fileNameWithoutExtMatchToSlice.Add(fileNameWithoutExtention, slice);
 
                 findIndex(slice, fileNameWithoutExtention);
-                findSourceFile(slice, fileNameWithoutExtention,fileExtention);
+                findSourceFile(slice, fileNameWithoutExtention, fileExtention);
             }
         }
 
@@ -73,20 +73,32 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// </summary>
         /// <param name="slice"></param>
         /// <param name="nameWithoutExtention"></param>
-        private void findSourceFile(BinarySliceInfoModel slice, string nameWithoutExtention,string sourceExtention)
+        private void findSourceFile(BinarySliceInfoModel slice, string nameWithoutExtention, string sourceExtention)
         {
             string pattern = "[_|\\-|\\(| ]*[\\d]+[\\)]*";
 
             //使用参数RightToLeft，可以让查找从字符串的最后开始。
             //从右查找出-123,_123,(123),-((123))这样字符串，并替换为空。
-            string sourceNameWithoutExtention = Regex.Replace(nameWithoutExtention, pattern, "", RegexOptions.RightToLeft);
-            if (string.IsNullOrEmpty(_givenFileExtention))
+            Match match = Regex.Match(nameWithoutExtention, pattern, RegexOptions.RightToLeft);
+            //string sourceNameWithoutExtention = Regex.Replace(nameWithoutExtention, pattern, "", RegexOptions.RightToLeft);
+            string sourceNameWithoutExtention;
+            if (match.Success)
             {
-                slice.SourceFileName = sourceNameWithoutExtention+"."+sourceExtention;
+                int i = nameWithoutExtention.LastIndexOf(match.Value);
+                sourceNameWithoutExtention = nameWithoutExtention.Substring(0, i);
             }
             else
             {
-                slice.SourceFileName = sourceNameWithoutExtention+"."+_givenFileExtention;
+                sourceNameWithoutExtention = nameWithoutExtention;
+            }
+
+            if (string.IsNullOrEmpty(_givenFileExtention))
+            {
+                slice.MergedFileName = sourceNameWithoutExtention + "." + sourceExtention;
+            }
+            else
+            {
+                slice.MergedFileName = sourceNameWithoutExtention + "." + _givenFileExtention;
             }
         }
 
@@ -97,7 +109,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         {
             _mergedFiles = new List<BinaryEntiretyInfoModel>();
             List<string> sourceFileNames =
-                _sourceFiles.Select(file => file.SourceFileName).Distinct().ToList();
+                _sourceFiles.Select(file => file.MergedFileName).Distinct().ToList();
             foreach (string sourceName in sourceFileNames)
             {
                 BinaryEntiretyInfoModel sourceFile = new BinaryEntiretyInfoModel();
@@ -115,7 +127,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         private long getMergedSize(string sourceName)
         {
             List<long> sliceSizes =
-                _sourceFiles.Where(file => file.SourceFileName == sourceName).
+                _sourceFiles.Where(file => file.MergedFileName == sourceName).
                 Select(file => file.FileSize).ToList();
             return sliceSizes.Sum();
         }

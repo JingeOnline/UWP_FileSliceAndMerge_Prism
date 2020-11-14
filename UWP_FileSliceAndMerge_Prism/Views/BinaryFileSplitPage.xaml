@@ -231,7 +231,7 @@
                 </controls:DataGrid>
             </Grid>
         </Border>
-        <StackPanel Grid.Row="4" Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="2"
+        <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="2"
                         Margin="{StaticResource MediumTopMargin}" VerticalAlignment="Top">
             <!--开始按钮-->
             <Button Style="{StaticResource MediumButton}" x:Uid="BinaryFileSplitPage_StartButton"

@@ -391,8 +391,6 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             IsFinish = false;
             MergedFiles.Clear();
-            //SourceFilesInfo.Clear();
-            //SliceFiles.Clear();
             SliceFiles.Clear();
             //让该Command重新检测是否能够执行的条件
             StartSplitCommand.RaiseCanExecuteChanged();

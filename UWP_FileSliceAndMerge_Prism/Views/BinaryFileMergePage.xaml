@@ -60,13 +60,11 @@
                                     <TextBlock Text="{Binding FileName,Mode=OneWay}"
                                                Grid.Column="0"
                                                VerticalAlignment="Center"/>
-                                    <ProgressBar VerticalAlignment="Center"
-                                                 Grid.Column="1"
-                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"
-                                                 Margin="{StaticResource SmallLeftMargin}"
-                                                 IsIndeterminate="False"
-                                                 Value="{Binding Path=SliceComplatedNumber,Mode=OneWay}"
-                                                 Maximum="{Binding Path=SliceNumber,Mode=OneWay}"/>
+                                    <ProgressBar IsIndeterminate="False" VerticalAlignment="Center"
+                                                 Grid.Column="1" Margin="{StaticResource SmallLeftMargin}"
+                                                 Value="{Binding FinishSize,Mode=OneWay}"
+                                                 Maximum="{Binding FileSize,Mode=OneWay}"
+                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"/>
                                 </Grid>
                             </DataTemplate>
                         </controls:DataGridTemplateColumn.CellTemplate>
@@ -130,5 +128,14 @@
                 </controls:DataGrid.Columns>
             </controls:DataGrid>
         </Border>
+        <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="2"
+                        Margin="{StaticResource MediumTopMargin}" VerticalAlignment="Top">
+            <!--开始按钮-->
+            <Button Style="{StaticResource MediumButton}" x:Uid="BinaryFileSplitPage_StartButton"
+                        Command="{x:Bind ViewModel.StartMergeCommand}"/>
+            <Button Style="{StaticResource MediumButton}" Margin="{StaticResource SmallTopBottomMargin}"
+                        x:Uid="BinaryFileSplitPage_OpenSlicesFolderButton" 
+                    Command="{x:Bind ViewModel.LaunchFolderCommand,Mode=OneWay}"/>
+        </StackPanel>
     </Grid>
 </Page>

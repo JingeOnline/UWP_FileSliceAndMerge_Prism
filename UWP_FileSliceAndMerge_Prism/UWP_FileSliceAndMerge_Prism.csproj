@@ -162,6 +162,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Constants\PageTokens.cs" />
     <Compile Include="Services\BinaryFile\MergePreviewService.cs" />
+    <Compile Include="Services\BinaryFile\MergeService.cs" />
     <Compile Include="Services\BinaryFile\SplitService.cs" />
     <Compile Include="Services\BinaryFile\SplitPreviewService.cs" />
     <Compile Include="Services\CheckOutputFileExistingService.cs" />

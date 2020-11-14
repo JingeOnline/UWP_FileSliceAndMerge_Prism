@@ -77,7 +77,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                 lastFileSize -= avgSlicesSize;
                 slices.Add(new BinarySliceInfoModel()
                 {
-                    SourceFileName = sourceFile.FileName,
+                    MergedFileName = sourceFile.FileName,
                     FileSize = avgSlicesSize,
                     FileName = getSliceName(sourceFile.FileName,  i + _indexStartWith),
                     IsDone=false,
@@ -86,7 +86,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             //最后一个切片的大小和前几个切片大小可能会不同。
             slices.Add(new BinarySliceInfoModel()
             {
-                SourceFileName = sourceFile.FileName,
+                MergedFileName = sourceFile.FileName,
                 FileSize = lastFileSize,
                 FileName=getSliceName(sourceFile.FileName,_sliceNumber-1+_indexStartWith),
                 IsDone = false,
@@ -140,7 +140,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             {
                 slices.Add(new BinarySliceInfoModel()
                 {
-                    SourceFileName = sourceFile.FileName,
+                    MergedFileName = sourceFile.FileName,
                     FileSize = maxSize,
                     FileName = getSliceName(sourceFile.FileName, _indexStartWith),
                     IsDone = false,
@@ -152,7 +152,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             {
                 slices.Add(new BinarySliceInfoModel()
                 {
-                    SourceFileName = sourceFile.FileName,
+                    MergedFileName = sourceFile.FileName,
                     FileSize = totalSize,
                     FileName = getSliceName(sourceFile.FileName, _indexStartWith),
                     IsDone = false,

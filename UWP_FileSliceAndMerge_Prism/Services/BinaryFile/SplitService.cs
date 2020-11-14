@@ -36,10 +36,10 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            setBufferSize(previewResultCollection);
+            //setBufferSize(previewResultCollection);
             foreach (BinaryEntiretyInfoModel file in _sourceFiles)
             {
-                List<BinarySliceInfoModel> oneFilePreviews = previewResultCollection.Where(x => x.SourceFileName == file.FileName).ToList();
+                List<BinarySliceInfoModel> oneFilePreviews = previewResultCollection.Where(x => x.MergedFileName == file.FileName).ToList();
                 await splitOneFile(file, oneFilePreviews);
                 file.IsDone = true;
             }
@@ -52,23 +52,22 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// <summary>
         /// 根据文件大小设置读写缓冲区大小
         /// </summary>
-        /// <param name="previewResultCollection"></param>
-        private void setBufferSize(IEnumerable<BinarySliceInfoModel> previewResultCollection)
+        /// <param name="sliceSize"></param>
+        private void setBufferSize(long sliceSize)
         {
-            long previewSliceSize = previewResultCollection.First().FileSize;
-            if (previewSliceSize > 1024 * 1024 * 256)
+            if (sliceSize > 1024 * 1024 * 256)
             {
                 _bufferSize = 1024 * 1024 * 128;
                 return;
             }
 
-            if (previewSliceSize > 1024 * 1024 * 64)
+            if (sliceSize > 1024 * 1024 * 64)
             {
                 _bufferSize = 1024 * 1024 * 16;
                 return;
             }
 
-            if (previewSliceSize > 1024 * 1024)
+            if (sliceSize > 1024 * 1024)
             {
                 _bufferSize = 1024 * 1024;
                 return;
@@ -86,6 +85,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         private async Task splitOneFile(BinaryEntiretyInfoModel sourceFile, List<BinarySliceInfoModel> slicesPreview)
         {
             sourceFile.IsStart = true;
+            setBufferSize(slicesPreview.First().FileSize);
             long streamStartPosition = 0;
             foreach (var preview in slicesPreview)
             {

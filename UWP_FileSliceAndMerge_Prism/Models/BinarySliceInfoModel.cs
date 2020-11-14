@@ -9,7 +9,7 @@ namespace UWP_FileSliceAndMerge_Prism.Models
     public class BinarySliceInfoModel:INotifyPropertyChanged
     {
         public StorageFile StorageFile { get; set; }
-        public string SourceFileName { get; set; }
+        public string MergedFileName { get; set; }
         public string FileName { get; set; }
         public long FileSize { get; set; }
         public uint Index { get; set; }

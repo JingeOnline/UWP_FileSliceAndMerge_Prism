@@ -23,19 +23,30 @@ namespace UWP_FileSliceAndMerge_Prism.Tests.MSTest
             //string text = "123_456_(789)";
             //string result1 = "_(789)";
 
-            string text = "123_456-((789))";
-            string result1 = "-((789))";
+            //string text = "123_456-((789))";
+            //string result1 = "-((789))";
 
+            //string text = "四海图库_2 (3)";
+            //string match = " (3)";
+
+            string text = "四海图库_2_(3)";
+            string match = "四海图库_2";
 
             string result = getMergedNameFromSliceName(text);
-            Assert.AreEqual(result1, result);
+            Assert.AreEqual(match, result);
         }
 
         private string getMergedNameFromSliceName(string name)
         {
-            string pattern1 = "[_|\\-|\\(| ]*[\\d]+[\\)]*";
-            Match match = Regex.Match(name, pattern1, RegexOptions.RightToLeft);
-            return match.Value;
+            string fileName = null;
+            string pattern = "[_|\\-|\\(| ]*[\\d]+[\\)]*";
+            Match match = Regex.Match(name, pattern, RegexOptions.RightToLeft);
+            if (match != null)
+            {
+                int i = name.LastIndexOf(match.Value);
+                fileName = name.Substring(0, i);
+            }
+            return fileName;
         }
     }
 }

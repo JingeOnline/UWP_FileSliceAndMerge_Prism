@@ -8,9 +8,11 @@ using Prism.Commands;
 using Prism.Windows.Mvvm;
 using UWP_FileSliceAndMerge_Prism.Helpers;
 using UWP_FileSliceAndMerge_Prism.Models;
+using UWP_FileSliceAndMerge_Prism.Services;
 using UWP_FileSliceAndMerge_Prism.Services.BinaryFile;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.System;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
@@ -86,9 +88,21 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                                         .ObservesProperty(() => IsStarted);
             SelectOutputFolderCommand = new DelegateCommand(selectOutputFolder, () => !IsStarted)
                                         .ObservesProperty(() => IsStarted);
+            StartMergeCommand = new DelegateCommand(startMerge,canStart)
+                .ObservesProperty(() => IsFinish).ObservesProperty(() => IsStarted);
+            LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(() => IsFinish);
             getAppSetting();
         }
 
+
+        /// <summary>
+        /// 开始按钮是否可用
+        /// </summary>
+        /// <returns></returns>
+        private bool canStart()
+        {
+            return SliceFiles.Count > 0 && !IsFinish && !IsStarted;
+        }
 
         /// <summary>
         /// 用户选择要合并的文件
@@ -104,8 +118,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 await getSourceFileInfo(files);
                 preview();
                 //让该Command重新检测是否能够执行的条件
-                //TODO:这里记得取消注释
-                //StartSplitCommand.RaiseCanExecuteChanged();
+                StartMergeCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -152,6 +165,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private void preview()
         {
+            IsFinish = false;
             MergePreviewService previewService = new MergePreviewService(SliceFiles);
             MergedFiles = new ObservableCollection<BinaryEntiretyInfoModel>(previewService.GetPreview());
         }
@@ -180,6 +194,33 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             {
                 OutputFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(_folderToken);
             }
+        }
+
+        /// <summary>
+        /// 开始执行合并
+        /// </summary>
+        private async void startMerge()
+        {
+            if (!await CheckOutputFileExistingService.checkOutputFileName(OutputFolder, MergedFiles))
+            {
+                return;
+            }
+            IsStarted = true;
+            MergeService mergeService = new MergeService(OutputFolder,SliceFiles);
+            await mergeService.MergeFiles(MergedFiles);
+            IsFinish = true;
+            IsStarted = false;
+            new ToastNotificationsService().ShowTaskFinishToast("Merge Complete",
+                $"Successfully exported {MergedFiles.Count} merged files.");
+        }
+
+        /// <summary>
+        /// 下载完成后打开文件夹
+        /// </summary>
+        private async void launchFolder()
+        {
+            var t = new FolderLauncherOptions();
+            await Launcher.LaunchFolderAsync(OutputFolder, t);
         }
     }
 }
