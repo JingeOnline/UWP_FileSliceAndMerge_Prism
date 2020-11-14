@@ -87,6 +87,31 @@
                               Visibility="{x:Bind ViewModel.IsOutputFolderSetAsDefaultVisiable,Mode=OneWay}"
                               IsOn="{x:Bind ViewModel.IsSaveOutputFolderAsDefault,Mode=TwoWay}"/>
         </StackPanel>
+        <!--用户自定义文件扩展名-->
+        <Grid Grid.Row="2" Margin="{StaticResource SmallTopMargin}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <ToggleSwitch OffContent="Customize Extention"
+                              OnContent="Customize Extention"
+                              VerticalAlignment="Center"
+                              x:Name="ToggleSwitch_CustomizeExtention"
+                              IsOn="{x:Bind ViewModel.IsCustomizeExtention,Mode=TwoWay}"/>
+                <TextBox Margin="{StaticResource SmallLeftMargin}"
+                         VerticalAlignment="Center"
+                         Width="156"
+                         Visibility="{Binding ElementName=ToggleSwitch_CustomizeExtention, Path=IsOn}"
+                         Text="{x:Bind ViewModel.MergedFileExtention,Mode=TwoWay,UpdateSourceTrigger=Default}"
+                         KeyDown="TextBox_KeyDown"/>
+            </StackPanel>
+            <TextBlock Foreground="Red"  Grid.Row="6"
+                       Text="{x:Bind ViewModel.NamingInvalidWarning,Mode=OneWay}"
+                       Visibility="{x:Bind ViewModel.IsNamingInvalidWarningVisiable,Mode=OneWay}"
+                       TextWrapping="Wrap"/>
+        </Grid>
+
         <!--Preview文件列表-->
         <Border Style="{StaticResource ThinRadiusThemeBorder}"
                     Margin="{StaticResource MediumTopMargin}" Grid.Row="3">

@@ -6,7 +6,7 @@ using Windows.Storage;
 
 namespace UWP_FileSliceAndMerge_Prism.Models
 {
-    public class BinarySliceInfoModel:INotifyPropertyChanged
+    public class BinarySliceInfoModel : INotifyPropertyChanged
     {
         public StorageFile StorageFile { get; set; }
         public string MergedFileName { get; set; }
@@ -24,11 +24,11 @@ namespace UWP_FileSliceAndMerge_Prism.Models
         public bool IsStart
         {
             get { return _isStart; }
-            set { _isStart = value;OnPropertyChanged("IsStart"); }
+            set { _isStart = value; OnPropertyChanged("IsStart"); }
         }
-        
+
         private bool _isDone;
-        public bool IsDone 
+        public bool IsDone
         {
             get { return _isDone; }
             set
@@ -37,12 +37,12 @@ namespace UWP_FileSliceAndMerge_Prism.Models
                 OnPropertyChanged("IsDone");
                 if (IsDone)
                 {
-                    Icon= "\xF78C";
+                    Icon = "\xF78C";
                 }
             }
         }
 
-        private long _finishSize=0;
+        private long _finishSize = 0;
         public long FinishSize
         {
             get { return _finishSize; }

@@ -168,7 +168,9 @@
                          VerticalAlignment="Center"
                          Width="156"
                          Visibility="{Binding ElementName=ToggleSwitch_CustomizeExtention, Path=IsOn}"
-                         Text="{x:Bind ViewModel.SliceFileExtention,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{x:Bind ViewModel.SliceFileExtention,Mode=TwoWay,UpdateSourceTrigger=Default}"
+                         KeyDown="TextBox_KeyDown">
+                </TextBox>
                 <TextBlock Margin="{StaticResource SmallLeftMargin}"
                            VerticalAlignment="Center"
                            Visibility="{Binding ElementName=ToggleSwitch_CustomizeExtention, Path=IsOn}"
@@ -180,8 +182,8 @@
                        Text="{x:Bind ViewModel.SplitMethodWarning,Mode=OneWay}"
                        Visibility="{x:Bind ViewModel.IsSplitMethodWarningVisible,Mode=OneWay}" />
             <TextBlock Foreground="Red"  Grid.Row="6"
-                       Text="{x:Bind ViewModel.SliceNamingWarning,Mode=OneWay}"
-                       Visibility="{x:Bind ViewModel.IsSliceNamingWarningVisiable,Mode=OneWay}"
+                       Text="{x:Bind ViewModel.NamingInvalidWarning,Mode=OneWay}"
+                       Visibility="{x:Bind ViewModel.IsNamingInvalidWarningVisiable,Mode=OneWay}"
                        TextWrapping="Wrap"/>
         </Grid>
         <!--输出文件预览列表-->

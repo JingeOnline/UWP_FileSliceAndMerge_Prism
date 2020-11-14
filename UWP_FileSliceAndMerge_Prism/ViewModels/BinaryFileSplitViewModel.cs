@@ -237,21 +237,21 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
         }
 
-        private string _sliceNamingWarning;
-        public string SliceNamingWarning
+        private string _namingInvalidWarning;
+        public string NamingInvalidWarning
         {
-            get { return _sliceNamingWarning; }
+            get { return _namingInvalidWarning; }
             set
             {
-                SetProperty(ref _sliceNamingWarning, value);
-                if (string.IsNullOrEmpty(value))
-                {
-                    IsSliceNamingWarningVisiable = false;
-                }
-                else
-                {
-                    IsSliceNamingWarningVisiable = true;
-                }
+                SetProperty(ref _namingInvalidWarning, value);
+                //if (string.IsNullOrEmpty(value))
+                //{
+                //    IsSliceNamingWarningVisiable = false;
+                //}
+                //else
+                //{
+                //    IsSliceNamingWarningVisiable = true;
+                //}
             }
         }
 
@@ -262,11 +262,11 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             set { SetProperty(ref _isSplitMethodWarningVisible, value); }
         }
 
-        private bool _isSliceNamingWarningVisiable;
-        public bool IsSliceNamingWarningVisiable
+        private bool _isNamingInvalidWarningVisiable;
+        public bool IsNamingInvalidWarningVisiable
         {
-            get { return _isSliceNamingWarningVisiable; }
-            set { SetProperty(ref _isSliceNamingWarningVisiable, value); }
+            get { return _isNamingInvalidWarningVisiable; }
+            set { SetProperty(ref _isNamingInvalidWarningVisiable, value); }
         }
 
         private bool _isFinish;
@@ -579,12 +579,12 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             bool isValid = FileNameCheck.Check(fileName);
             if (!isValid)
             {
-                SliceNamingWarning = BinaryFileErrors.InvalidFileName;
-                IsSliceNamingWarningVisiable = true;
+                NamingInvalidWarning = BinaryFileErrors.InvalidFileName;
+                IsNamingInvalidWarningVisiable = true;
             }
             else
             {
-                IsSliceNamingWarningVisiable = false;
+                IsNamingInvalidWarningVisiable = false;
             }
             return isValid;
         }

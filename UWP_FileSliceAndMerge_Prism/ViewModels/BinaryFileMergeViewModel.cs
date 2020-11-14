@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
+using UWP_FileSliceAndMerge_Prism.Constants;
 using UWP_FileSliceAndMerge_Prism.Helpers;
 using UWP_FileSliceAndMerge_Prism.Models;
 using UWP_FileSliceAndMerge_Prism.Services;
@@ -68,6 +69,47 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 MyAppSettingHelper.AppSetting.SaveAsync<bool>(_settingKey, value);
             }
         }
+        private bool _isCustomizeExtention = false;
+        public bool IsCustomizeExtention
+        {
+            get { return _isCustomizeExtention; }
+            set
+            {
+                if (_isCustomizeExtention != value)
+                {
+                    SetProperty(ref _isCustomizeExtention, value);
+                    preview();
+                }
+            }
+        }
+        private string _mergedFileExtention;
+        public string MergedFileExtention
+        {
+            get { return _mergedFileExtention; }
+            set
+            {
+                if (_mergedFileExtention != value)
+                {
+                    if (checkFileName(value))
+                    {
+                        SetProperty(ref _mergedFileExtention, value);
+                        preview();
+                    }
+                }
+            }
+        }
+        private bool _isNamingInvalidWarningVisiable;
+        public bool IsNamingInvalidWarningVisiable
+        {
+            get { return _isNamingInvalidWarningVisiable; }
+            set { SetProperty(ref _isNamingInvalidWarningVisiable, value); }
+        }
+        private string _namingInvalidWarning;
+        public string NamingInvalidWarning
+        {
+            get { return _namingInvalidWarning; }
+            set { SetProperty(ref _namingInvalidWarning, value); }
+        }
         private bool _isStarted = false;
         public bool IsStarted
         {
@@ -88,7 +130,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                                         .ObservesProperty(() => IsStarted);
             SelectOutputFolderCommand = new DelegateCommand(selectOutputFolder, () => !IsStarted)
                                         .ObservesProperty(() => IsStarted);
-            StartMergeCommand = new DelegateCommand(startMerge,canStart)
+            StartMergeCommand = new DelegateCommand(startMerge, canStart)
                 .ObservesProperty(() => IsFinish).ObservesProperty(() => IsStarted);
             LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(() => IsFinish);
             getAppSetting();
@@ -166,7 +208,15 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         private void preview()
         {
             IsFinish = false;
-            MergePreviewService previewService = new MergePreviewService(SliceFiles);
+            MergePreviewService previewService;
+            if (IsCustomizeExtention)
+            {
+                previewService = new MergePreviewService(SliceFiles, MergedFileExtention);
+            }
+            else
+            {
+                previewService = new MergePreviewService(SliceFiles);
+            }
             MergedFiles = new ObservableCollection<BinaryEntiretyInfoModel>(previewService.GetPreview());
         }
 
@@ -206,7 +256,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 return;
             }
             IsStarted = true;
-            MergeService mergeService = new MergeService(OutputFolder,SliceFiles);
+            MergeService mergeService = new MergeService(OutputFolder, SliceFiles);
             await mergeService.MergeFiles(MergedFiles);
             IsFinish = true;
             IsStarted = false;
@@ -221,6 +271,26 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             var t = new FolderLauncherOptions();
             await Launcher.LaunchFolderAsync(OutputFolder, t);
+        }
+
+        /// <summary>
+        /// 检查用户输入的文件名是否是合法的windows文件名
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private bool checkFileName(string fileName)
+        {
+            bool isValid = FileNameCheck.Check(fileName);
+            if (!isValid)
+            {
+                NamingInvalidWarning = BinaryFileErrors.InvalidFileName;
+                IsNamingInvalidWarningVisiable = true;
+            }
+            else
+            {
+                IsNamingInvalidWarningVisiable = false;
+            }
+            return isValid;
         }
     }
 }

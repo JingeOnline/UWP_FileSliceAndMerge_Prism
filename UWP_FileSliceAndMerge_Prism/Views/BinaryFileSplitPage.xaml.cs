@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using UWP_FileSliceAndMerge_Prism.ViewModels;
+using Windows.UI.Core;
+using System.Diagnostics;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -28,6 +30,15 @@ namespace UWP_FileSliceAndMerge_Prism.Views
         public BinaryFileSplitPage()
         {
             this.InitializeComponent();
+        }
+
+        private void TextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                //让文本框失去焦点，从而触发Binding的Trigger
+                this.Focus(FocusState.Programmatic);
+            }
         }
     }
 }

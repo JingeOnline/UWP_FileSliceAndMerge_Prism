@@ -28,5 +28,13 @@ namespace UWP_FileSliceAndMerge_Prism.Views
         {
             this.InitializeComponent();
         }
+        private void TextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                //让文本框失去焦点，从而触发Binding的Trigger
+                this.Focus(FocusState.Programmatic);
+            }
+        }
     }
 }

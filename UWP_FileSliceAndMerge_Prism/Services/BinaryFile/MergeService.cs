@@ -37,7 +37,6 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             mergedFile.IsStart = true;
             List<BinarySliceInfoModel> sortedList = slicesForOneFile.OrderBy(x => x.Index).ToList();
             setBufferSize(slicesForOneFile.First().FileSize);
-            //TODO:用户点击开始按钮的时候，检测文件名是否存在
             StorageFile targetFile =
                 await _outputFolder.CreateFileAsync(mergedFile.FileName, CreationCollisionOption.ReplaceExisting);
             using (Stream writeStream = await targetFile.OpenStreamForWriteAsync())
