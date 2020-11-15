@@ -125,6 +125,69 @@
     <value>UWP_FileSliceAndMerge_Prism</value>
     <comment>Application display name</comment>
   </data>
+  <data name="BinaryFileMergePage_OpenExportFolderButton.Content" xml:space="preserve">
+    <value>打开文件夹</value>
+  </data>
+  <data name="BinaryFileMergePage_SelectFilesButton.Content" xml:space="preserve">
+    <value>选择文件</value>
+  </data>
+  <data name="BinaryFileMergePage_SelectOutputPathButton.Content" xml:space="preserve">
+    <value>输出路径</value>
+  </data>
+  <data name="BinaryFileMergePage_SourceClearButton.Content" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="BinaryFileMergePage_StartButton.Content" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="BinaryFileSplitPage_OpenExportFolderButton.Content" xml:space="preserve">
+    <value>打开文件夹</value>
+  </data>
+  <data name="BinaryFileSplitPage_RadioButton_IndexStartWith0.Content" xml:space="preserve">
+    <value>序号起始值为0</value>
+  </data>
+  <data name="BinaryFileSplitPage_RadioButton_IndexStartWith1.Content" xml:space="preserve">
+    <value>序号起始值为1</value>
+  </data>
+  <data name="BinaryFileSplitPage_RadioButton_SetSliceNumber.Content" xml:space="preserve">
+    <value>指定切片数量</value>
+  </data>
+  <data name="BinaryFileSplitPage_RadioButton_SetSliceSize.Content" xml:space="preserve">
+    <value>指定切片大小</value>
+  </data>
+  <data name="BinaryFileSplitPage_SelectFilesButton.Content" xml:space="preserve">
+    <value>选择文件</value>
+  </data>
+  <data name="BinaryFileSplitPage_SelectFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>选择想要切分的文件（支持多选）</value>
+  </data>
+  <data name="BinaryFileSplitPage_SelectOutputPathButton.Content" xml:space="preserve">
+    <value>输出路径</value>
+  </data>
+  <data name="BinaryFileSplitPage_SelectOutputPathButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>选择切片文件输出的路径文件夹</value>
+  </data>
+  <data name="BinaryFileSplitPage_SourceClearButton.Content" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="BinaryFileSplitPage_SourceClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>清除待切分的原文件</value>
+  </data>
+  <data name="BinaryFileSplitPage_StartButton.Content" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="BinaryFileSplitPage_TextBlock_SetSliceName.Text" xml:space="preserve">
+    <value>切片命名规则</value>
+  </data>
+  <data name="BinaryFileSplitPage_TextBlock_SplitMethod.Text" xml:space="preserve">
+    <value>切分方法</value>
+  </data>
+  <data name="Datagrid_Column_FileName.Header" xml:space="preserve">
+    <value>文件名称</value>
+  </data>
+  <data name="Datagrid_Column_FileSize.Header" xml:space="preserve">
+    <value>文件大小（字节）</value>
+  </data>
   <data name="FirstRunDialog.PrimaryButtonText" xml:space="preserve">
     <value>Ok</value>
     <comment>First use prompt message primary button text</comment>
@@ -148,7 +211,7 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <comment>First use prompt message body</comment>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>About this application</value>
+    <value>关于此应用</value>
     <comment>About this application title for Settings</comment>
   </data>
   <data name="Settings_AboutDescription.Text" xml:space="preserve">
@@ -156,7 +219,7 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <comment>About this application description for Settings</comment>
   </data>
   <data name="Settings_Personalization.Text" xml:space="preserve">
-    <value>Personalization</value>
+    <value>个性化</value>
     <comment>Personalization text for Settings</comment>
   </data>
   <data name="Settings_PrivacyTermsLink.Content" xml:space="preserve">
@@ -168,19 +231,19 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <comment>Here is your Privacy Statement url for Settings</comment>
   </data>
   <data name="Settings_Theme.Text" xml:space="preserve">
-    <value>Choose Theme</value>
+    <value>选择主题</value>
     <comment>Choose theme text for Settings</comment>
   </data>
   <data name="Settings_Theme_Dark.Content" xml:space="preserve">
-    <value>Dark</value>
+    <value>深色</value>
     <comment>Dark theme text for Settings</comment>
   </data>
   <data name="Settings_Theme_Default.Content" xml:space="preserve">
-    <value>Windows default</value>
+    <value>Windows 默认</value>
     <comment>Windows default theme text for Settings</comment>
   </data>
   <data name="Settings_Theme_Light.Content" xml:space="preserve">
-    <value>Light</value>
+    <value>浅色</value>
     <comment>Light theme text for Settings</comment>
   </data>
   <data name="Shell_Main.Content" xml:space="preserve">
@@ -192,11 +255,23 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <comment>Navigation view item name for TabbedPivot</comment>
   </data>
   <data name="TabbedPivot_PivotItem1.Header" xml:space="preserve">
-    <value>文件切割</value>
+    <value>文件切分</value>
     <comment>First Pivot item title for TabbedPivot</comment>
   </data>
   <data name="TabbedPivot_PivotItem2.Header" xml:space="preserve">
     <value>文件合并</value>
     <comment>Second Pivot item title for TabbedPivot</comment>
+  </data>
+  <data name="ToggleSwitch_CustomizeExtention.OffContent" xml:space="preserve">
+    <value>自定义文件扩展名</value>
+  </data>
+  <data name="ToggleSwitch_CustomizeExtention.OnContent" xml:space="preserve">
+    <value>自定义文件扩展名</value>
+  </data>
+  <data name="ToggleSwitch_SaveAsDefault.OffContent" xml:space="preserve">
+    <value>保存为默认值</value>
+  </data>
+  <data name="ToggleSwitch_SaveAsDefault.OnContent" xml:space="preserve">
+    <value>保存为默认值</value>
   </data>
 </root>

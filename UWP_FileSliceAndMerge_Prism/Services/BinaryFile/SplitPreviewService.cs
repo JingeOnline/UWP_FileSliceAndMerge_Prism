@@ -48,17 +48,20 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             return previewSlices;
         }
 
+        /// <summary>
+        /// 根据切片大小来计算名称和大小
+        /// </summary>
+        /// <param name="maxSize"></param>
+        /// <returns></returns>
         public List<BinarySliceInfoModel> GetPreviewSlicesBySize(long maxSize)
         {
-            //Stopwatch sw = new Stopwatch();
-            //sw.Start();
-
             List<BinarySliceInfoModel> previewSlices = new List<BinarySliceInfoModel>();
             foreach(BinaryEntiretyInfoModel sourceFileInfo in _sourceFiles)
             {
-                previewSlices.AddRange(getSlicesBySizeFromOneFile(sourceFileInfo, maxSize));
+                List<BinarySliceInfoModel> slices = getSlicesBySizeFromOneFile(sourceFileInfo, maxSize);
+                previewSlices.AddRange(slices);
+                sourceFileInfo.SliceNumber = slices.Count;
             }
-            //Debug.WriteLine(sw.ElapsedMilliseconds);
             return previewSlices;
         }
 
@@ -136,16 +139,18 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         {
             List<BinarySliceInfoModel> slices = new List<BinarySliceInfoModel>();
             long totalSize = sourceFile.FileSize;
+            int index = 0;
             while (totalSize > maxSize)
             {
                 slices.Add(new BinarySliceInfoModel()
                 {
                     MergedFileName = sourceFile.FileName,
                     FileSize = maxSize,
-                    FileName = getSliceName(sourceFile.FileName, _indexStartWith),
+                    FileName = getSliceName(sourceFile.FileName, _indexStartWith+index),
                     IsDone = false,
                 });
-                _indexStartWith++;
+                //_indexStartWith++;
+                index++;
                 totalSize -= maxSize;
             }
             if (totalSize != 0)
@@ -154,7 +159,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                 {
                     MergedFileName = sourceFile.FileName,
                     FileSize = totalSize,
-                    FileName = getSliceName(sourceFile.FileName, _indexStartWith),
+                    FileName = getSliceName(sourceFile.FileName, _indexStartWith+index),
                     IsDone = false,
                 });
             }

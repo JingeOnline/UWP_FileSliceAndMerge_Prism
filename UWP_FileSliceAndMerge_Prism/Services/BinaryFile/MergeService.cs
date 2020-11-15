@@ -70,19 +70,19 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// <param name="sliceSize"></param>
         private void setBufferSize(long sliceSize)
         {
-            if (sliceSize > 1024 * 1024 * 256)
+            if (sliceSize >= 1024 * 1024 * 256)
             {
                 _bufferSize = 1024 * 1024 * 128;
                 return;
             }
 
-            if (sliceSize > 1024 * 1024 * 64)
+            if (sliceSize >= 1024 * 1024 * 64)
             {
                 _bufferSize = 1024 * 1024 * 16;
                 return;
             }
 
-            if (sliceSize > 1024 * 1024)
+            if (sliceSize >= 1024 * 1024)
             {
                 _bufferSize = 1024 * 1024;
                 return;

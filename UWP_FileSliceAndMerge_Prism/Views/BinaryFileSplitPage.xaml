@@ -36,14 +36,15 @@
                                                  Binding="{Binding Icon,Mode=OneWay}"
                                                  FontFamily="Segoe MDL2 Assets"
                                                  FontSize="16"/>
-                    <controls:DataGridTemplateColumn Header="File Name"
-                                                     Width="4*">
+
+                    <controls:DataGridTemplateColumn x:Uid="Datagrid_Column_FileName"
+                                                     Width="5*">
                         <controls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid Margin="{StaticResource SmallLeftRightMargin}">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{Binding FileName,Mode=OneWay}"
                                                Grid.Column="0"
@@ -54,13 +55,14 @@
                                                  Margin="{StaticResource SmallLeftMargin}"
                                                  IsIndeterminate="False"
                                                  Value="{Binding Path=SliceComplatedNumber,Mode=OneWay}"
-                                                 Maximum="{Binding Path=SliceNumber,Mode=OneWay}"/>
+                                                 Maximum="{Binding Path=SliceNumber,Mode=OneWay}"
+                                                 Width="400"/>
                                 </Grid>
                             </DataTemplate>
                         </controls:DataGridTemplateColumn.CellTemplate>
                     </controls:DataGridTemplateColumn>
 
-                    <controls:DataGridTextColumn Header="File Size (Byte)"
+                    <controls:DataGridTextColumn x:Uid="Datagrid_Column_FileSize"
                                                  Binding="{Binding FileSizeText, Mode=OneWay}"
                                                  Width="*"
                                                  FontSize="16"/>
@@ -83,7 +85,7 @@
             <TextBlock Style="{StaticResource BodyTextStyle}" Text="{x:Bind ViewModel.OutputFolder.Path,Mode=OneWay}"
                        VerticalAlignment="Center" HorizontalAlignment="Right"
                        IsTextSelectionEnabled="True" x:Name="TextBlock_OutputFolder"/>
-            <ToggleSwitch OffContent="Set as Default" OnContent="Set as Default" VerticalAlignment="Center"
+            <ToggleSwitch x:Uid="ToggleSwitch_SaveAsDefault" VerticalAlignment="Center"
                               Margin="{StaticResource SmallLeftMargin}"
                               Visibility="{x:Bind ViewModel.IsOutputFolderSetAsDefaultVisiable,Mode=OneWay}"
                               IsOn="{x:Bind ViewModel.IsSaveOutputFolderAsDefault,Mode=TwoWay}"/>
@@ -109,21 +111,24 @@
                 <!--<ColumnDefinition Width="auto"/>-->
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <!--文本-->
-            <TextBlock Text="Split Method" Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
+            <!--切片规则选择标题-->
+            <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
                            Width="120" FontWeight="SemiBold"
-                       HorizontalAlignment="Left"/>
-            <TextBlock Text="Set Slice Name" Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       x:Uid="BinaryFileSplitPage_TextBlock_SplitMethod"/>
+            <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
                            Width="120" Grid.Row="3" Margin="{StaticResource SmallTopMargin}" FontWeight="SemiBold"
-                       HorizontalAlignment="Left"/>
+                       HorizontalAlignment="Left"
+                       x:Uid="BinaryFileSplitPage_TextBlock_SetSliceName"/>
             <!--切片规则选择-->
             <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="{StaticResource SmallTopMargin}">
                 <!--按照数量切片-->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <RadioButton GroupName="SplitMethod" Content="Set Slice Number" VerticalAlignment="Center"
+                    <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
                              x:Name="RadioButton_SetSliceNumber"
                              IsChecked="{x:Bind ViewModel.IsSplitBySliceNumber,Mode=TwoWay}"
-                             Margin="{StaticResource SmallRightMargin}"/>
+                             Margin="{StaticResource SmallRightMargin}"
+                             x:Uid="BinaryFileSplitPage_RadioButton_SetSliceNumber"/>
                     <!--该控件使用了Binding方式，因为使用XBind的时候，经常报出莫名其妙的异常-->
                     <ComboBox IsEditable="True"  Width="200" ItemsSource="{x:Bind ViewModel.SliceNumberList}"
                           VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}"
@@ -132,8 +137,9 @@
                 </StackPanel>
                 <!--按照文件大小切片-->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <RadioButton GroupName="SplitMethod" Content="Set Slice Size" VerticalAlignment="Center"
-                             x:Name="RadioButton_SetSliceSize" Margin="{StaticResource SmallRightMargin}"/>
+                    <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
+                             x:Name="RadioButton_SetSliceSize" Margin="{StaticResource SmallRightMargin}"
+                                 x:Uid="BinaryFileSplitPage_RadioButton_SetSliceSize"/>
                     <ComboBox IsEditable="True" Width="100" ItemsSource="{x:Bind ViewModel.SliceMaxSizeList}" VerticalAlignment="Center"
                           IsEnabled="{Binding ElementName=RadioButton_SetSliceSize,Path=IsChecked}"
                           SelectedItem="{Binding SliceMaxSizeText,Mode=TwoWay}"
@@ -150,17 +156,19 @@
                           ItemsSource="{x:Bind ViewModel.SliceNamingRules}"
                           SelectedItem="{x:Bind ViewModel.SliceNamingRule,Mode=TwoWay}"
                           Margin="{StaticResource SmallRightMargin}"/>
-                <RadioButton GroupName="IndexStartWith" Content="Index Start with 0"
+                <!--切片文件的起始序号-->
+                <RadioButton GroupName="IndexStartWith" 
                              VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}"
-                             IsChecked="{x:Bind ViewModel.IndexStartWith0,Mode=TwoWay}"/>
-                <RadioButton GroupName="IndexStartWith" Content="Index Start with 1"
-                             VerticalAlignment="Center"/>
+                             IsChecked="{x:Bind ViewModel.IndexStartWith0,Mode=TwoWay}"
+                             x:Uid="BinaryFileSplitPage_RadioButton_IndexStartWith0"/>
+                <RadioButton GroupName="IndexStartWith"
+                             VerticalAlignment="Center"
+                             x:Uid="BinaryFileSplitPage_RadioButton_IndexStartWith1"/>
               
             </StackPanel>
             <!--用户自定义文件扩展名-->
             <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="{StaticResource SmallTopMargin}">
-                <ToggleSwitch OffContent="Customize Extention"
-                              OnContent="Customize Extention"
+                <ToggleSwitch x:Uid="ToggleSwitch_CustomizeExtention"
                               VerticalAlignment="Center"
                               x:Name="ToggleSwitch_CustomizeExtention"
                               IsOn="{x:Bind ViewModel.IsCustomizeExtention,Mode=TwoWay}"/>
@@ -203,14 +211,14 @@
                                                      Width="4*"
                                                      FontSize="16"/>-->
                         <!--文件名和进度条-->
-                        <controls:DataGridTemplateColumn Header="Output Name"
-                                                     Width="4*">
+                        <controls:DataGridTemplateColumn x:Uid="Datagrid_Column_FileName"
+                                                     Width="5*">
                             <controls:DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid Margin="{StaticResource SmallLeftRightMargin}">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"
                                                Grid.Column="0"/>
@@ -218,14 +226,15 @@
                                                  Grid.Column="1" Margin="{StaticResource SmallLeftMargin}"
                                                  Value="{Binding FinishSize,Mode=OneWay}"
                                                  Maximum="{Binding FileSize,Mode=OneWay}"
-                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"/>
+                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"
+                                                     Width="400"/>
                                     </Grid>
                                 </DataTemplate>
                             </controls:DataGridTemplateColumn.CellTemplate>
                         </controls:DataGridTemplateColumn>
                         <!--文件大小-->
                         <!--该控件不能在xmal中格式化字符串-->
-                        <controls:DataGridTextColumn Header="File Size (Byte)"
+                        <controls:DataGridTextColumn x:Uid="Datagrid_Column_FileSize"
                                                  Binding="{Binding FileSizeText, Mode=OneWay}"
                                                  Width="*"
                                                  FontSize="16"/>
@@ -239,7 +248,7 @@
             <Button Style="{StaticResource MediumButton}" x:Uid="BinaryFileSplitPage_StartButton"
                         Command="{x:Bind ViewModel.StartSplitCommand}"/>
             <Button Style="{StaticResource MediumButton}" Margin="{StaticResource SmallTopBottomMargin}"
-                        x:Uid="BinaryFileSplitPage_OpenSlicesFolderButton" 
+                        x:Uid="BinaryFileSplitPage_OpenExportFolderButton" 
                     Command="{x:Bind ViewModel.LaunchFolderCommand,Mode=OneWay}"/>
         </StackPanel>
     </Grid>

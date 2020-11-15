@@ -38,6 +38,7 @@ namespace UWP_FileSliceAndMerge_Prism.Models
                 if (IsDone)
                 {
                     Icon = "\xF78C";
+                    IsStart = false;
                 }
             }
         }

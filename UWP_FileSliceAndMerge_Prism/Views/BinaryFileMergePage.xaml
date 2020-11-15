@@ -48,14 +48,14 @@
                                                  Binding="{Binding Icon,Mode=OneWay}"
                                                  FontFamily="Segoe MDL2 Assets"
                                                  FontSize="16"/>
-                    <controls:DataGridTemplateColumn Header="File Name"
-                                                     Width="4*">
+                    <controls:DataGridTemplateColumn x:Uid="Datagrid_Column_FileName"
+                                                     Width="5*">
                         <controls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid Margin="{StaticResource SmallLeftRightMargin}">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{Binding FileName,Mode=OneWay}"
                                                Grid.Column="0"
@@ -64,12 +64,13 @@
                                                  Grid.Column="1" Margin="{StaticResource SmallLeftMargin}"
                                                  Value="{Binding FinishSize,Mode=OneWay}"
                                                  Maximum="{Binding FileSize,Mode=OneWay}"
-                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"/>
+                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"
+                                                 Width="400"/>
                                 </Grid>
                             </DataTemplate>
                         </controls:DataGridTemplateColumn.CellTemplate>
                     </controls:DataGridTemplateColumn>
-                    <controls:DataGridTextColumn Header="File Size (Byte)"
+                    <controls:DataGridTextColumn x:Uid="Datagrid_Column_FileSize"
                                                  Binding="{Binding FileSizeText, Mode=OneWay}"
                                                  Width="*"
                                                  FontSize="16"/>
@@ -82,7 +83,7 @@
             <TextBlock Style="{StaticResource BodyTextStyle}" Text="{x:Bind ViewModel.OutputFolder.Path,Mode=OneWay}"
                        VerticalAlignment="Center" HorizontalAlignment="Right"
                        IsTextSelectionEnabled="True" x:Name="TextBlock_OutputFolder"/>
-            <ToggleSwitch OffContent="Set as Default" OnContent="Set as Default" VerticalAlignment="Center"
+            <ToggleSwitch x:Uid="ToggleSwitch_SaveAsDefault" VerticalAlignment="Center"
                               Margin="{StaticResource SmallLeftMargin}"
                               Visibility="{x:Bind ViewModel.IsOutputFolderSetAsDefaultVisiable,Mode=OneWay}"
                               IsOn="{x:Bind ViewModel.IsSaveOutputFolderAsDefault,Mode=TwoWay}"/>
@@ -94,8 +95,7 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
-                <ToggleSwitch OffContent="Customize Extention"
-                              OnContent="Customize Extention"
+                <ToggleSwitch x:Uid="ToggleSwitch_CustomizeExtention"
                               VerticalAlignment="Center"
                               x:Name="ToggleSwitch_CustomizeExtention"
                               IsOn="{x:Bind ViewModel.IsCustomizeExtention,Mode=TwoWay}"/>
@@ -122,14 +122,14 @@
                                                  Binding="{Binding Icon,Mode=OneWay}"
                                                  FontFamily="Segoe MDL2 Assets"
                                                  FontSize="16"/>
-                    <controls:DataGridTemplateColumn Header="File Name"
-                                                     Width="4*">
+                    <controls:DataGridTemplateColumn x:Uid="Datagrid_Column_FileName"
+                                                     Width="5*">
                         <controls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid Margin="{StaticResource SmallLeftRightMargin}">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{Binding FileName,Mode=OneWay}"
                                                Grid.Column="0"
@@ -140,13 +140,14 @@
                                                  Margin="{StaticResource SmallLeftMargin}"
                                                  IsIndeterminate="False"
                                                  Value="{Binding Path=SliceComplatedNumber,Mode=OneWay}"
-                                                 Maximum="{Binding Path=SliceNumber,Mode=OneWay}"/>
+                                                 Maximum="{Binding Path=SliceNumber,Mode=OneWay}"
+                                                 Width="400"/>
                                 </Grid>
                             </DataTemplate>
                         </controls:DataGridTemplateColumn.CellTemplate>
                     </controls:DataGridTemplateColumn>
 
-                    <controls:DataGridTextColumn Header="File Size (Byte)"
+                    <controls:DataGridTextColumn x:Uid="Datagrid_Column_FileSize"
                                                  Binding="{Binding FileSizeText, Mode=OneWay}"
                                                  Width="*"
                                                  FontSize="16"/>
@@ -156,10 +157,10 @@
         <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="2"
                         Margin="{StaticResource MediumTopMargin}" VerticalAlignment="Top">
             <!--开始按钮-->
-            <Button Style="{StaticResource MediumButton}" x:Uid="BinaryFileSplitPage_StartButton"
+            <Button Style="{StaticResource MediumButton}" x:Uid="BinaryFileMergePage_StartButton"
                         Command="{x:Bind ViewModel.StartMergeCommand}"/>
             <Button Style="{StaticResource MediumButton}" Margin="{StaticResource SmallTopBottomMargin}"
-                        x:Uid="BinaryFileSplitPage_OpenSlicesFolderButton" 
+                        x:Uid="BinaryFileMergePage_OpenExportFolderButton" 
                     Command="{x:Bind ViewModel.LaunchFolderCommand,Mode=OneWay}"/>
         </StackPanel>
     </Grid>

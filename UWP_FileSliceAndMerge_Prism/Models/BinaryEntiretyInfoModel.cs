@@ -29,7 +29,15 @@ namespace UWP_FileSliceAndMerge_Prism.Models
         public bool IsDone
         {
             get { return isDone; }
-            set { SetProperty(ref isDone, value); }
+            set
+            {
+                SetProperty(ref isDone, value);
+                if (value)
+                {
+                    Icon = "\xF78C";
+                    IsStart = false;
+                }
+            }
         }
         private string icon= "\xE160";
         public string Icon
@@ -52,7 +60,7 @@ namespace UWP_FileSliceAndMerge_Prism.Models
                 SetProperty(ref sliceCompletedNumber, value);
                 if (sliceCompletedNumber == SliceNumber)
                 {
-                    Icon = "\xF78C";
+                    IsDone = true;
                 }
             }
         }

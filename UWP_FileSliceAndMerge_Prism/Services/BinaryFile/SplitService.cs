@@ -45,8 +45,8 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             }
             GC.Collect(1);
             GC.Collect(2);
-            Debug.WriteLine("当前缓冲区大小 " + _bufferSize);
-            Debug.WriteLine("总时长 " + stopwatch.ElapsedMilliseconds);
+
+            Debug.WriteLine($"切割文件总时长 " + stopwatch.ElapsedMilliseconds);
         }
 
         /// <summary>
@@ -55,19 +55,19 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
         /// <param name="sliceSize"></param>
         private void setBufferSize(long sliceSize)
         {
-            if (sliceSize > 1024 * 1024 * 256)
+            if (sliceSize >= 1024 * 1024 * 256)
             {
                 _bufferSize = 1024 * 1024 * 128;
                 return;
             }
 
-            if (sliceSize > 1024 * 1024 * 64)
+            if (sliceSize >= 1024 * 1024 * 64)
             {
                 _bufferSize = 1024 * 1024 * 16;
                 return;
             }
 
-            if (sliceSize > 1024 * 1024)
+            if (sliceSize >= 1024 * 1024)
             {
                 _bufferSize = 1024 * 1024;
                 return;
@@ -92,6 +92,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
                 await splitOneFileOneSlice(sourceFile.StorageFile, preview, streamStartPosition);
                 streamStartPosition += preview.FileSize;
                 sourceFile.SliceComplatedNumber++;
+                Debug.WriteLine($"切割完成{sourceFile.SliceComplatedNumber}/{sourceFile.SliceNumber}");
             }
         }
 
