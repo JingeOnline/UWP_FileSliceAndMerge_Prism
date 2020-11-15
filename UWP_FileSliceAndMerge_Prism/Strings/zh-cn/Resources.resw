@@ -177,10 +177,13 @@
     <value>开始</value>
   </data>
   <data name="BinaryFileSplitPage_TextBlock_SetSliceName.Text" xml:space="preserve">
-    <value>切片命名规则</value>
+    <value>切片序号格式</value>
   </data>
   <data name="BinaryFileSplitPage_TextBlock_SplitMethod.Text" xml:space="preserve">
     <value>切分方法</value>
+  </data>
+  <data name="ContentDialog_InvalidInput.Title" xml:space="preserve">
+    <value>无效值</value>
   </data>
   <data name="Datagrid_Column_FileName.Header" xml:space="preserve">
     <value>文件名称</value>
@@ -254,6 +257,15 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <value>二进制文件处理</value>
     <comment>Navigation view item name for TabbedPivot</comment>
   </data>
+  <data name="String_WarningMaximumNumberOfSlices" xml:space="preserve">
+    <value>程序允许的最大切片数量为 999,999</value>
+  </data>
+  <data name="String_WarningMaximumNumberOfSlices_1" xml:space="preserve">
+    <value>当前设定值将产生</value>
+  </data>
+  <data name="String_WarningMaximumNumberOfSlices_2" xml:space="preserve">
+    <value>个切片文件，请更改切片数量，切片大小，或单位。</value>
+  </data>
   <data name="TabbedPivot_PivotItem1.Header" xml:space="preserve">
     <value>文件切分</value>
     <comment>First Pivot item title for TabbedPivot</comment>
@@ -261,6 +273,9 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
   <data name="TabbedPivot_PivotItem2.Header" xml:space="preserve">
     <value>文件合并</value>
     <comment>Second Pivot item title for TabbedPivot</comment>
+  </data>
+  <data name="TextBlock_FileExtension.Text" xml:space="preserve">
+    <value>文件扩展名</value>
   </data>
   <data name="ToggleSwitch_CustomizeExtention.OffContent" xml:space="preserve">
     <value>自定义文件扩展名</value>

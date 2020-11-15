@@ -15,9 +15,9 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <!--<RowDefinition Height="auto"/>-->
         </Grid.RowDefinitions>
@@ -30,7 +30,7 @@
         <Border Style="{StaticResource ThinRadiusThemeBorder}"
                     Margin="{StaticResource SmallTopMargin}">
             <controls:DataGrid ItemsSource="{x:Bind ViewModel.MergedFiles,Mode=OneWay}"
-                                   AutoGenerateColumns="False" IsReadOnly="True" Height="160">
+                                   AutoGenerateColumns="False" IsReadOnly="True">
                 <controls:DataGrid.Columns>
                     <controls:DataGridTextColumn Width="SizeToCells"
                                                  Binding="{Binding Icon,Mode=OneWay}"
@@ -96,104 +96,109 @@
                     x:Uid="BinaryFileSplitPage_SelectOutputPathButton"
                     VerticalAlignment="Center" Command="{x:Bind ViewModel.SelectOutputFolderCommand}"
                 Margin="{StaticResource SmallTopMargin}"/>
-
-        <Grid Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <!--<ColumnDefinition Width="auto"/>-->
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <!--切片规则选择标题-->
-            <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
-                           Width="120" FontWeight="SemiBold"
-                       HorizontalAlignment="Left"
-                       x:Uid="BinaryFileSplitPage_TextBlock_SplitMethod"/>
-            <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
-                           Width="120" Grid.Row="3" Margin="{StaticResource SmallTopMargin}" FontWeight="SemiBold"
-                       HorizontalAlignment="Left"
-                       x:Uid="BinaryFileSplitPage_TextBlock_SetSliceName"/>
-            <!--切片规则选择-->
-            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="{StaticResource SmallTopMargin}">
-                <!--按照数量切片-->
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <!--切片规则选择标题-->
+                <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
+                       HorizontalAlignment="Left" 
+                       x:Uid="BinaryFileSplitPage_TextBlock_SplitMethod"
+                       Margin="{StaticResource SmallTopMargin}"/>
+                <!--切片规则选项-->
+                <StackPanel Orientation="Vertical" Grid.Row="1"
+                            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+                            Margin="{StaticResource SmallTopMargin}">
+                    <StackPanel Orientation="Horizontal" >
+                        <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
                              x:Name="RadioButton_SetSliceNumber"
                              IsChecked="{x:Bind ViewModel.IsSplitBySliceNumber,Mode=TwoWay}"
                              Margin="{StaticResource SmallRightMargin}"
                              x:Uid="BinaryFileSplitPage_RadioButton_SetSliceNumber"/>
-                    <!--该控件使用了Binding方式，因为使用XBind的时候，经常报出莫名其妙的异常-->
-                    <ComboBox IsEditable="True"  Width="200" ItemsSource="{x:Bind ViewModel.SliceNumberList}"
+                        <ComboBox IsEditable="True"  Width="128" ItemsSource="{x:Bind ViewModel.SliceNumberList}"
                           VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}"
                           IsEnabled="{Binding ElementName=RadioButton_SetSliceNumber,Path=IsChecked}"
-                          SelectedItem="{Binding SliceNumberText,Mode=TwoWay}"/>
-                </StackPanel>
-                <!--按照文件大小切片-->
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
+                          SelectedItem="{x:Bind ViewModel.SliceNumberText,Mode=TwoWay}"/>
+                        <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
                              x:Name="RadioButton_SetSliceSize" Margin="{StaticResource SmallRightMargin}"
                                  x:Uid="BinaryFileSplitPage_RadioButton_SetSliceSize"/>
-                    <ComboBox IsEditable="True" Width="100" ItemsSource="{x:Bind ViewModel.SliceMaxSizeList}" VerticalAlignment="Center"
+                        <ComboBox IsEditable="True" Width="128" ItemsSource="{x:Bind ViewModel.SliceMaxSizeList}" VerticalAlignment="Center"
                           IsEnabled="{Binding ElementName=RadioButton_SetSliceSize,Path=IsChecked}"
-                          SelectedItem="{Binding SliceMaxSizeText,Mode=TwoWay}"
+                          SelectedItem="{x:Bind ViewModel.SliceMaxSizeText,Mode=TwoWay}"
                           Margin="{StaticResource SmallRightMargin}"/>
-                    <ComboBox ItemsSource="{x:Bind ViewModel.SliceMaxSizeUnitList}" VerticalAlignment="Center"
+                        <ComboBox ItemsSource="{x:Bind ViewModel.SliceMaxSizeUnitList}" VerticalAlignment="Center"
                           IsEnabled="{Binding ElementName=RadioButton_SetSliceSize,Path=IsChecked}"
                           SelectedItem="{x:Bind ViewModel.SliceMaxSizeUnit,Mode=TwoWay}"/>
+                    </StackPanel>
+                    <!--切片数量和文件大小输入非法字符-->
+                    <TextBlock Foreground="Red"  
+                       Text="{x:Bind ViewModel.SplitMethodWarning,Mode=OneWay}"
+                       Visibility="{x:Bind ViewModel.IsSplitMethodWarningVisible,Mode=OneWay}" />
                 </StackPanel>
-            </StackPanel>
-            <!--设置切片的命名规则-->
-            <StackPanel Orientation="Horizontal" Grid.Row="4" 
-                        VerticalAlignment="Center" Margin="{StaticResource SmallTopMargin}">
-                <ComboBox IsEditable="True" Width="348" VerticalAlignment="Center"
+                <!--命名规则选择标题-->
+                <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
+                           Grid.Row="2" Margin="{StaticResource SmallTopMargin}" 
+                       HorizontalAlignment="Left" 
+                       x:Uid="BinaryFileSplitPage_TextBlock_SetSliceName"/>
+                <!--命名规则选项-->
+                <StackPanel Orientation="Horizontal"
+                                Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+                                Grid.Row="3"
+                                Margin="{StaticResource SmallTopMargin}">
+                    <ComboBox IsEditable="False" Width="128" VerticalAlignment="Center"
                           ItemsSource="{x:Bind ViewModel.SliceNamingRules}"
-                          SelectedItem="{x:Bind ViewModel.SliceNamingRule,Mode=TwoWay}"
+                          SelectedIndex="{x:Bind ViewModel.SliceIndexRule,Mode=TwoWay}"
                           Margin="{StaticResource SmallRightMargin}"/>
-                <!--切片文件的起始序号-->
-                <RadioButton GroupName="IndexStartWith" 
+                    <!--切片文件的起始序号-->
+                    <RadioButton GroupName="IndexStartWith" Grid.Column="1"
                              VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}"
                              IsChecked="{x:Bind ViewModel.IndexStartWith0,Mode=TwoWay}"
                              x:Uid="BinaryFileSplitPage_RadioButton_IndexStartWith0"/>
-                <RadioButton GroupName="IndexStartWith"
-                             VerticalAlignment="Center"
+                    <RadioButton GroupName="IndexStartWith" Grid.Column="1"
+                             VerticalAlignment="Center" Grid.Row="1"
                              x:Uid="BinaryFileSplitPage_RadioButton_IndexStartWith1"/>
-              
-            </StackPanel>
-            <!--用户自定义文件扩展名-->
-            <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="{StaticResource SmallTopMargin}">
-                <ToggleSwitch x:Uid="ToggleSwitch_CustomizeExtention"
+                </StackPanel>
+                <!--自定义文件扩展名标题-->
+                <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
+                           Grid.Row="4" Margin="{StaticResource SmallTopMargin}" 
+                       HorizontalAlignment="Left" Text="Customize Extension"
+                           x:Uid="TextBlock_FileExtension"/>
+                <!--自定义文件扩展名-->
+                <StackPanel Orientation="Vertical" Grid.Row="5"
+                            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+                    <StackPanel Orientation="Horizontal" Margin="{StaticResource SmallTopMargin}">
+                        <ToggleSwitch x:Uid="ToggleSwitch_CustomizeExtention"
                               VerticalAlignment="Center"
                               x:Name="ToggleSwitch_CustomizeExtention"
                               IsOn="{x:Bind ViewModel.IsCustomizeExtention,Mode=TwoWay}"/>
-                <TextBox Margin="{StaticResource SmallLeftMargin}"
+                        <TextBox Margin="{StaticResource SmallLeftMargin}"
                          VerticalAlignment="Center"
                          Width="156"
                          Visibility="{Binding ElementName=ToggleSwitch_CustomizeExtention, Path=IsOn}"
                          Text="{x:Bind ViewModel.SliceFileExtention,Mode=TwoWay,UpdateSourceTrigger=Default}"
                          KeyDown="TextBox_KeyDown">
-                </TextBox>
-                <TextBlock Margin="{StaticResource SmallLeftMargin}"
+                        </TextBox>
+                        <TextBlock Margin="{StaticResource SmallLeftMargin}"
                            VerticalAlignment="Center"
                            Visibility="{Binding ElementName=ToggleSwitch_CustomizeExtention, Path=IsOn}"
                            Text="Don't forget manually assign the extention when merge."
                            Foreground="Gray"/>
-            </StackPanel>
-            <!--错误警告文本-->
-            <TextBlock Foreground="Red"  Grid.Row="2"
-                       Text="{x:Bind ViewModel.SplitMethodWarning,Mode=OneWay}"
-                       Visibility="{x:Bind ViewModel.IsSplitMethodWarningVisible,Mode=OneWay}" />
-            <TextBlock Foreground="Red"  Grid.Row="6"
+                    </StackPanel>
+                    <!--扩展名包含非法字符警告-->
+                    <TextBlock Foreground="Red"
                        Text="{x:Bind ViewModel.NamingInvalidWarning,Mode=OneWay}"
                        Visibility="{x:Bind ViewModel.IsNamingInvalidWarningVisiable,Mode=OneWay}"
                        TextWrapping="Wrap"/>
-        </Grid>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
         <!--输出文件预览列表-->
         <Border  Style="{StaticResource ThinRadiusThemeBorder}"
                      Margin="{StaticResource MediumTopMargin}"

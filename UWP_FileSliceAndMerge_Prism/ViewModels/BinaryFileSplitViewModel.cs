@@ -45,9 +45,10 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
 
         public List<string> SliceNamingRules { get; set; } = new List<string>()
         {
-            "{@}_{#}",
-            "{@}-{#}",
-            "{@} ({#})"
+            "_0,_1,_2 ...",
+            "-0,-1,-2 ...",
+            "(0),(1),(2) ...",
+            " (0), (1), (2) ..."
         };
         public List<string> SliceNumberList { get; set; } = new List<string>()
         {
@@ -62,19 +63,16 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             "Byte","KB","MB","GB"
         };
 
-        private string _sliceNamingRule = "{@}_{#}";
-        public string SliceNamingRule
+        private int _sliceIndexRule = 0;
+        public int SliceIndexRule
         {
-            get { return _sliceNamingRule; }
+            get { return _sliceIndexRule; }
             set
             {
-                if (_sliceNamingRule != value)
+                if (_sliceIndexRule != value)
                 {
-                    SetProperty(ref _sliceNamingRule, value);
-                    if (checkFileName(value))
-                    {
-                        preview();
-                    }
+                    SetProperty(ref _sliceIndexRule, value);
+                    preview();
                 }
             }
         }
@@ -132,12 +130,12 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         private string _sliceNumberText = "2";
         public string SliceNumberText
         {
-            get { return _sliceNumber.ToString(); }
+            get { return _sliceNumberText; }
             set
             {
                 if (_sliceNumberText != value)
                 {
-                    _sliceNumberText = value;
+                    SetProperty(ref _sliceNumberText, value);
                     checkSliceNumber(value);
                 }
             }
@@ -300,7 +298,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             StartSplitCommand = new DelegateCommand(startSplit, canStart)
                 .ObservesProperty(() => IsFinish).ObservesProperty(() => IsStarted);
             LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(() => IsFinish);
-            SliceNamingRule = SliceNamingRules[0];
+            //SliceIndexRule = SliceNamingRules[0];
             getAppSetting();
         }
 
@@ -411,11 +409,11 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             SplitPreviewService previewService;
             if (!IsCustomizeExtention)
             {
-                previewService = new SplitPreviewService(SliceNamingRule, _indexStartWith, MergedFiles);
+                previewService = new SplitPreviewService(SliceIndexRule, _indexStartWith, MergedFiles);
             }
             else
             {
-                previewService = new SplitPreviewService(SliceNamingRule, SliceFileExtention, _indexStartWith, MergedFiles);
+                previewService = new SplitPreviewService(SliceIndexRule, SliceFileExtention, _indexStartWith, MergedFiles);
             }
 
 
@@ -442,6 +440,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private async void checkSliceNumber(string inputText)
         {
+            Debug.WriteLine("执行输入检验 " + inputText);
             SplitMethodWarning = "";
             if (Int32.TryParse(inputText, out int inputNumber) && inputNumber > 0)
             {
@@ -519,6 +518,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             BinarySplitSettingWarningDialog dialog = new BinarySplitSettingWarningDialog(outputFileNumber);
             await dialog.ShowAsync();
+            //Debug.WriteLine("弹出警告窗口");
         }
 
         /// <summary>

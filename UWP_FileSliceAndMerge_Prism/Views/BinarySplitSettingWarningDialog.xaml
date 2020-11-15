@@ -7,22 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="Invalid Input"
+    x:Uid="ContentDialog_InvalidInput"
     PrimaryButtonText="Ok"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
 
     <Grid>
         <StackPanel>
-            <TextBlock Text="The maximum number of slices is 999,999."
+            <TextBlock Text="{x:Bind TheMaximumNumberOfSlices}"
                        Style="{StaticResource BodyTextBlockStyle}"/>
             <TextBlock  Style="{StaticResource BodyTextBlockStyle}"
-                        Margin="{StaticResource SmallTopMargin}">
-                <Run Text="Your setting will generate"/>
-                <Run Text="{x:Bind ResultFileNumber}"/>
-                     <Run Text="slice files, please change your number or unit."/>
-            </TextBlock>
-        <!--<TextBlock Text="Notice: Considering the performance, the result preview table only show the top 5000 slices."
-                       Style="{StaticResource NoticeTextStyle}"
-                       Margin="{StaticResource SmallTopMargin}"/>-->
+                        Margin="{StaticResource SmallTopMargin}"
+                        Text="{x:Bind CurrentSituation}"/>
         </StackPanel>
     </Grid>
 </ContentDialog>

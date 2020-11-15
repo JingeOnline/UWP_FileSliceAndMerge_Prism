@@ -24,4 +24,9 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
+    <Style x:Key="GroupTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
 </ResourceDictionary>

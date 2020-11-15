@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -20,10 +21,16 @@ namespace UWP_FileSliceAndMerge_Prism.Views
     public sealed partial class BinarySplitSettingWarningDialog : ContentDialog
     {
         public long ResultFileNumber { get; set; }
+        public string TheMaximumNumberOfSlices { get; set; }
+        public string CurrentSituation { get; set; }
         public BinarySplitSettingWarningDialog(long resultFileNumber)
         {
             ResultFileNumber = resultFileNumber;
             RequestedTheme = (Window.Current.Content as FrameworkElement).RequestedTheme;
+            TheMaximumNumberOfSlices= ResourceLoader.GetForViewIndependentUse().GetString("String_WarningMaximumNumberOfSlices");
+            CurrentSituation= ResourceLoader.GetForViewIndependentUse().GetString("String_WarningMaximumNumberOfSlices_1");
+            CurrentSituation += resultFileNumber;
+            CurrentSituation+= ResourceLoader.GetForViewIndependentUse().GetString("String_WarningMaximumNumberOfSlices_2");
             this.InitializeComponent();
         }
 

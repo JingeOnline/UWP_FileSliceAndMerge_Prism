@@ -207,6 +207,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private void preview()
         {
+            if (SliceFiles.Count == 0) { return;}
             IsFinish = false;
             MergePreviewService previewService;
             if (IsCustomizeExtention)

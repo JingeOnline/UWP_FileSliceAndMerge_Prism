@@ -251,16 +251,28 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <value>Set Slice Size</value>
   </data>
   <data name="BinaryFileSplitPage_TextBlock_SetSliceName.Text" xml:space="preserve">
-    <value>Set Slice Name</value>
+    <value>Slice Index Format</value>
   </data>
   <data name="BinaryFileSplitPage_TextBlock_SplitMethod.Text" xml:space="preserve">
     <value>Split Method</value>
+  </data>
+  <data name="ContentDialog_InvalidInput.Title" xml:space="preserve">
+    <value>Invalid Input</value>
   </data>
   <data name="Datagrid_Column_FileName.Header" xml:space="preserve">
     <value>File Name</value>
   </data>
   <data name="Datagrid_Column_FileSize.Header" xml:space="preserve">
     <value>File Size (Byte)</value>
+  </data>
+  <data name="String_WarningMaximumNumberOfSlices" xml:space="preserve">
+    <value>The maximum number of slices is 999,999</value>
+  </data>
+  <data name="String_WarningMaximumNumberOfSlices_1" xml:space="preserve">
+    <value>Your setting will generate</value>
+  </data>
+  <data name="String_WarningMaximumNumberOfSlices_2" xml:space="preserve">
+    <value>slice files, please change your number or unit.</value>
   </data>
   <data name="ToggleSwitch_CustomizeExtention.OffContent" xml:space="preserve">
     <value>Customize File Extension</value>
@@ -273,5 +285,8 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
   </data>
   <data name="ToggleSwitch_SaveAsDefault.OnContent" xml:space="preserve">
     <value>Save as Default</value>
+  </data>
+  <data name="TextBlock_FileExtension.Text" xml:space="preserve">
+    <value>File Extension</value>
   </data>
 </root>

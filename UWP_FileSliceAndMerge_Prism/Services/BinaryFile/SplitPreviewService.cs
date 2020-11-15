@@ -10,20 +10,21 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
     public class SplitPreviewService
     {
         private int _sliceNumber;
-        private string _namingRule;
+        //private string _namingRule;
+        private int _indexRule;
         private string _fileExtention;
         private int _indexStartWith;
         private IEnumerable<BinaryEntiretyInfoModel> _sourceFiles;
 
-        public SplitPreviewService(string namingRule, int indexStartWith, IEnumerable<BinaryEntiretyInfoModel> sourceFiles)
+        public SplitPreviewService(int indexRule, int indexStartWith, IEnumerable<BinaryEntiretyInfoModel> sourceFiles)
         {
-            this._namingRule = namingRule;
+            _indexRule = indexRule;
             this._indexStartWith = indexStartWith;
             this._sourceFiles = sourceFiles;
         }
-        public SplitPreviewService(string namingRule,string fileExtention, int indexStartWith, IEnumerable<BinaryEntiretyInfoModel> sourceFiles)
+        public SplitPreviewService(int indexRule, string fileExtention, int indexStartWith, IEnumerable<BinaryEntiretyInfoModel> sourceFiles)
         {
-            this._namingRule = namingRule;
+            _indexRule = indexRule;
             this._fileExtention = fileExtention;
             this._indexStartWith = indexStartWith;
             this._sourceFiles = sourceFiles;
@@ -108,16 +109,23 @@ namespace UWP_FileSliceAndMerge_Prism.Services.BinaryFile
             string[] array = sourceName.Split('.');
             string fileExtention = array[array.Length - 1];
             string fileName = sourceName.Remove(sourceName.Length - fileExtention.Length - 1);
-            string name = _namingRule;
-            if (_namingRule.Contains("{@}"))
+            //string name = _namingRule;
+            //if (_namingRule.Contains("{@}"))
+            //{
+            //    name = name.Replace("{@}", fileName);
+            //}
+            //if (_namingRule.Contains("{#}"))
+            //{
+            //    name = name.Replace("{#}", index.ToString());
+            //}
+            string name=null;
+            switch (_indexRule)
             {
-                name = name.Replace("{@}", fileName);
+                case 0: name = fileName + "_" + index;break;
+                case 1: name = fileName + "-" + index;break;
+                case 2: name = fileName + "(" + index + ")";break;
+                case 3: name = fileName + " (" + index + ")"; break;
             }
-            if (_namingRule.Contains("{#}"))
-            {
-                name = name.Replace("{#}", index.ToString());
-            }
-
             if (string.IsNullOrEmpty(_fileExtention))
             {
                 return name + "." + fileExtention;
