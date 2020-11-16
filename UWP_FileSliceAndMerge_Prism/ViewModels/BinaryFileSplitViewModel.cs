@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
-using UWP_FileSliceAndMerge_Prism.Constants;
 using UWP_FileSliceAndMerge_Prism.Helpers;
 using UWP_FileSliceAndMerge_Prism.Models;
 using UWP_FileSliceAndMerge_Prism.Services;
@@ -117,7 +116,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 SetProperty(ref _isSplitBySliceNumber, value);
                 if (value)
                 {
-                    checkSliceNumber(_sliceNumber.ToString());
+                    checkSliceNumber(_sliceNumberText);
                 }
                 else
                 {
@@ -214,42 +213,6 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             {
                 SetProperty(ref _isSaveOutputFolderAsDefault, value);
                 MyAppSettingHelper.AppSetting.SaveAsync<bool>(_settingKey, value);
-            }
-        }
-
-        private string _splitMethodWarning;
-        public string SplitMethodWarning
-        {
-            get { return _splitMethodWarning; }
-            set
-            {
-                SetProperty(ref _splitMethodWarning, value);
-                if (string.IsNullOrEmpty(value))
-                {
-                    IsSplitMethodWarningVisible = false;
-                }
-                else
-                {
-                    IsSplitMethodWarningVisible = true;
-                }
-            }
-        }
-
-        private string _namingInvalidWarning;
-        public string NamingInvalidWarning
-        {
-            get { return _namingInvalidWarning; }
-            set
-            {
-                SetProperty(ref _namingInvalidWarning, value);
-                //if (string.IsNullOrEmpty(value))
-                //{
-                //    IsSliceNamingWarningVisiable = false;
-                //}
-                //else
-                //{
-                //    IsSliceNamingWarningVisiable = true;
-                //}
             }
         }
 
@@ -440,8 +403,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private async void checkSliceNumber(string inputText)
         {
+            IsSplitMethodWarningVisible = false;
             Debug.WriteLine("执行输入检验 " + inputText);
-            SplitMethodWarning = "";
             if (Int32.TryParse(inputText, out int inputNumber) && inputNumber > 0)
             {
                 //int sliceNumber = Int32.Parse(inputText);
@@ -455,7 +418,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
             else
             {
-                SplitMethodWarning = BinaryFileErrors.InvalidNumber;
+                IsSplitMethodWarningVisible = true;
             }
         }
 
@@ -465,7 +428,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// <param name="inputText"></param>
         private async void checkSliceMaxSize(string inputText)
         {
-            SplitMethodWarning = "";
+            IsSplitMethodWarningVisible = false;
             if (long.TryParse(inputText, out long inputNumber) && inputNumber > 0)
             {
                 _sliceMaxSizeTextNumber = inputNumber;
@@ -485,7 +448,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
             else
             {
-                SplitMethodWarning = BinaryFileErrors.InvalidNumber;
+                IsSplitMethodWarningVisible = true;
             }
         }
 
@@ -495,7 +458,6 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// <param name="unit"></param>
         private async void checkSliceMaxSizeUnit()
         {
-            SplitMethodWarning = "";
             long sliceCount = 0;
             foreach (BinaryEntiretyInfoModel file in MergedFiles)
             {
@@ -579,7 +541,6 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             bool isValid = FileNameCheck.Check(fileName);
             if (!isValid)
             {
-                NamingInvalidWarning = BinaryFileErrors.InvalidFileName;
                 IsNamingInvalidWarningVisiable = true;
             }
             else

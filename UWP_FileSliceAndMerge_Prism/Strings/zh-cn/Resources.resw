@@ -176,11 +176,26 @@
   <data name="BinaryFileSplitPage_StartButton.Content" xml:space="preserve">
     <value>开始</value>
   </data>
+  <data name="BinaryFileSplitPage_TextBlock_HintOfCustomizeExtention.Text" xml:space="preserve">
+    <value>提示：不要忘记在文件合并时手动指定扩展名</value>
+  </data>
   <data name="BinaryFileSplitPage_TextBlock_SetSliceName.Text" xml:space="preserve">
     <value>切片序号格式</value>
   </data>
   <data name="BinaryFileSplitPage_TextBlock_SplitMethod.Text" xml:space="preserve">
     <value>切分方法</value>
+  </data>
+  <data name="ContentDialogue_FileAlreadyExist_TextBlock_Description.Text" xml:space="preserve">
+    <value>输出路径中已经存在以下同名文件：</value>
+  </data>
+  <data name="ContentDialog_FileAlreadyExist.PrimaryButtonText" xml:space="preserve">
+    <value>覆盖已存在文件</value>
+  </data>
+  <data name="ContentDialog_FileAlreadyExist.SecondaryButtonText" xml:space="preserve">
+    <value>取消并重新命名</value>
+  </data>
+  <data name="ContentDialog_FileAlreadyExist.Title" xml:space="preserve">
+    <value>文件名已经存在</value>
   </data>
   <data name="ContentDialog_InvalidInput.Title" xml:space="preserve">
     <value>无效值</value>
@@ -273,6 +288,12 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
   <data name="TabbedPivot_PivotItem2.Header" xml:space="preserve">
     <value>文件合并</value>
     <comment>Second Pivot item title for TabbedPivot</comment>
+  </data>
+  <data name="TextBlock_Error_InvalidCharacter.Text" xml:space="preserve">
+    <value>输入错误：Windows系统不允许文件名包含以下字符 \ / * ? &lt; &gt; : | "</value>
+  </data>
+  <data name="TextBlock_Error_NotPositiveInteger.Text" xml:space="preserve">
+    <value>输入错误：输入值必须为大于零的整数</value>
   </data>
   <data name="TextBlock_FileExtension.Text" xml:space="preserve">
     <value>文件扩展名</value>

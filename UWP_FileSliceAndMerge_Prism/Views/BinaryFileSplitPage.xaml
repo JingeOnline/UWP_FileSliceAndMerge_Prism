@@ -107,14 +107,14 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <!--切片规则选择标题-->
-                <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
+                <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center"
                        HorizontalAlignment="Left" 
                        x:Uid="BinaryFileSplitPage_TextBlock_SplitMethod"
-                       Margin="{StaticResource SmallTopMargin}"/>
+                           Margin="{StaticResource XXSmallTopMargin}"/>
                 <!--切片规则选项-->
                 <StackPanel Orientation="Vertical" Grid.Row="1"
                             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
-                            Margin="{StaticResource SmallTopMargin}">
+                            Margin="{StaticResource XXSmallTopMargin}">
                     <StackPanel Orientation="Horizontal" >
                         <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
                              x:Name="RadioButton_SetSliceNumber"
@@ -138,19 +138,18 @@
                     </StackPanel>
                     <!--切片数量和文件大小输入非法字符-->
                     <TextBlock Foreground="Red"  
-                       Text="{x:Bind ViewModel.SplitMethodWarning,Mode=OneWay}"
+                       x:Uid="TextBlock_Error_NotPositiveInteger"
                        Visibility="{x:Bind ViewModel.IsSplitMethodWarningVisible,Mode=OneWay}" />
                 </StackPanel>
                 <!--命名规则选择标题-->
-                <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
-                           Grid.Row="2" Margin="{StaticResource SmallTopMargin}" 
+                <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center"
+                           Grid.Row="2" Margin="{StaticResource XSmallTopMargin}" 
                        HorizontalAlignment="Left" 
                        x:Uid="BinaryFileSplitPage_TextBlock_SetSliceName"/>
                 <!--命名规则选项-->
                 <StackPanel Orientation="Horizontal"
                                 Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
-                                Grid.Row="3"
-                                Margin="{StaticResource SmallTopMargin}">
+                                Grid.Row="3" Margin="{StaticResource XXSmallTopMargin}">
                     <ComboBox IsEditable="False" Width="128" VerticalAlignment="Center"
                           ItemsSource="{x:Bind ViewModel.SliceNamingRules}"
                           SelectedIndex="{x:Bind ViewModel.SliceIndexRule,Mode=TwoWay}"
@@ -165,14 +164,15 @@
                              x:Uid="BinaryFileSplitPage_RadioButton_IndexStartWith1"/>
                 </StackPanel>
                 <!--自定义文件扩展名标题-->
-                <TextBlock Style="{StaticResource BodyTextStyle}" VerticalAlignment="Center"
-                           Grid.Row="4" Margin="{StaticResource SmallTopMargin}" 
-                       HorizontalAlignment="Left" Text="Customize Extension"
+                <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center"
+                           Grid.Row="4" Margin="{StaticResource XSmallTopMargin}" 
+                       HorizontalAlignment="Left"
                            x:Uid="TextBlock_FileExtension"/>
                 <!--自定义文件扩展名-->
                 <StackPanel Orientation="Vertical" Grid.Row="5"
-                            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-                    <StackPanel Orientation="Horizontal" Margin="{StaticResource SmallTopMargin}">
+                            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+                            Margin="{StaticResource XXSmallTopMargin}">
+                    <StackPanel Orientation="Horizontal">
                         <ToggleSwitch x:Uid="ToggleSwitch_CustomizeExtention"
                               VerticalAlignment="Center"
                               x:Name="ToggleSwitch_CustomizeExtention"
@@ -187,12 +187,12 @@
                         <TextBlock Margin="{StaticResource SmallLeftMargin}"
                            VerticalAlignment="Center"
                            Visibility="{Binding ElementName=ToggleSwitch_CustomizeExtention, Path=IsOn}"
-                           Text="Don't forget manually assign the extention when merge."
+                            x:Uid="BinaryFileSplitPage_TextBlock_HintOfCustomizeExtention"
                            Foreground="Gray"/>
                     </StackPanel>
                     <!--扩展名包含非法字符警告-->
                     <TextBlock Foreground="Red"
-                       Text="{x:Bind ViewModel.NamingInvalidWarning,Mode=OneWay}"
+                       x:Uid="TextBlock_Error_InvalidCharacter"
                        Visibility="{x:Bind ViewModel.IsNamingInvalidWarningVisiable,Mode=OneWay}"
                        TextWrapping="Wrap"/>
                 </StackPanel>
@@ -211,10 +211,6 @@
                                                  Binding="{Binding Icon,Mode=OneWay}"
                                                  FontFamily="Segoe MDL2 Assets"
                                                  FontSize="16"/>
-                        <!--<controls:DataGridTextColumn Header="Output Name"
-                                                     Binding="{Binding FileName,Mode=OneWay}"
-                                                     Width="4*"
-                                                     FontSize="16"/>-->
                         <!--文件名和进度条-->
                         <controls:DataGridTemplateColumn x:Uid="Datagrid_Column_FileName"
                                                      Width="5*">

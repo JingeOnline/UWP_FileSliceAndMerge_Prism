@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
-using UWP_FileSliceAndMerge_Prism.Constants;
 using UWP_FileSliceAndMerge_Prism.Helpers;
 using UWP_FileSliceAndMerge_Prism.Models;
 using UWP_FileSliceAndMerge_Prism.Services;
@@ -103,12 +102,6 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             get { return _isNamingInvalidWarningVisiable; }
             set { SetProperty(ref _isNamingInvalidWarningVisiable, value); }
-        }
-        private string _namingInvalidWarning;
-        public string NamingInvalidWarning
-        {
-            get { return _namingInvalidWarning; }
-            set { SetProperty(ref _namingInvalidWarning, value); }
         }
         private bool _isStarted = false;
         public bool IsStarted
@@ -284,7 +277,6 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             bool isValid = FileNameCheck.Check(fileName);
             if (!isValid)
             {
-                NamingInvalidWarning = BinaryFileErrors.InvalidFileName;
                 IsNamingInvalidWarningVisiable = true;
             }
             else

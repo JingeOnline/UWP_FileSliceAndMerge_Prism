@@ -147,7 +147,6 @@
     </Compile>
     <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
-    <Compile Include="Constants\BinaryFileErrors.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\FileNameCheck.cs" />
     <Compile Include="Helpers\MyAppSettingHelper.cs" />

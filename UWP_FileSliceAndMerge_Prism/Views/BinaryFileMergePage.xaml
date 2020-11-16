@@ -93,8 +93,16 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal">
+            <!--自定义文件扩展名标题-->
+            <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center"
+                       Margin="{StaticResource XSmallTopMargin}" 
+                       HorizontalAlignment="Left" 
+                           x:Uid="TextBlock_FileExtension"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1"
+                        Margin="{StaticResource XXSmallTopMargin}"
+                        Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
                 <ToggleSwitch x:Uid="ToggleSwitch_CustomizeExtention"
                               VerticalAlignment="Center"
                               x:Name="ToggleSwitch_CustomizeExtention"
@@ -106,8 +114,9 @@
                          Text="{x:Bind ViewModel.MergedFileExtention,Mode=TwoWay,UpdateSourceTrigger=Default}"
                          KeyDown="TextBox_KeyDown"/>
             </StackPanel>
-            <TextBlock Foreground="Red"  Grid.Row="6"
-                       Text="{x:Bind ViewModel.NamingInvalidWarning,Mode=OneWay}"
+            <!--错误信息：用户输入的非法文件名字符-->
+            <TextBlock Foreground="Red"  Grid.Row="2"
+                       x:Uid="TextBlock_Error_InvalidCharacter"
                        Visibility="{x:Bind ViewModel.IsNamingInvalidWarningVisiable,Mode=OneWay}"
                        TextWrapping="Wrap"/>
         </Grid>

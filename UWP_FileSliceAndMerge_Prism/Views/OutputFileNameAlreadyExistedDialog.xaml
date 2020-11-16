@@ -6,9 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="File Already Exist"
-    PrimaryButtonText="Replace Existing File"
-    SecondaryButtonText="Cancel and Rename"
+    x:Uid="ContentDialog_FileAlreadyExist"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
@@ -17,7 +15,8 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="The following files already exist in the export folder:" Style="{StaticResource BodyTextBlockStyle}"/>
+        <TextBlock x:Uid="ContentDialogue_FileAlreadyExist_TextBlock_Description"
+                   Style="{StaticResource BodyTextBlockStyle}"/>
         <ListView Grid.Row="1" Margin="{StaticResource SmallTopMargin}" ItemsSource="{x:Bind FileNames}"
                   Background="{StaticResource ThumbBorderThemeBrush}">
             <ListView.ItemTemplate>
