@@ -31,7 +31,8 @@
                 -->
                 <winui:NavigationViewItem x:Uid="Shell_Main" Icon="Document" helpers:NavHelper.NavigateTo="Main" />
                 <!--<winui:NavigationViewItem x:Uid="Shell_TabView" Icon="Document" helpers:NavHelper.NavigateTo="TabView" />-->
-                <winui:NavigationViewItem x:Uid="Shell_TabbedPivot" Icon="Document" helpers:NavHelper.NavigateTo="TabbedPivot" />
+                <winui:NavigationViewItem x:Uid="Shell_BinaryFile" Icon="Document" helpers:NavHelper.NavigateTo="BinaryFile" />
+                <winui:NavigationViewItem x:Uid="Shell_TxtFile" Icon="Document" helpers:NavHelper.NavigateTo="TxtFile" />
             </winui:NavigationView.MenuItems>
             <i:Interaction.Behaviors>
                 <behaviors:NavigationViewHeaderBehavior

@@ -175,19 +175,22 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ToastNotificationsService.cs" />
     <Compile Include="Services\ToastNotificationsService.Samples.cs" />
-    <Compile Include="ViewModels\BinaryFileMergeViewModel.cs" />
-    <Compile Include="ViewModels\BinaryFileSplitViewModel.cs" />
+    <Compile Include="ViewModels\BinaryFile\BinaryFileMergeViewModel.cs" />
+    <Compile Include="ViewModels\BinaryFile\BinaryFileSplitViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="ViewModels\TabbedPivotViewModel.cs" />
-    <Compile Include="Views\BinaryFileMergePage.xaml.cs">
+    <Compile Include="ViewModels\BinaryFileViewModel.cs" />
+    <Compile Include="ViewModels\TxtFileViewModel.cs" />
+    <Compile Include="ViewModels\TxtFile\TxtMergeViewModel.cs" />
+    <Compile Include="ViewModels\TxtFile\TxtSplitViewModel.cs" />
+    <Compile Include="Views\BinaryFile\BinaryFileMergePage.xaml.cs">
       <DependentUpon>BinaryFileMergePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BinaryFileSplitPage.xaml.cs">
+    <Compile Include="Views\BinaryFile\BinaryFileSplitPage.xaml.cs">
       <DependentUpon>BinaryFileSplitPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BinarySplitSettingWarningDialog.xaml.cs">
+    <Compile Include="Views\BinaryFile\BinarySplitSettingWarningDialog.xaml.cs">
       <DependentUpon>BinarySplitSettingWarningDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FirstRunDialog.xaml.cs">
@@ -205,8 +208,17 @@
     <Compile Include="Views\ShellPage.xaml.cs">
       <DependentUpon>ShellPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TabbedPivotPage.xaml.cs">
-      <DependentUpon>TabbedPivotPage.xaml</DependentUpon>
+    <Compile Include="Views\BinaryFilePage.xaml.cs">
+      <DependentUpon>BinaryFilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TxtFilePage.xaml.cs">
+      <DependentUpon>TxtFilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TxtFile\TxtMergePage.xaml.cs">
+      <DependentUpon>TxtMergePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TxtFile\TxtSplitPage.xaml.cs">
+      <DependentUpon>TxtSplitPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -238,15 +250,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\BinaryFileMergePage.xaml">
+    <Page Include="Views\BinaryFile\BinaryFileMergePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\BinaryFileSplitPage.xaml">
+    <Page Include="Views\BinaryFile\BinaryFileSplitPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\BinarySplitSettingWarningDialog.xaml">
+    <Page Include="Views\BinaryFile\BinarySplitSettingWarningDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -270,9 +282,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\TabbedPivotPage.xaml">
+    <Page Include="Views\BinaryFilePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TxtFilePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TxtFile\TxtMergePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TxtFile\TxtSplitPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

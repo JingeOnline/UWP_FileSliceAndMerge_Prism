@@ -264,13 +264,16 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <value>浅色</value>
     <comment>Light theme text for Settings</comment>
   </data>
+  <data name="Shell_BinaryFile.Content" xml:space="preserve">
+    <value>二进制文件处理</value>
+    <comment>Navigation view item name for TabbedPivot</comment>
+  </data>
   <data name="Shell_Main.Content" xml:space="preserve">
     <value>主页</value>
     <comment>Navigation view item name for Main</comment>
   </data>
-  <data name="Shell_TabbedPivot.Content" xml:space="preserve">
-    <value>二进制文件处理</value>
-    <comment>Navigation view item name for TabbedPivot</comment>
+  <data name="Shell_TxtFile.Content" xml:space="preserve">
+    <value>Txt 文本文件处理</value>
   </data>
   <data name="String_WarningMaximumNumberOfSlices" xml:space="preserve">
     <value>程序允许的最大切片数量为 999,999</value>

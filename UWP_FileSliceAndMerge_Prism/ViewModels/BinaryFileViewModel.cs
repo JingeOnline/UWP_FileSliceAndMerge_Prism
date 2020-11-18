@@ -4,9 +4,9 @@ using Prism.Windows.Mvvm;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
-    public class TabbedPivotViewModel : ViewModelBase
+    public class BinaryFileViewModel : ViewModelBase
     {
-        public TabbedPivotViewModel()
+        public BinaryFileViewModel()
         {
         }
     }

@@ -6,11 +6,11 @@ using Windows.UI.Xaml.Controls;
 
 namespace UWP_FileSliceAndMerge_Prism.Views
 {
-    public sealed partial class TabbedPivotPage : Page
+    public sealed partial class BinaryFilePage : Page
     {
-        private TabbedPivotViewModel ViewModel => DataContext as TabbedPivotViewModel;
+        private BinaryFileViewModel ViewModel => DataContext as BinaryFileViewModel;
 
-        public TabbedPivotPage()
+        public BinaryFilePage()
         {
             InitializeComponent();
         }

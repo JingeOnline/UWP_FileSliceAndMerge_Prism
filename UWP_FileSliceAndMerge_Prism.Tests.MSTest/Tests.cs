@@ -38,7 +38,7 @@ namespace UWP_FileSliceAndMerge_Prism.Tests.MSTest
         public void TestTabbedPivotViewModelCreation()
         {
             // This test is trivial. Add your own tests for the logic you add to the ViewModel.
-            var vm = new TabbedPivotViewModel();
+            var vm = new BinaryFileViewModel();
             Assert.IsNotNull(vm);
         }
     }
