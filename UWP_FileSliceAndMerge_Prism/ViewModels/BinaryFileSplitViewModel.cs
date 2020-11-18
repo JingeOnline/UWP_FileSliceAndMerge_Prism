@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
@@ -13,7 +10,6 @@ using UWP_FileSliceAndMerge_Prism.Models;
 using UWP_FileSliceAndMerge_Prism.Services;
 using UWP_FileSliceAndMerge_Prism.Services.BinaryFile;
 using UWP_FileSliceAndMerge_Prism.Views;
-using Windows.ApplicationModel.Store.Preview.InstallControl;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
@@ -23,8 +19,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
     class BinaryFileSplitViewModel : ViewModelBase
     {
-        private readonly string _settingKey = "BinaryMerge_IsSaveOutputFolderAsDefault";
-        private readonly string _folderToken = "BinaryMerge_OutputFolderToken";
+        private readonly string _settingKey = "BinarySplit_IsSaveOutputFolderAsDefault";
+        private readonly string _folderToken = "BinarySplit_OutputFolderToken";
         private readonly int MaxSliceNumber = 999999;
 
         public ObservableCollection<BinaryEntiretyInfoModel> MergedFiles { get; set; } =
@@ -84,11 +80,9 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             {
                 if (_sliceFileExtention != value)
                 {
-                    if (checkFileName(value))
-                    {
-                        SetProperty(ref _sliceFileExtention, value);
-                        preview();
-                    }
+
+                    SetProperty(ref _sliceFileExtention, value);
+                    checkFileName();
                 }
             }
         }
@@ -102,7 +96,14 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 if (_isCustomizeExtention != value)
                 {
                     SetProperty(ref _isCustomizeExtention, value);
-                    preview();
+                    if (_isCustomizeExtention)
+                    {
+                        checkFileName();
+                    }
+                    else
+                    {
+                        IsNamingInvalidWarningVisiable = false;
+                    }
                 }
             }
         }
@@ -338,7 +339,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                                             await file.GetBasicPropertiesAsync();
                 MergedFiles.Add(new BinaryEntiretyInfoModel
                 {
-                    StorageFile=file,
+                    StorageFile = file,
                     FileName = file.Name,
                     FileSize = (long)basicProperties.Size
                 });
@@ -536,9 +537,9 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        private bool checkFileName(string fileName)
+        private void checkFileName()
         {
-            bool isValid = FileNameCheck.Check(fileName);
+            bool isValid = FileNameCheck.Check(SliceFileExtention);
             if (!isValid)
             {
                 IsNamingInvalidWarningVisiable = true;
@@ -546,8 +547,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             else
             {
                 IsNamingInvalidWarningVisiable = false;
+                preview();
             }
-            return isValid;
         }
 
     }

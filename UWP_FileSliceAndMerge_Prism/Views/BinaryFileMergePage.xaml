@@ -89,7 +89,7 @@
                               IsOn="{x:Bind ViewModel.IsSaveOutputFolderAsDefault,Mode=TwoWay}"/>
         </StackPanel>
         <!--用户自定义文件扩展名-->
-        <Grid Grid.Row="2" Margin="{StaticResource SmallTopMargin}">
+        <Grid Grid.Row="2" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -123,7 +123,7 @@
 
         <!--Preview文件列表-->
         <Border Style="{StaticResource ThinRadiusThemeBorder}"
-                    Margin="{StaticResource MediumTopMargin}" Grid.Row="3">
+                    Margin="{StaticResource SmallTopMargin}" Grid.Row="3">
             <controls:DataGrid ItemsSource="{x:Bind ViewModel.MergedFiles,Mode=OneWay}"
                                    AutoGenerateColumns="False" IsReadOnly="True">
                 <controls:DataGrid.Columns>

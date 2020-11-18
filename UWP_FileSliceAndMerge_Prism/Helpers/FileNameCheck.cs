@@ -12,6 +12,10 @@ namespace UWP_FileSliceAndMerge_Prism.Helpers
 
         public static bool Check(String fileName)
         {
+            if (fileName == null)
+            {
+                return true;
+            }
             char[] fileNameChars = fileName.ToCharArray();
             if (fileNameChars.Intersect(invalidChars).Count() != 0)
             {

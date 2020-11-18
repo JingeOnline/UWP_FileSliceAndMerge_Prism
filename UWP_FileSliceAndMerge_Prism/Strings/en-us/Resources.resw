@@ -302,7 +302,7 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <value>The following files already exist in the export folder:</value>
   </data>
   <data name="ContentDialog_FileAlreadyExist.PrimaryButtonText" xml:space="preserve">
-    <value>Replace Existed File(s)</value>
+    <value>Override Existed File(s)</value>
   </data>
   <data name="ContentDialog_FileAlreadyExist.SecondaryButtonText" xml:space="preserve">
     <value>Cancel and Rename</value>
