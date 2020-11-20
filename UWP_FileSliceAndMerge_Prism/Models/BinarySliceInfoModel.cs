@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using Windows.Storage;
+using Prism.Mvvm;
 
 namespace UWP_FileSliceAndMerge_Prism.Models
 {
-    public class BinarySliceInfoModel : INotifyPropertyChanged
+    public class BinarySliceInfoModel : BindableBase
     {
         public StorageFile StorageFile { get; set; }
         public string MergedFileName { get; set; }
@@ -24,7 +25,7 @@ namespace UWP_FileSliceAndMerge_Prism.Models
         public bool IsStart
         {
             get { return _isStart; }
-            set { _isStart = value; OnPropertyChanged("IsStart"); }
+            set { SetProperty(ref _isStart, value); }
         }
 
         private bool _isDone;
@@ -33,8 +34,7 @@ namespace UWP_FileSliceAndMerge_Prism.Models
             get { return _isDone; }
             set
             {
-                _isDone = value;
-                OnPropertyChanged("IsDone");
+                SetProperty(ref _isDone,value);
                 if (IsDone)
                 {
                     Icon = "\xF78C";
@@ -49,8 +49,7 @@ namespace UWP_FileSliceAndMerge_Prism.Models
             get { return _finishSize; }
             set
             {
-                _finishSize = value;
-                OnPropertyChanged("FinishSize");
+                SetProperty(ref _finishSize, value);
             }
         }
 
@@ -60,22 +59,18 @@ namespace UWP_FileSliceAndMerge_Prism.Models
             get { return _icon; }
             set
             {
-                if (_icon != value)
-                {
-                    _icon = value;
-                    OnPropertyChanged("Icon");
-                }
+                SetProperty(ref _icon, value);
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string propName = "")
-        {
-            if (this.PropertyChanged != null)
-            {
-                var handler = PropertyChanged;
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
-        }
+        //public event PropertyChangedEventHandler PropertyChanged;
+        //public void OnPropertyChanged(string propName = "")
+        //{
+        //    if (this.PropertyChanged != null)
+        //    {
+        //        var handler = PropertyChanged;
+        //        this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        //    }
+        //}
     }
 }

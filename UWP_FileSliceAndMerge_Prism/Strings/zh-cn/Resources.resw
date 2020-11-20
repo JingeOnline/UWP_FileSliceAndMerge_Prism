@@ -206,6 +206,15 @@
   <data name="Datagrid_Column_FileSize.Header" xml:space="preserve">
     <value>文件大小（字节）</value>
   </data>
+  <data name="DataGrid_Column_LineCount.Header" xml:space="preserve">
+    <value>行数</value>
+  </data>
+  <data name="Datagrid_Column_TextLength.Header" xml:space="preserve">
+    <value>字符长度</value>
+  </data>
+  <data name="DataGrid_Column_WordCount.Header" xml:space="preserve">
+    <value>字数</value>
+  </data>
   <data name="FirstRunDialog.PrimaryButtonText" xml:space="preserve">
     <value>Ok</value>
     <comment>First use prompt message primary button text</comment>
@@ -312,5 +321,14 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
   </data>
   <data name="ToggleSwitch_SaveAsDefault.OnContent" xml:space="preserve">
     <value>保存为默认值</value>
+  </data>
+  <data name="TxtFileSplitPage_RadioButton_SplitByNumber.Content" xml:space="preserve">
+    <value>指定数量</value>
+  </data>
+  <data name="TxtSplitPage_ComboBoxItem_Lines.Content" xml:space="preserve">
+    <value>行数</value>
+  </data>
+  <data name="TxtSplitPage_ComboBoxItem_Words.Content" xml:space="preserve">
+    <value>字数</value>
   </data>
 </root>

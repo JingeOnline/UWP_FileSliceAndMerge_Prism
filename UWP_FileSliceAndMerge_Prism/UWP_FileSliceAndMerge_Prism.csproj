@@ -158,6 +158,8 @@
     <Compile Include="Models\DragDropStartingData.cs" />
     <Compile Include="Models\BinarySliceInfoModel.cs" />
     <Compile Include="Models\TabViewItemData.cs" />
+    <Compile Include="Models\TxtEntiretyInfoModel.cs" />
+    <Compile Include="Models\TxtSliceInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Constants\PageTokens.cs" />
     <Compile Include="Services\BinaryFile\MergePreviewService.cs" />
@@ -175,6 +177,8 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ToastNotificationsService.cs" />
     <Compile Include="Services\ToastNotificationsService.Samples.cs" />
+    <Compile Include="Services\TxtFile\SplitPreviewService.cs" />
+    <Compile Include="Services\TxtFile\TxtInfoService.cs" />
     <Compile Include="ViewModels\BinaryFile\BinaryFileMergeViewModel.cs" />
     <Compile Include="ViewModels\BinaryFile\BinaryFileSplitViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

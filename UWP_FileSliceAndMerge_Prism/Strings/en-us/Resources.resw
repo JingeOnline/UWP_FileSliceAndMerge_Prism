@@ -313,4 +313,22 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
   <data name="Shell_TxtFile.Content" xml:space="preserve">
     <value>Txt File</value>
   </data>
+  <data name="DataGrid_Column_LineCount.Header" xml:space="preserve">
+    <value>Lines</value>
+  </data>
+  <data name="DataGrid_Column_WordCount.Header" xml:space="preserve">
+    <value>Words</value>
+  </data>
+  <data name="TxtFileSplitPage_RadioButton_SplitByNumber.Content" xml:space="preserve">
+    <value>Split By Number</value>
+  </data>
+  <data name="TxtSplitPage_ComboBoxItem_Lines.Content" xml:space="preserve">
+    <value>Line(s)</value>
+  </data>
+  <data name="TxtSplitPage_ComboBoxItem_Words.Content" xml:space="preserve">
+    <value>Word(s)</value>
+  </data>
+  <data name="Datagrid_Column_TextLength.Header" xml:space="preserve">
+    <value>Length</value>
+  </data>
 </root>
