@@ -136,7 +136,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// <returns></returns>
         private bool canStart()
         {
-            return SliceFiles.Count > 0 && !IsFinish && !IsStarted;
+            return SliceFiles.Count > 0 && !IsFinish && !IsStarted && OutputFolder != null;
         }
 
         /// <summary>
@@ -193,6 +193,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     FutureAccessList.AddOrReplace(_folderToken, folder);
                 OutputFolder = folder;
             }
+            //让该Command重新检测是否能够执行的条件
+            StartMergeCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -245,7 +247,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private async void startMerge()
         {
-            if (!await CheckOutputFileExistingService.checkOutputFileName(OutputFolder, MergedFiles))
+            IEnumerable<string> fileNames = MergedFiles.Select(x => x.FileName);
+            if (!await CheckOutputFileExistingService.checkOutputFileName(OutputFolder, fileNames))
             {
                 return;
             }

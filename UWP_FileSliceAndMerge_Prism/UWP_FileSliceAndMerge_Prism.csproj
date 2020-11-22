@@ -178,6 +178,7 @@
     <Compile Include="Services\ToastNotificationsService.cs" />
     <Compile Include="Services\ToastNotificationsService.Samples.cs" />
     <Compile Include="Services\TxtFile\SplitPreviewService.cs" />
+    <Compile Include="Services\TxtFile\SplitService.cs" />
     <Compile Include="Services\TxtFile\TxtInfoService.cs" />
     <Compile Include="ViewModels\BinaryFile\BinaryFileMergeViewModel.cs" />
     <Compile Include="ViewModels\BinaryFile\BinaryFileSplitViewModel.cs" />

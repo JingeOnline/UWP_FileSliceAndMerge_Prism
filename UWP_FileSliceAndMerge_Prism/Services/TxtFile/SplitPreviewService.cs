@@ -56,7 +56,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.TxtFile
                 slices.Add(new TxtSliceInfoModel()
                 {
                     FileName = getSliceName(sourceFile.FileName, currentFileIndex),
-                    TextContent = string.Concat(sliceLines),
+                    TextContent = string.Join('\n', sliceLines),
                     Index = (uint)currentFileIndex,
                     MergedFileName = sourceFile.FileName,
                     TxtLineCount = lineLimit,
@@ -72,7 +72,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.TxtFile
                 slices.Add(new TxtSliceInfoModel()
                 {
                     FileName = getSliceName(sourceFile.FileName, currentFileIndex),
-                    TextContent = string.Concat(sliceLines),
+                    TextContent = string.Join('\n', sliceLines),
                     Index = (uint)currentFileIndex,
                     MergedFileName = sourceFile.FileName,
                     TxtLineCount = sliceLines.Count(),

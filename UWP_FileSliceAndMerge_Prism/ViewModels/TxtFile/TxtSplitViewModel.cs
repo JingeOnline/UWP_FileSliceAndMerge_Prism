@@ -12,6 +12,7 @@ using UWP_FileSliceAndMerge_Prism.Services.TxtFile;
 using UWP_FileSliceAndMerge_Prism.Helpers;
 using UWP_FileSliceAndMerge_Prism.Views;
 using System.Diagnostics;
+using UWP_FileSliceAndMerge_Prism.Services;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
@@ -147,6 +148,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 .ObservesProperty(() => IsStarted);
             SelectOutputFolderCommand = new DelegateCommand(selectOutputFolder, () => !IsStarted)
                 .ObservesProperty(() => IsStarted);
+            StartSplitCommand = new DelegateCommand(startSplit, canStart)
+                .ObservesProperty(() => IsFinish).ObservesProperty(() => IsStarted);
         }
 
         /// <summary>
@@ -163,7 +166,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 await getSourceFileInfo(files);
                 preview();
                 //让该Command重新检测是否能够执行的条件
-                //StartSplitCommand.RaiseCanExecuteChanged();
+                StartSplitCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -222,6 +225,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     FutureAccessList.AddOrReplace(_folderToken, folder);
                 OutputFolder = folder;
             }
+            //让该Command重新检测是否能够执行的条件
+            StartSplitCommand.RaiseCanExecuteChanged();
         }
 
         private void preview()
@@ -263,6 +268,35 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             BinarySplitSettingWarningDialog dialog = new BinarySplitSettingWarningDialog(outputFileNumber);
             await dialog.ShowAsync();
             //Debug.WriteLine("弹出警告窗口");
+        }
+
+
+        /// <summary>
+        /// 开始执行切割
+        /// </summary>
+        private async void startSplit()
+        {
+            IEnumerable<string> fileNames = SliceFiles.Select(x => x.FileName);
+            if (!await CheckOutputFileExistingService.checkOutputFileName(OutputFolder, fileNames))
+            {
+                return;
+            }
+            IsStarted = true;
+            //SplitService sliceService = new SplitService(OutputFolder, MergedFiles);
+            SplitService splitService = new SplitService(SliceFiles, OutputFolder);
+            await splitService.SplitFiles();
+            IsFinish = true;
+            IsStarted = false;
+            new ToastNotificationsService().ShowTaskFinishToast("Split Complete",
+                $"Successfully exported {SliceFiles.Count} slice files.");
+        }
+        /// <summary>
+        /// 开始按钮是否可用
+        /// </summary>
+        /// <returns></returns>
+        private bool canStart()
+        {
+            return SliceFiles.Count > 0 && !IsFinish && !IsStarted && OutputFolder != null;
         }
     }
 }

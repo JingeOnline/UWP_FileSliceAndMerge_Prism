@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
@@ -272,7 +273,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// <returns></returns>
         private bool canStart()
         {
-            return MergedFiles.Count > 0 && !IsFinish && !IsStarted;
+            return SliceFiles.Count > 0 && !IsFinish && !IsStarted && OutputFolder != null;
         }
 
 
@@ -324,6 +325,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     FutureAccessList.AddOrReplace(_folderToken, folder);
                 OutputFolder = folder;
             }
+            //让该Command重新检测是否能够执行的条件
+            StartSplitCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -510,7 +513,8 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         /// </summary>
         private async void startSplit()
         {
-            if (!await CheckOutputFileExistingService.checkOutputFileName(OutputFolder, SliceFiles))
+            IEnumerable<string> fileNames = SliceFiles.Select(x => x.FileName);
+            if (!await CheckOutputFileExistingService.checkOutputFileName(OutputFolder, fileNames))
             {
                 return;
             }

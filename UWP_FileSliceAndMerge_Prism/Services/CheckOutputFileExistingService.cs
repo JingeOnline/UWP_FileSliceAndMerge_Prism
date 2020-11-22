@@ -11,36 +11,12 @@ namespace UWP_FileSliceAndMerge_Prism.Services
 {
     public static class CheckOutputFileExistingService
     {
-        public static async Task<bool> checkOutputFileName(StorageFolder outputFolder, IEnumerable<BinarySliceInfoModel> previewFiles)
+        public static async Task<bool> checkOutputFileName(StorageFolder outputFolder, IEnumerable<string> fileNames)
         {
             IReadOnlyList<StorageFile> existedFiles = await outputFolder.GetFilesAsync();
             IEnumerable<string> existedFileNames = existedFiles.Select(x => x.Name);
-            IEnumerable<string> newFileNames = previewFiles.Select(x => x.FileName);
-            IEnumerable<string> duplicateNames = existedFileNames.Intersect(newFileNames);
-            if (duplicateNames.Count() > 0)
-            {
-                OutputFileNameAlreadyExistedDialog dialog = new OutputFileNameAlreadyExistedDialog(duplicateNames);
-                await dialog.ShowAsync();
-                if (dialog.AllowReplaceExisting)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return true;
-            }
-        }
-        public static async Task<bool> checkOutputFileName(StorageFolder outputFolder, IEnumerable<BinaryEntiretyInfoModel> previewFiles)
-        {
-            IReadOnlyList<StorageFile> existedFiles = await outputFolder.GetFilesAsync();
-            IEnumerable<string> existedFileNames = existedFiles.Select(x => x.Name);
-            IEnumerable<string> newFileNames = previewFiles.Select(x => x.FileName);
-            IEnumerable<string> duplicateNames = existedFileNames.Intersect(newFileNames);
+            //IEnumerable<string> newFileNames = previewFiles.Select(x => x.FileName);
+            IEnumerable<string> duplicateNames = existedFileNames.Intersect(fileNames);
             if (duplicateNames.Count() > 0)
             {
                 OutputFileNameAlreadyExistedDialog dialog = new OutputFileNameAlreadyExistedDialog(duplicateNames);
