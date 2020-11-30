@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UWP_FileSliceAndMerge_Prism.Models;
 
@@ -23,6 +24,7 @@ namespace UWP_FileSliceAndMerge_Prism.Services.TxtFile
             foreach(TxtEntiretyInfoModel txt in _txtFiles)
             {
                 await findTxtWordCount(txt);
+                Debug.WriteLine("计算所在线程3：" + Thread.CurrentThread.ManagedThreadId);
             }
         }
 
@@ -31,7 +33,9 @@ namespace UWP_FileSliceAndMerge_Prism.Services.TxtFile
             //string runtimeLanguages = Windows.ApplicationModel.Resources.Core
             //    .ResourceContext.GetForCurrentView().QualifierValues["Language"];
             //Debug.WriteLine(runtimeLanguages);
+            Debug.WriteLine("计算所在线程1："+Thread.CurrentThread.ManagedThreadId);
             string content= await Windows.Storage.FileIO.ReadTextAsync(txt.StorageFile);
+            Debug.WriteLine("计算所在线程2：" + Thread.CurrentThread.ManagedThreadId);
             txt.TextContent = content;
             //查找字数
             if (_isChinese)

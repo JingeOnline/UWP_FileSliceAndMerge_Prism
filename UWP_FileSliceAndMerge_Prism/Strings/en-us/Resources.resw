@@ -331,4 +331,13 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
   <data name="Datagrid_Column_TextLength.Header" xml:space="preserve">
     <value>Length</value>
   </data>
+  <data name="BinaryFileSplitPage_TextBlock_TxtLanguage.Text" xml:space="preserve">
+    <value>Text Language</value>
+  </data>
+  <data name="TxtFileSplitPage_RadioButton_Chinese.Content" xml:space="preserve">
+    <value>Chinese</value>
+  </data>
+  <data name="TxtFileSplitPage_RadioButton_English.Content" xml:space="preserve">
+    <value>English</value>
+  </data>
 </root>

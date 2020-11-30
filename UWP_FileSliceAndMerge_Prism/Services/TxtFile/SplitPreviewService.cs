@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UWP_FileSliceAndMerge_Prism.Models;
 
@@ -20,6 +21,11 @@ namespace UWP_FileSliceAndMerge_Prism.Services.TxtFile
             _indexRule = indexRule;
         }
 
+        /// <summary>
+        /// 指定行数获得切片预览
+        /// </summary>
+        /// <param name="lineLimit"></param>
+        /// <returns></returns>
         public List<TxtSliceInfoModel> GetPreviewByLineCount(int lineLimit)
         {
             if (_sourceFiles == null || _sourceFiles.Count() == 0)
@@ -29,7 +35,29 @@ namespace UWP_FileSliceAndMerge_Prism.Services.TxtFile
             List<TxtSliceInfoModel> slices = new List<TxtSliceInfoModel>();
             foreach(TxtEntiretyInfoModel sourceFile in _sourceFiles)
             {
-                slices.AddRange(getPreviewByLineCountForOneSourceFile(sourceFile,lineLimit));
+                List<TxtSliceInfoModel> oneFileSlices = getPreviewByLineCountForOneSourceFile(sourceFile, lineLimit);
+                slices.AddRange(oneFileSlices);
+                sourceFile.SliceNumber = oneFileSlices.Count;
+            }
+            return slices;
+        }
+
+        /// <summary>
+        /// 指定字数获得切片预览
+        /// </summary>
+        /// <param name="wordLimit"></param>
+        /// <param name="isChinese"></param>
+        /// <returns></returns>
+        public List<TxtSliceInfoModel> GetPreviewByWordCount(int wordLimit, bool isChinese)
+        {
+            if (_sourceFiles == null || _sourceFiles.Count() == 0)
+            {
+                return null;
+            }
+            List<TxtSliceInfoModel> slices = new List<TxtSliceInfoModel>();
+            foreach(TxtEntiretyInfoModel sourceFile in _sourceFiles)
+            {
+                slices.AddRange(getPreviewByWordCountForOneSourceFile(sourceFile, wordLimit,isChinese));
             }
             return slices;
         }
@@ -79,6 +107,88 @@ namespace UWP_FileSliceAndMerge_Prism.Services.TxtFile
                 });
             }
             return slices;
+        }
+
+        /// <summary>
+        /// 根据指定字数，获得一个文件的所有切片
+        /// </summary>
+        /// <param name="sourceFile"></param>
+        /// <param name="wordLimit"></param>
+        /// <returns></returns>
+        private List<TxtSliceInfoModel> getPreviewByWordCountForOneSourceFile
+            (TxtEntiretyInfoModel sourceFile, int wordLimit, bool isChinese)
+        {
+            List<TxtSliceInfoModel> slices = new List<TxtSliceInfoModel>();
+            if (isChinese)
+            {
+                long leftWordCount = sourceFile.TextContent.Length;
+                int currentFileIndex = _indexStart;
+                int currentWordIndex = 0;
+                while (leftWordCount > wordLimit)
+                {
+                    slices.Add(new TxtSliceInfoModel()
+                    {
+                        FileName = getSliceName(sourceFile.FileName, currentFileIndex),
+                        TextContent = sourceFile.TextContent.Substring(currentWordIndex, wordLimit),
+                        Index = (uint)currentFileIndex,
+                        MergedFileName = sourceFile.FileName,
+                        TxtWordCount = wordLimit,
+                    });
+                    currentWordIndex += wordLimit;
+                    leftWordCount -= wordLimit;
+                    currentFileIndex++;
+                }
+                if (leftWordCount != 0)
+                {
+                    slices.Add(new TxtSliceInfoModel()
+                    {
+                        FileName = getSliceName(sourceFile.FileName, currentFileIndex),
+                        TextContent = sourceFile.TextContent.Substring(currentWordIndex, (int)leftWordCount),
+                        Index = (uint)currentFileIndex,
+                        MergedFileName = sourceFile.FileName,
+                        TxtWordCount = leftWordCount,
+                    });
+                }
+                return slices;
+            }
+            else
+            {
+                //char[] delimiters = new char[] { ' ', '\r', '\n' };
+                //string[] words = sourceFile.TextContent.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                //string[] wordsWithLineBreak = sourceFile.TextContent.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                string pattern = @"(?=(?<=^|[^\s])\s+)";
+                string[] words = Regex.Split(sourceFile.TextContent, pattern);
+                long leftWordCount = words.Length;
+                int currentFileIndex = _indexStart;
+                int currentWordIndex = 0;
+                while (leftWordCount > wordLimit)
+                {
+                    slices.Add(new TxtSliceInfoModel()
+                    {
+                        FileName = getSliceName(sourceFile.FileName, currentFileIndex),
+                        //TextContent = string.Join(' ',words.Skip(currentWordIndex).Take(wordLimit)),
+                        TextContent = string.Join("",words.Skip(currentWordIndex).Take(wordLimit)),
+                        Index = (uint)currentFileIndex,
+                        MergedFileName = sourceFile.FileName,
+                        TxtWordCount = wordLimit,
+                    });
+                    currentWordIndex += wordLimit;
+                    leftWordCount -= wordLimit;
+                    currentFileIndex++;
+                }
+                if (leftWordCount != 0)
+                {
+                    slices.Add(new TxtSliceInfoModel()
+                    {
+                        FileName = getSliceName(sourceFile.FileName, currentFileIndex),
+                        TextContent = string.Join(' ',words.Skip(currentWordIndex).Take((int)leftWordCount)),
+                        Index = (uint)currentFileIndex,
+                        MergedFileName = sourceFile.FileName,
+                        TxtWordCount = leftWordCount,
+                    });
+                }
+                return slices;
+            }
         }
 
         /// <summary>

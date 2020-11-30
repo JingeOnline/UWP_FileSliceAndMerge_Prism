@@ -60,17 +60,17 @@
                         </controls:DataGridTemplateColumn.CellTemplate>
                     </controls:DataGridTemplateColumn>
                     <!--字数-->
-                    <controls:DataGridTextColumn Binding="{Binding TxtWordCount}"
+                    <controls:DataGridTextColumn Binding="{Binding TxtWordCount,Mode=OneWay}"
                                                  x:Uid="DataGrid_Column_WordCount"
                                                  Width="*"
                                                  FontSize="16"/>
                     <!--行数-->
-                    <controls:DataGridTextColumn Binding="{Binding TxtLineCount}"
+                    <controls:DataGridTextColumn Binding="{Binding TxtLineCount,Mode=OneWay}"
                                                  x:Uid="DataGrid_Column_LineCount"
                                                  Width="*"
                                                  FontSize="16"/>
                     <!--文本长度-->
-                    <controls:DataGridTextColumn Binding="{Binding TextLength}"
+                    <controls:DataGridTextColumn Binding="{Binding TextLength,Mode=OneWay}"
                                                  x:Uid="DataGrid_Column_TextLength"
                                                  Width="*"
                                                  FontSize="16"/>
@@ -116,16 +116,37 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <!--切片规则选择标题-->
+                <!--文本语言选择标题-->
                 <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center"
                        HorizontalAlignment="Left" 
-                       x:Uid="BinaryFileSplitPage_TextBlock_SplitMethod"
+                       x:Uid="BinaryFileSplitPage_TextBlock_TxtLanguage"
                            Margin="{StaticResource XXSmallTopMargin}"/>
-                <!--切片规则选项-->
-                <StackPanel Orientation="Vertical" Grid.Row="1"
+                <!--文本语言选项-->
+                <StackPanel Orientation="Horizontal" Grid.Row="1"
                             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
                             Margin="{StaticResource XXSmallTopMargin}">
+                    <RadioButton GroupName="TxtLanguage"
+                                 x:Uid="TxtFileSplitPage_RadioButton_English"
+                                 Margin="{StaticResource SmallRightMargin}"
+                                 />
+                    <RadioButton GroupName="TxtLanguage"
+                                 x:Uid="TxtFileSplitPage_RadioButton_Chinese"
+                                 IsChecked="{x:Bind ViewModel.IsChinese,Mode=TwoWay}"/>
+                </StackPanel>
+                <!--切片规则选择标题-->
+                <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center"
+                           HorizontalAlignment="Left" 
+                           x:Uid="BinaryFileSplitPage_TextBlock_SplitMethod"
+                           Margin="{StaticResource XSmallTopMargin}"
+                           Grid.Row="2"/>
+                <!--切片规则选项-->
+                <StackPanel Orientation="Vertical" Grid.Row="3"
+                            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+                            Margin="{StaticResource XXSmallTopMargin}">
+                    <!--按照行数或字数切割-->
                     <StackPanel Orientation="Horizontal" >
                         <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
                              x:Name="RadioButton_SetSliceNumber"
@@ -137,20 +158,44 @@
                           IsEnabled="{Binding ElementName=RadioButton_SetSliceNumber,Path=IsChecked}"
                           SelectedItem="{x:Bind ViewModel.NumberSelectedText,Mode=TwoWay}"/>
                         <ComboBox VerticalAlignment="Center"
-                          IsEnabled="{Binding ElementName=RadioButton_SetSliceNumber,Path=IsChecked}"
-                          SelectedIndex="{x:Bind ViewModel.NumberUnitSelectedIndex,Mode=TwoWay}">
-                            <ComboBoxItem x:Uid="TxtSplitPage_ComboBoxItem_Words"/>
+                                  IsEnabled="{Binding ElementName=RadioButton_SetSliceNumber,Path=IsChecked}"
+                                  SelectedIndex="{x:Bind ViewModel.NumberUnitSelectedIndex,Mode=TwoWay}"
+                                  Margin="{StaticResource SmallRightMargin}">
+                            <ComboBoxItem x:Uid="TxtSplitPage_ComboBoxItem_Words"
+                                          x:Name="ComboBoxItem_Words"/>
                             <ComboBoxItem x:Uid="TxtSplitPage_ComboBoxItem_Lines" IsSelected="True"/>
                         </ComboBox>
-                        <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
-                             x:Name="RadioButton_SetSliceSize" Margin="{StaticResource SmallRightMargin}"
-                                 x:Uid="TxtFileSplitPage_RadioButton_SplitBySearch"/>
-
                     </StackPanel>
                     <!--切片数量和文件大小输入非法字符-->
                     <TextBlock Foreground="Red"  
                        x:Uid="TextBlock_Error_NotPositiveInteger"
                        Visibility="{x:Bind ViewModel.IsSplitNumberWarningShow,Mode=OneWay}" />
+                    <!--按照关键字切割-->
+                    <RadioButton GroupName="SplitMethod" VerticalAlignment="Center"
+                             x:Name="RadioButton_SetSliceSize" Margin="{StaticResource SmallRightMargin}"
+                                 x:Uid="TxtFileSplitPage_RadioButton_SplitBySearch"/>
+                </StackPanel>
+                <!--Index规则选择标题-->
+                <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center"
+                           Grid.Row="4" Margin="{StaticResource XSmallTopMargin}" 
+                       HorizontalAlignment="Left" 
+                       x:Uid="BinaryFileSplitPage_TextBlock_SetSliceName"/>
+                <!--Index规则选项-->
+                <StackPanel Orientation="Horizontal"
+                                Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+                                Grid.Row="5" Margin="{StaticResource XXSmallTopMargin}">
+                    <ComboBox IsEditable="False" Width="128" VerticalAlignment="Center"
+                          ItemsSource="{x:Bind ViewModel.SliceIndexRules}"
+                          SelectedIndex="{x:Bind ViewModel.SliceIndexRule,Mode=TwoWay}"
+                          Margin="{StaticResource SmallRightMargin}"/>
+                    <!--切片文件的起始序号-->
+                    <RadioButton GroupName="IndexStartWith" Grid.Column="1"
+                             VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}"
+                             IsChecked="{x:Bind ViewModel.IndexStartWith0,Mode=TwoWay}"
+                             x:Uid="BinaryFileSplitPage_RadioButton_IndexStartWith0"/>
+                    <RadioButton GroupName="IndexStartWith" Grid.Column="1"
+                             VerticalAlignment="Center" Grid.Row="1"
+                             x:Uid="BinaryFileSplitPage_RadioButton_IndexStartWith1"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>
@@ -172,18 +217,8 @@
                             <controls:DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid Margin="{StaticResource SmallLeftRightMargin}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"
                                                Grid.Column="0"/>
-                                        <ProgressBar IsIndeterminate="False" VerticalAlignment="Center"
-                                                 Grid.Column="1" Margin="{StaticResource SmallLeftMargin}"
-                                                 Value="{Binding FinishSize,Mode=OneWay}"
-                                                 Maximum="{Binding FileSize,Mode=OneWay}"
-                                                 Visibility="{Binding Path=IsStart,Mode=OneWay}"
-                                                     Width="400"/>
                                     </Grid>
                                 </DataTemplate>
                             </controls:DataGridTemplateColumn.CellTemplate>
@@ -209,7 +244,7 @@
             </Grid>
         </Border>
         <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="2"
-                        Margin="{StaticResource MediumTopMargin}" VerticalAlignment="Top">
+                        Margin="{StaticResource SmallTopMargin}" VerticalAlignment="Top">
             <!--开始按钮-->
             <Button Style="{StaticResource MediumButton}" x:Uid="BinaryFileSplitPage_StartButton"
                         Command="{x:Bind ViewModel.StartSplitCommand}"/>

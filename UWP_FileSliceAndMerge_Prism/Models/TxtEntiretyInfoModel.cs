@@ -22,7 +22,13 @@ namespace UWP_FileSliceAndMerge_Prism.Models
         public bool IsStart
         {
             get { return isStart; }
-            set { SetProperty(ref isStart, value); }
+            set
+            {
+                if (value != isStart)
+                {
+                SetProperty(ref isStart, value);
+                }
+            }
         }
         private bool isDone = false;
         public bool IsDone

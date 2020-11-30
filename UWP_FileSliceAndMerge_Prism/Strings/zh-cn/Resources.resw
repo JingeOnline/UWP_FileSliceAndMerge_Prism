@@ -185,6 +185,9 @@
   <data name="BinaryFileSplitPage_TextBlock_SplitMethod.Text" xml:space="preserve">
     <value>切分方法</value>
   </data>
+  <data name="BinaryFileSplitPage_TextBlock_TxtLanguage.Text" xml:space="preserve">
+    <value>文本语言</value>
+  </data>
   <data name="ContentDialogue_FileAlreadyExist_TextBlock_Description.Text" xml:space="preserve">
     <value>输出路径中已经存在以下同名文件：</value>
   </data>
@@ -321,6 +324,12 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
   </data>
   <data name="ToggleSwitch_SaveAsDefault.OnContent" xml:space="preserve">
     <value>保存为默认值</value>
+  </data>
+  <data name="TxtFileSplitPage_RadioButton_Chinese.Content" xml:space="preserve">
+    <value>中文</value>
+  </data>
+  <data name="TxtFileSplitPage_RadioButton_English.Content" xml:space="preserve">
+    <value>英文</value>
   </data>
   <data name="TxtFileSplitPage_RadioButton_SplitByNumber.Content" xml:space="preserve">
     <value>指定数量</value>

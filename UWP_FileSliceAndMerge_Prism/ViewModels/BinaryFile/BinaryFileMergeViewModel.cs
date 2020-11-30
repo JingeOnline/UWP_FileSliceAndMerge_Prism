@@ -13,6 +13,7 @@ using UWP_FileSliceAndMerge_Prism.Services.BinaryFile;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
+using AsyncAwaitBestPractices;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
@@ -65,7 +66,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             set
             {
                 SetProperty(ref _isSaveOutputFolderAsDefault, value);
-                MyAppSettingHelper.AppSetting.SaveAsync<bool>(_settingKey, value);
+                MyAppSettingHelper.AppSetting.SaveAsync<bool>(_settingKey, value).SafeFireAndForget();
             }
         }
         private bool _isCustomizeExtention = false;
@@ -126,7 +127,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             StartMergeCommand = new DelegateCommand(startMerge, canStart)
                 .ObservesProperty(() => IsFinish).ObservesProperty(() => IsStarted);
             LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(() => IsFinish);
-            getAppSetting();
+            getAppSetting().SafeFireAndForget();
         }
 
 

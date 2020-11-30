@@ -140,17 +140,17 @@
                        x:Uid="TextBlock_Error_NotPositiveInteger"
                        Visibility="{x:Bind ViewModel.IsSplitMethodWarningVisible,Mode=OneWay}" />
                 </StackPanel>
-                <!--命名规则选择标题-->
+                <!--Index规则选择标题-->
                 <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center"
                            Grid.Row="2" Margin="{StaticResource XSmallTopMargin}" 
                        HorizontalAlignment="Left" 
                        x:Uid="BinaryFileSplitPage_TextBlock_SetSliceName"/>
-                <!--命名规则选项-->
+                <!--Index规则选项-->
                 <StackPanel Orientation="Horizontal"
                                 Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
                                 Grid.Row="3" Margin="{StaticResource XXSmallTopMargin}">
                     <ComboBox IsEditable="False" Width="128" VerticalAlignment="Center"
-                          ItemsSource="{x:Bind ViewModel.SliceNamingRules}"
+                          ItemsSource="{x:Bind ViewModel.SliceIndexRules}"
                           SelectedIndex="{x:Bind ViewModel.SliceIndexRule,Mode=TwoWay}"
                           Margin="{StaticResource SmallRightMargin}"/>
                     <!--切片文件的起始序号-->
@@ -243,7 +243,7 @@
             </Grid>
         </Border>
         <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="2"
-                        Margin="{StaticResource MediumTopMargin}" VerticalAlignment="Top">
+                        Margin="{StaticResource SmallTopMargin}" VerticalAlignment="Top">
             <!--开始按钮-->
             <Button Style="{StaticResource MediumButton}" x:Uid="BinaryFileSplitPage_StartButton"
                         Command="{x:Bind ViewModel.StartSplitCommand}"/>

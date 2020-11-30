@@ -13,12 +13,15 @@ namespace UWP_FileSliceAndMerge_Prism.Services.TxtFile
     public class SplitService
     {
         private IEnumerable<TxtSliceInfoModel> _slicesPreviews;
+        private IEnumerable<TxtEntiretyInfoModel> _sourceFiles;
         private StorageFolder _storageFolder;
 
-        public SplitService(IEnumerable<TxtSliceInfoModel> slicesPreviews,StorageFolder storageFolder)
+        public SplitService(IEnumerable<TxtSliceInfoModel> slicesPreviews,StorageFolder storageFolder,
+            IEnumerable<TxtEntiretyInfoModel> sourceFiles)
         {
             _slicesPreviews = slicesPreviews;
             _storageFolder = storageFolder;
+            _sourceFiles = sourceFiles;
         }
 
         public async Task SplitFiles()
@@ -27,15 +30,17 @@ namespace UWP_FileSliceAndMerge_Prism.Services.TxtFile
             {
                 StorageFile file=await _storageFolder.CreateFileAsync(slice.FileName, CreationCollisionOption.ReplaceExisting);
                 await Windows.Storage.FileIO.WriteTextAsync(file, slice.TextContent);
+                slice.IsDone = true;
+                //使用Stream来写入，效果是一样的。
                 //var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite);
-
-                //Debug.WriteLine(slice.TextContent.Substring(0, 1000));
                 //using (var stream = await file.OpenStreamForWriteAsync())
                 //{
                 //    var bytes = Encoding.UTF8.GetBytes(slice.TextContent);
                 //    await stream.WriteAsync(bytes, 0, bytes.Length);
                 //}
-
+                TxtEntiretyInfoModel sourceFile = _sourceFiles.First(x => x.FileName == slice.MergedFileName);
+                sourceFile.IsStart = true;
+                sourceFile.SliceComplatedNumber++;
             }
         }
     }

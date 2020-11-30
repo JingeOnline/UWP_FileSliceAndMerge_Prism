@@ -13,6 +13,10 @@ using UWP_FileSliceAndMerge_Prism.Helpers;
 using UWP_FileSliceAndMerge_Prism.Views;
 using System.Diagnostics;
 using UWP_FileSliceAndMerge_Prism.Services;
+using Windows.System;
+using AsyncAwaitBestPractices;
+using Windows.Storage.AccessCache;
+using System.Threading;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
@@ -22,9 +26,12 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         private readonly string _folderToken = "TxtSplit_OutputFolderToken";
         private readonly int MaxSliceNumber = 999999;
 
-        public ObservableCollection<TxtEntiretyInfoModel> EntiretyFiles { get; set; } =
-                            new ObservableCollection<TxtEntiretyInfoModel>();
-        private ObservableCollection<TxtSliceInfoModel> _sliceFiles = new ObservableCollection<TxtSliceInfoModel>();
+        public ObservableCollection<TxtEntiretyInfoModel> EntiretyFiles { get; set; }
+            = new ObservableCollection<TxtEntiretyInfoModel>();
+
+        private ObservableCollection<TxtSliceInfoModel> _sliceFiles
+            = new ObservableCollection<TxtSliceInfoModel>();
+
         public ObservableCollection<TxtSliceInfoModel> SliceFiles
         {
             get { return _sliceFiles; }
@@ -40,8 +47,42 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             "10000"
         };
 
-        private int _numberSelected=100;
-        private string _numberSelectedText="100";
+        public List<string> SliceIndexRules { get; set; } = new List<string>()
+        {
+            "_0,_1,_2 ...",
+            "-0,-1,-2 ...",
+            "(0),(1),(2) ...",
+            " (0), (1), (2) ..."
+        };
+
+        private int _sliceIndexRule = 0;
+        public int SliceIndexRule
+        {
+            get { return _sliceIndexRule; }
+            set
+            {
+                if (_sliceIndexRule != value)
+                {
+                    SetProperty(ref _sliceIndexRule, value);
+                    preview().SafeFireAndForget();
+                }
+            }
+        }
+        private bool _indexStartWith0 = true;
+        private int _indexStartWith = 0;
+        public bool IndexStartWith0
+        {
+            get { return _indexStartWith0; }
+            set
+            {
+                SetProperty(ref _indexStartWith0, value);
+                _indexStartWith = value ? 0 : 1;
+                preview().SafeFireAndForget();
+            }
+        }
+
+        private int _numberSelected = 100;
+        private string _numberSelectedText = "100";
         public string NumberSelectedText
         {
             get { return _numberSelectedText; }
@@ -50,11 +91,13 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 if (_numberSelectedText != value)
                 {
                     SetProperty(ref _numberSelectedText, value);
-                    checkSliceNumber(_numberSelectedText);
+                    checkSliceNumber(_numberSelectedText).SafeFireAndForget();
                 }
 
             }
         }
+
+        //分割单位，行或字数
         private int _numberUnitSelectedIndex;
         public int NumberUnitSelectedIndex
         {
@@ -64,7 +107,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 if (_numberUnitSelectedIndex != value)
                 {
                     SetProperty(ref _numberUnitSelectedIndex, value);
-                    checkSliceNumber(NumberSelectedText);
+                    checkSliceNumber(NumberSelectedText).SafeFireAndForget();
                 }
             }
         }
@@ -86,7 +129,12 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         public bool IsChinese
         {
             get { return _isChinese; }
-            set { SetProperty(ref _isChinese, value); }
+            set
+            {
+                SetProperty(ref _isChinese, value);
+                //calculateSourceFileInfo().SafeFireAndForget();
+                calculateSourceAndPreview().SafeFireAndForget();
+            }
         }
         private StorageFolder _outputFolder;
         public StorageFolder OutputFolder
@@ -117,7 +165,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             set
             {
                 SetProperty(ref _isSaveOutputFolderAsDefault, value);
-                MyAppSettingHelper.AppSetting.SaveAsync<bool>(_settingKey, value);
+                MyAppSettingHelper.AppSetting.SaveAsync<bool>(_settingKey, value).SafeFireAndForget();
             }
         }
 
@@ -146,10 +194,26 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 .ObservesProperty(() => IsStarted);
             ClearSourceFilesCommand = new DelegateCommand(clearUi, () => !IsStarted)
                 .ObservesProperty(() => IsStarted);
+            //ClearSourceFilesCommand = new DelegateCommand(clearUi);
             SelectOutputFolderCommand = new DelegateCommand(selectOutputFolder, () => !IsStarted)
                 .ObservesProperty(() => IsStarted);
             StartSplitCommand = new DelegateCommand(startSplit, canStart)
                 .ObservesProperty(() => IsFinish).ObservesProperty(() => IsStarted);
+            LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(() => IsFinish);
+            getAppSetting().SafeFireAndForget();
+        }
+
+        /// <summary>
+        /// 获取应用程序储存的设置数据
+        /// </summary>
+        /// <returns></returns>
+        private async Task getAppSetting()
+        {
+            IsSaveOutputFolderAsDefault = await MyAppSettingHelper.AppSetting.ReadAsync<bool>(_settingKey);
+            if (IsSaveOutputFolderAsDefault)
+            {
+                OutputFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(_folderToken);
+            }
         }
 
         /// <summary>
@@ -163,8 +227,10 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             var files = await filesPicker.PickMultipleFilesAsync();
             if (files.Count > 0)
             {
+                Debug.WriteLine(Thread.CurrentThread.ManagedThreadId);
                 await getSourceFileInfo(files);
-                preview();
+                await preview();
+                Debug.WriteLine(Thread.CurrentThread.ManagedThreadId);
                 //让该Command重新检测是否能够执行的条件
                 StartSplitCommand.RaiseCanExecuteChanged();
             }
@@ -188,7 +254,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     FileSize = (long)basicProperties.Size
                 });
             }
-            await calculateTxtInfo();
+            await calculateSourceFileInfo();
         }
 
         /// <summary>
@@ -198,15 +264,26 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             IsFinish = false;
             EntiretyFiles.Clear();
+            //EntiretyFiles.RemoveAt(0);
             SliceFiles.Clear();
             //让该Command重新检测是否能够执行的条件
             StartSplitCommand.RaiseCanExecuteChanged();
         }
 
-        private async Task calculateTxtInfo()
+        /// <summary>
+        /// 计算文本的相关信息
+        /// </summary>
+        /// <returns></returns>
+        private async Task calculateSourceFileInfo()
         {
             TxtInfoService txtInfoService = new TxtInfoService(EntiretyFiles, IsChinese);
             await txtInfoService.FindWordCountAndLineCount();
+        }
+
+        private async Task calculateSourceAndPreview()
+        {
+            await calculateSourceFileInfo();
+            await preview();
         }
 
         /// <summary>
@@ -229,17 +306,48 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             StartSplitCommand.RaiseCanExecuteChanged();
         }
 
-        private void preview()
+        //private void preview()
+        //{
+        //    if(EntiretyFiles==null || EntiretyFiles.Count == 0) { return; }
+        //    SplitPreviewService previewService = new SplitPreviewService(EntiretyFiles, _indexStartWith, SliceIndexRule);
+        //    List<TxtSliceInfoModel> resultList;
+        //    if (NumberUnitSelectedIndex == 0)
+        //    {
+        //        resultList = previewService.GetPreviewByWordCount(_numberSelected, IsChinese);
+        //    }
+        //    else
+        //    {
+        //        resultList = previewService.GetPreviewByLineCount(_numberSelected);
+        //    }
+        //    SliceFiles = new ObservableCollection<TxtSliceInfoModel>(resultList);
+        //    //让该Command重新检测是否能够执行的条件
+        //    IsFinish = false;
+        //    StartSplitCommand.RaiseCanExecuteChanged();
+        //}
+
+        private async Task preview()
         {
-            SplitPreviewService previewService = new SplitPreviewService(EntiretyFiles, 1, 1);
-            List<TxtSliceInfoModel> resultList=previewService.GetPreviewByLineCount(_numberSelected);
+            if (EntiretyFiles == null || EntiretyFiles.Count == 0) { return; }
+            SplitPreviewService previewService = new SplitPreviewService(EntiretyFiles, _indexStartWith, SliceIndexRule);
+            List<TxtSliceInfoModel> resultList;
+            if (NumberUnitSelectedIndex == 0)
+            {
+                resultList = await Task.Run(() => previewService.GetPreviewByWordCount(_numberSelected, IsChinese));
+            }
+            else
+            {
+                resultList = await Task.Run(() => previewService.GetPreviewByLineCount(_numberSelected));
+            }
             SliceFiles = new ObservableCollection<TxtSliceInfoModel>(resultList);
+            //让该Command重新检测是否能够执行的条件
+            IsFinish = false;
+            StartSplitCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
         /// 检测用户输入的切片数量是否合法
         /// </summary>
-        private async void checkSliceNumber(string inputText)
+        private async Task checkSliceNumber(string inputText)
         {
             Debug.WriteLine("执行输入检验 " + inputText);
             if (Int32.TryParse(inputText, out int inputNumber) && inputNumber > 0)
@@ -251,7 +359,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     return;
                 }
                 _numberSelected = inputNumber;
-                preview();
+                await preview();
             }
             else
             {
@@ -283,7 +391,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             }
             IsStarted = true;
             //SplitService sliceService = new SplitService(OutputFolder, MergedFiles);
-            SplitService splitService = new SplitService(SliceFiles, OutputFolder);
+            SplitService splitService = new SplitService(SliceFiles, OutputFolder, EntiretyFiles);
             await splitService.SplitFiles();
             IsFinish = true;
             IsStarted = false;
@@ -298,5 +406,15 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             return SliceFiles.Count > 0 && !IsFinish && !IsStarted && OutputFolder != null;
         }
+
+        /// <summary>
+        /// 下载完成后打开文件夹
+        /// </summary>
+        private async void launchFolder()
+        {
+            var t = new FolderLauncherOptions();
+            await Launcher.LaunchFolderAsync(OutputFolder, t);
+        }
+
     }
 }

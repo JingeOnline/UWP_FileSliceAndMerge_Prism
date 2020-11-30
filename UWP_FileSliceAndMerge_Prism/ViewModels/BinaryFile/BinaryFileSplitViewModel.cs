@@ -14,7 +14,7 @@ using UWP_FileSliceAndMerge_Prism.Views;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
-using Windows.UI.Core;
+using AsyncAwaitBestPractices;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
@@ -39,7 +39,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         public DelegateCommand StartSplitCommand { get; set; }
         public DelegateCommand LaunchFolderCommand { get; set; }
 
-        public List<string> SliceNamingRules { get; set; } = new List<string>()
+        public List<string> SliceIndexRules { get; set; } = new List<string>()
         {
             "_0,_1,_2 ...",
             "-0,-1,-2 ...",
@@ -214,7 +214,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             set
             {
                 SetProperty(ref _isSaveOutputFolderAsDefault, value);
-                MyAppSettingHelper.AppSetting.SaveAsync<bool>(_settingKey, value);
+                MyAppSettingHelper.AppSetting.SaveAsync<bool>(_settingKey, value).SafeFireAndForget();
             }
         }
 
@@ -263,8 +263,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
             StartSplitCommand = new DelegateCommand(startSplit, canStart)
                 .ObservesProperty(() => IsFinish).ObservesProperty(() => IsStarted);
             LaunchFolderCommand = new DelegateCommand(launchFolder).ObservesCanExecute(() => IsFinish);
-            //SliceIndexRule = SliceNamingRules[0];
-            getAppSetting();
+            getAppSetting().SafeFireAndForget();
         }
 
         /// <summary>
