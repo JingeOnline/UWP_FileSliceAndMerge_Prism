@@ -194,7 +194,6 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                 .ObservesProperty(() => IsStarted);
             ClearSourceFilesCommand = new DelegateCommand(clearUi, () => !IsStarted)
                 .ObservesProperty(() => IsStarted);
-            //ClearSourceFilesCommand = new DelegateCommand(clearUi);
             SelectOutputFolderCommand = new DelegateCommand(selectOutputFolder, () => !IsStarted)
                 .ObservesProperty(() => IsStarted);
             StartSplitCommand = new DelegateCommand(startSplit, canStart)
