@@ -36,7 +36,7 @@
                                                  FontSize="16"/>
                     <!--文件名和进度条-->
                     <controls:DataGridTemplateColumn x:Uid="Datagrid_Column_FileName"
-                                                     Width="5*">
+                                                     Width="4*">
                         <controls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid Margin="{StaticResource SmallLeftRightMargin}">
