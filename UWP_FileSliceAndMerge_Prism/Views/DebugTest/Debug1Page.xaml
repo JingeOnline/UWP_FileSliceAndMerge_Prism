@@ -1,0 +1,88 @@
+﻿<Page
+    x:Class="UWP_FileSliceAndMerge_Prism.Views.Debug1Page"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWP_FileSliceAndMerge_Prism.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="LightGreen">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="12"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <!--源文件列表-->
+        <Border Style="{StaticResource ThinRadiusThemeBorder}"
+                    Margin="{StaticResource SmallTopMargin}">
+            <controls:DataGrid ItemsSource="{x:Bind ViewModel.EntiretyFiles,Mode=OneWay}"
+                                   AutoGenerateColumns="False" IsReadOnly="True">
+                <controls:DataGrid.Columns>
+                    <!--图标-->
+                    <controls:DataGridTextColumn Width="SizeToCells"
+                                                 Binding="{Binding Icon,Mode=OneWay}"
+                                                 FontFamily="Segoe MDL2 Assets"
+                                                 FontSize="16"/>
+                    <!--文件名和进度条-->
+                    <controls:DataGridTemplateColumn Header="FileName"
+                                                     Width="5*">
+                        <controls:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding FileName,Mode=OneWay}"
+                                               VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>
+                    <!--字数-->
+                    <!--<controls:DataGridTextColumn Binding="{Binding TxtWordCount}"
+                                                 x:Uid="DataGrid_Column_WordCount"
+                                                 Width="*"
+                                                 FontSize="16"/>-->
+                    <!--<controls:DataGridTextColumn Binding="{Binding FileName,Mode=OneWay}"
+                                                 Header="FileName" Width="*"/>
+                    <controls:DataGridTemplateColumn>
+                        <controls:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ProgressBar Width="400" IsIndeterminate="True"/>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>-->
+                    <controls:DataGridTextColumn Binding="{Binding TxtWordCount, Mode=OneWay}"
+                                                 Header="Words"
+                                                 Width="*"
+                                                 FontSize="16"/>
+                    <!--行数-->
+                    <controls:DataGridTextColumn Binding="{Binding TxtLineCount, Mode=OneWay}"
+                                                 x:Uid="DataGrid_Column_LineCount"
+                                                 Width="*"
+                                                 FontSize="16"/>
+                    <!--文本长度-->
+                    <controls:DataGridTextColumn Binding="{Binding TextLength, Mode=OneWay}"
+                                                 x:Uid="DataGrid_Column_TextLength"
+                                                 Width="*"
+                                                 FontSize="16"/>
+                    <!--文件大小-->
+                    <controls:DataGridTextColumn x:Uid="Datagrid_Column_FileSize"
+                                                 Binding="{Binding FileSizeText, Mode=OneWay}"
+                                                 Width="*"
+                                                 FontSize="16"/>
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </Border>
+        <!--选择文件和清空按钮-->
+        <StackPanel Grid.Column="2" VerticalAlignment="Top"
+                        Margin="{StaticResource SmallTopMargin}">
+            <Button Style="{StaticResource MediumButton}" 
+                        x:Uid="BinaryFileSplitPage_SelectFilesButton"
+                        Command="{x:Bind ViewModel.SelectSourceFilesCommand}"/>
+            <Button Style="{StaticResource MediumButton}" Margin="{StaticResource SmallTopMargin}"
+                        x:Uid="BinaryFileSplitPage_SourceClearButton"
+                        Command="{x:Bind ViewModel.ClearSourceFilesCommand}"/>
+        </StackPanel>
+    </Grid>
+</Page>

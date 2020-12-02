@@ -4,27 +4,23 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UWP_FileSliceAndMerge_Prism.Models;
-using Prism.Windows.Mvvm;
 using Prism.Commands;
+using Prism.Windows.Mvvm;
+using UWP_FileSliceAndMerge_Prism.Models;
 using Windows.Storage;
-using UWP_FileSliceAndMerge_Prism.Helpers;
-using UWP_FileSliceAndMerge_Prism.Views;
-using System.Diagnostics;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
-    public class TxtSplitViewModel : ViewModelBase
+    public class Debug1ViewModel:ViewModelBase
     {
-
         public ObservableCollection<TxtEntiretyInfoModel> EntiretyFiles { get; set; } =
                             new ObservableCollection<TxtEntiretyInfoModel>();
         public DelegateCommand SelectSourceFilesCommand { get; set; }
         public DelegateCommand ClearSourceFilesCommand { get; set; }
 
-        public TxtSplitViewModel()
+        public Debug1ViewModel()
         {
-            SelectSourceFilesCommand = new DelegateCommand(async ()=>await selectSourceFiles());
+            SelectSourceFilesCommand = new DelegateCommand(async () => await selectSourceFiles());
             ClearSourceFilesCommand = new DelegateCommand(clearUi);
         }
 
@@ -60,7 +56,7 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
                     FileSize = (long)basicProperties.Size,
                     TxtWordCount = 100,
                     TxtLineCount = 100,
-                    TextLength=100
+                    TextLength = 100
                 });
             }
         }
@@ -72,6 +68,5 @@ namespace UWP_FileSliceAndMerge_Prism.ViewModels
         {
             EntiretyFiles.Clear();
         }
-
     }
 }

@@ -8,5 +8,6 @@
         public const string SettingsPage = "Settings";
         public const string BinaryFilePage = "BinaryFile";
         public const string TxtFilePage = "TxtFile";
+        public const string DebugTestPage = "DebugTest";
     }
 }

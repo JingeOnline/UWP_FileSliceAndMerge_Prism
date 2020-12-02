@@ -7,11 +7,7 @@ using Prism.Windows.Mvvm;
 
 namespace UWP_FileSliceAndMerge_Prism.ViewModels
 {
-    public class TxtFileViewModel:ViewModelBase
+    public class Debug2ViewModel:ViewModelBase
     {
-        public TxtFileViewModel()
-        {
-
-        }
     }
 }

@@ -33,6 +33,8 @@
                 <!--<winui:NavigationViewItem x:Uid="Shell_TabView" Icon="Document" helpers:NavHelper.NavigateTo="TabView" />-->
                 <winui:NavigationViewItem x:Uid="Shell_BinaryFile" Icon="Document" helpers:NavHelper.NavigateTo="BinaryFile" />
                 <winui:NavigationViewItem x:Uid="Shell_TxtFile" Icon="Document" helpers:NavHelper.NavigateTo="TxtFile" />
+                <winui:NavigationViewItem Content="DebugTest" Icon="Document" helpers:NavHelper.NavigateTo="DebugTest" />
+                
             </winui:NavigationView.MenuItems>
             <i:Interaction.Behaviors>
                 <behaviors:NavigationViewHeaderBehavior

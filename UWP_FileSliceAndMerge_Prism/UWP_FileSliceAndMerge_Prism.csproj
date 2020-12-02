@@ -177,10 +177,11 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ToastNotificationsService.cs" />
     <Compile Include="Services\ToastNotificationsService.Samples.cs" />
-    <Compile Include="Services\TxtFile\SplitPreviewService.cs" />
-    <Compile Include="Services\TxtFile\TxtInfoService.cs" />
     <Compile Include="ViewModels\BinaryFile\BinaryFileMergeViewModel.cs" />
     <Compile Include="ViewModels\BinaryFile\BinaryFileSplitViewModel.cs" />
+    <Compile Include="ViewModels\DebugTestViewModel.cs" />
+    <Compile Include="ViewModels\DebugTest\Debug1ViewModel.cs" />
+    <Compile Include="ViewModels\DebugTest\Debug2ViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -196,6 +197,15 @@
     </Compile>
     <Compile Include="Views\BinaryFile\BinarySplitSettingWarningDialog.xaml.cs">
       <DependentUpon>BinarySplitSettingWarningDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DebugTestPage.xaml.cs">
+      <DependentUpon>DebugTestPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DebugTest\Debug1Page.xaml.cs">
+      <DependentUpon>Debug1Page.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DebugTest\Debug2Page.xaml.cs">
+      <DependentUpon>Debug2Page.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FirstRunDialog.xaml.cs">
       <DependentUpon>FirstRunDialog.xaml</DependentUpon>
@@ -263,6 +273,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BinaryFile\BinarySplitSettingWarningDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DebugTestPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DebugTest\Debug1Page.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DebugTest\Debug2Page.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
